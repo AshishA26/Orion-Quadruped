@@ -24,14 +24,17 @@ void loop() {
   // Set all servos to start
   pwm.writeMicroseconds(0, 900);
   pwm.writeMicroseconds(1, 1150);
-  delay(2000);
+  delay(1000);
   
   // Sweep all servos from 0 to 180 degrees
   float top_microsec = 900;
   float bot_microsec = 1150;
-  for(float i = 0; i <= 350; i += 1) {
-      top_microsec-=1;
-      bot_microsec+=1;
+
+  // Set to 4 if wanting leg to jump, set to 1 for normal movement.
+  increment = 4;
+  for(float i = 0; i <= 350/increment; i += 1) {
+      top_microsec-=increment;
+      bot_microsec+=increment;
       pwm.writeMicroseconds(0, int(top_microsec));
       pwm.writeMicroseconds(1, int(bot_microsec));
       // Serial.print("Top ms: ");
@@ -39,11 +42,11 @@ void loop() {
       // Serial.print("  Bottom ms: ");
       // Serial.print(bot_microsec);
       // Serial.println();
-      delay(1);
+      delayMicroseconds(2);
   }
-  for(float i = 0; i <= 350; i += 1) {
-      top_microsec+=1;
-      bot_microsec-=1;
+  for(float i = 0; i <= 350/increment; i += 1) {
+      top_microsec+=increment;
+      bot_microsec-=increment;
       pwm.writeMicroseconds(0, int(top_microsec));
       pwm.writeMicroseconds(1, int(bot_microsec));
       // Serial.print("Top ms: ");
@@ -51,7 +54,7 @@ void loop() {
       // Serial.print("  Bottom ms: ");
       // Serial.print(bot_microsec);
       // Serial.println();
-      delay(1);
+      delayMicroseconds(2);
   }
 }
 
