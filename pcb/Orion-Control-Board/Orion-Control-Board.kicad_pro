@@ -673,6 +673,12 @@
           "label": "Manufacturer Part #",
           "name": "Manufacturer Part #",
           "show": true
+        },
+        {
+          "group_by": false,
+          "label": "ReferenceSchematic",
+          "name": "ReferenceSchematic",
+          "show": false
         }
       ],
       "filter_string": "",
