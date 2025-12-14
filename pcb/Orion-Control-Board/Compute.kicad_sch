@@ -6878,7 +6878,7 @@
 				)
 			)
 		)
-		(property "Footprint" "digikey-footprints:PinHeader_1x3_P2.54_Drill1.1mm"
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
 			(at 175.26 72.39 0)
 			(effects
 				(font

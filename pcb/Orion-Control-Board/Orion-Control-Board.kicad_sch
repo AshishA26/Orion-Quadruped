@@ -4064,6 +4064,12 @@
 		(uuid "c74dc79e-13bd-4082-9386-e133c2a8d40d")
 	)
 	(junction
+		(at 24.13 132.08)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c7d2f57a-9f0d-4898-a2f5-eda117b4c3c5")
+	)
+	(junction
 		(at 100.33 129.54)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4196,6 +4202,16 @@
 			(type default)
 		)
 		(uuid "016af0b3-a4e6-4798-8f4c-7e70bffe3e74")
+	)
+	(wire
+		(pts
+			(xy 24.13 142.24) (xy 36.83 142.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "01e22103-de0b-4a7d-b131-e5ae1af819a6")
 	)
 	(wire
 		(pts
@@ -4486,6 +4502,16 @@
 			(type default)
 		)
 		(uuid "1da69418-e3bd-414a-87c1-149dcdc2f830")
+	)
+	(wire
+		(pts
+			(xy 24.13 142.24) (xy 24.13 132.08)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "201e1bb9-f5b2-4360-868d-1cb8ccb2041f")
 	)
 	(wire
 		(pts
@@ -5396,16 +5422,6 @@
 			(type default)
 		)
 		(uuid "734ae181-435b-46ac-9619-41d6a511fe0a")
-	)
-	(wire
-		(pts
-			(xy 21.59 142.24) (xy 36.83 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "74c1e1f4-8db9-4ca0-8a92-3b2836bea74a")
 	)
 	(wire
 		(pts
@@ -6727,7 +6743,7 @@
 			)
 		)
 	)
-	(global_label "SCL_{2}"
+	(global_label "SCL_{3}"
 		(shape bidirectional)
 		(at 110.49 139.7 180)
 		(effects
@@ -6975,7 +6991,7 @@
 			)
 		)
 	)
-	(global_label "SDA_{2}"
+	(global_label "SDA_{3}"
 		(shape bidirectional)
 		(at 110.49 137.16 180)
 		(effects
@@ -7057,7 +7073,7 @@
 			)
 		)
 	)
-	(global_label "SCL_{2}"
+	(global_label "SCL_{3}"
 		(shape bidirectional)
 		(at 184.15 139.7 180)
 		(effects
@@ -7555,7 +7571,7 @@
 			)
 		)
 	)
-	(global_label "SDA_{2}"
+	(global_label "SDA_{3}"
 		(shape bidirectional)
 		(at 34.29 137.16 180)
 		(effects
@@ -7635,7 +7651,7 @@
 			)
 		)
 	)
-	(global_label "SDA_{2}"
+	(global_label "SDA_{3}"
 		(shape bidirectional)
 		(at 184.15 137.16 180)
 		(effects
@@ -7717,7 +7733,7 @@
 			)
 		)
 	)
-	(global_label "SCL_{2}"
+	(global_label "SCL_{3}"
 		(shape bidirectional)
 		(at 34.29 139.7 180)
 		(effects
@@ -10433,71 +10449,6 @@
 			(project "Orion-Control-Board"
 				(path "/0755aee5-bc01-4cb5-b830-583289df50a3"
 					(reference "R4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3.3V")
-		(at 21.59 142.24 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "60046da5-f585-45bf-8755-602c77019f6f")
-		(property "Reference" "#PWR02"
-			(at 21.59 146.05 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3.3V"
-			(at 21.971 137.8458 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 21.59 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 21.59 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 21.59 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3497f332-df7e-414f-b724-74452f5871c8")
-		)
-		(instances
-			(project "Orion-Control-Board"
-				(path "/0755aee5-bc01-4cb5-b830-583289df50a3"
-					(reference "#PWR02")
 					(unit 1)
 				)
 			)
