@@ -1126,7 +1126,7 @@
 					(justify left bottom)
 				)
 			)
-			(property "Footprint" "CRYSTAL-SMD-3.2X1.5MM"
+			(property "Footprint" "AA_Custom_Components:CRYSTAL-SMD-3.2X1.5MM"
 				(at 0 5.08 0)
 				(effects
 					(font
@@ -3860,12 +3860,6 @@
 		(uuid "0acbc1d3-00c8-426f-a88c-e7ed3613361a")
 	)
 	(junction
-		(at 21.59 53.34)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "0acffd21-da3e-49cb-a024-fb2d378ec844")
-	)
-	(junction
 		(at 173.99 129.54)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4312,16 +4306,6 @@
 			(type default)
 		)
 		(uuid "0b891f92-3d1c-458e-ac11-b9d9d3891039")
-	)
-	(wire
-		(pts
-			(xy 21.59 46.99) (xy 21.59 53.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0c129ae2-c430-4bda-ad37-114c4db3a38e")
 	)
 	(wire
 		(pts
@@ -6643,6 +6627,46 @@
 		)
 		(uuid "ffb32208-67b9-4913-bc54-ddebf360aab6")
 	)
+	(label "3V3_BNO"
+		(at 46.99 38.1 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "0634ec24-c719-46a1-9d43-28a28c0f72ff")
+	)
+	(label "Y+"
+		(at 62.23 53.34 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "247e33be-dd24-46b9-9fd9-858fdcdc82ea")
+	)
+	(label "3V3_BNO"
+		(at 21.59 53.34 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "907f993d-1c32-4b33-b357-741665ce6369")
+	)
+	(label "Y-"
+		(at 64.77 66.04 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "9a767735-84b3-4788-bb25-bd6b121e9e4c")
+	)
 	(global_label "PWM0"
 		(shape output)
 		(at 93.98 55.88 180)
@@ -6787,7 +6811,7 @@
 	)
 	(global_label "3S_BATT_CELL3"
 		(shape output)
-		(at 101.6 194.31 180)
+		(at 101.6 189.23 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6797,7 +6821,7 @@
 		)
 		(uuid "13c8abe1-f726-4a2b-a9d0-5b0144a0ee81")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 84.9363 194.31 0)
+			(at 84.9363 189.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6973,7 +6997,7 @@
 	)
 	(global_label "2S_BATT_FRONT_CELL2"
 		(shape output)
-		(at 118.11 196.85 0)
+		(at 118.11 189.23 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6983,7 +7007,7 @@
 		)
 		(uuid "3281eeb0-db44-4911-8dbf-ed74fd753146")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 141.7285 196.85 0)
+			(at 141.7285 189.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7115,7 +7139,7 @@
 	)
 	(global_label "2S_BATT_REAR_CELL2"
 		(shape output)
-		(at 118.11 191.77 0)
+		(at 118.11 194.31 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7125,7 +7149,7 @@
 		)
 		(uuid "48856fa4-4c33-467e-a522-5117db250381")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 140.5189 191.77 0)
+			(at 140.5189 194.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7137,7 +7161,7 @@
 	)
 	(global_label "3S_BATT_CELL1"
 		(shape output)
-		(at 101.6 189.23 180)
+		(at 101.6 194.31 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7147,7 +7171,7 @@
 		)
 		(uuid "54421199-a07a-463f-8fe6-8c4f3870d647")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 84.9363 189.23 0)
+			(at 84.9363 194.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7221,7 +7245,7 @@
 	)
 	(global_label "2S_BATT_REAR_CELL1"
 		(shape output)
-		(at 118.11 189.23 0)
+		(at 118.11 196.85 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7231,7 +7255,7 @@
 		)
 		(uuid "69e50f5b-f0c9-4ac5-9745-3b126d014592")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 140.5189 189.23 0)
+			(at 140.5189 196.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7263,7 +7287,7 @@
 	)
 	(global_label "2S_BATT_FRONT_CELL1"
 		(shape output)
-		(at 118.11 194.31 0)
+		(at 118.11 191.77 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7273,7 +7297,7 @@
 		)
 		(uuid "8629f8ee-b5d6-43fd-97d9-8fec6b3ab06d")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 141.7285 194.31 0)
+			(at 141.7285 191.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7781,7 +7805,7 @@
 				)
 			)
 		)
-		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x02_P2.54mm_Vertical"
+		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x02_P2.54mm_Vertical_Bridged"
 			(at 53.34 38.1 0)
 			(effects
 				(font
@@ -8252,7 +8276,7 @@
 		(dnp no)
 		(uuid "085a8e8e-771c-4319-b4a5-f060f0bb3d48")
 		(property "Reference" "C1"
-			(at 38.2016 40.259 90)
+			(at 43.434 41.91 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8261,7 +8285,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 40.894 37.846 90)
+			(at 38.354 41.91 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8969,7 +8993,7 @@
 				)
 			)
 		)
-		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x02_P2.54mm_Vertical"
+		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x02_P2.54mm_Vertical_Bridged"
 			(at 57.15 110.49 0)
 			(effects
 				(font
@@ -11300,7 +11324,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "CRYSTAL-SMD-3.2X1.5MM"
+		(property "Footprint" "AA_Custom_Components:CRYSTAL-SMD-3.2X1.5MM"
 			(at 69.85 59.69 0)
 			(effects
 				(font
@@ -11413,71 +11437,6 @@
 			(project "Orion-Control-Board"
 				(path "/0755aee5-bc01-4cb5-b830-583289df50a3"
 					(reference "#GND03")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3.3V")
-		(at 21.59 46.99 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "8217f67c-5e77-4c7a-a0be-d85f3176325c")
-		(property "Reference" "#PWR01"
-			(at 21.59 50.8 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3.3V"
-			(at 21.971 42.5958 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 21.59 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 21.59 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 21.59 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "dcc28053-2251-4f8d-bc20-e541a6d3c9ea")
-		)
-		(instances
-			(project "Orion-Control-Board"
-				(path "/0755aee5-bc01-4cb5-b830-583289df50a3"
-					(reference "#PWR01")
 					(unit 1)
 				)
 			)
@@ -12369,7 +12328,7 @@
 				)
 			)
 		)
-		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x02_P2.54mm_Vertical"
+		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x02_P2.54mm_Vertical_Bridged"
 			(at 133.35 110.49 0)
 			(effects
 				(font
@@ -13576,7 +13535,7 @@
 				)
 			)
 		)
-		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x02_P2.54mm_Vertical"
+		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x02_P2.54mm_Vertical_Bridged"
 			(at 142.24 38.1 0)
 			(effects
 				(font
@@ -15085,7 +15044,7 @@
 				)
 			)
 		)
-		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x02_P2.54mm_Vertical"
+		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x02_P2.54mm_Vertical_Bridged"
 			(at 207.01 110.49 0)
 			(effects
 				(font

@@ -2227,6 +2227,194 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Jumper:Jumper_3_Bridged12"
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom no)
+			(on_board yes)
+			(property "Reference" "JP"
+				(at -2.54 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Jumper_3_Bridged12"
+				(at 0 2.794 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Jumper, 3-pole, pins 1+2 closed/bridged"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "Jumper SPDT"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Jumper* TestPoint*3Pads* TestPoint*Bridge*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Jumper_3_Bridged12_0_0"
+				(circle
+					(center -3.302 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 3.302 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "Jumper_3_Bridged12_0_1"
+				(arc
+					(start -3.048 0.508)
+					(mid -1.651 0.9912)
+					(end -0.254 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -1.27) (xy 0 -0.508)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "Jumper_3_Bridged12_1_1"
+				(pin passive line
+					(at -6.35 0 0)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.54)
+					(name "C"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 6.35 0 180)
+					(length 2.54)
+					(name "B"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Mechanical:MountingHole"
 			(pin_names
 				(offset 1.016)
@@ -3195,16 +3383,6 @@
 	)
 	(wire
 		(pts
-			(xy 97.79 31.75) (xy 107.95 31.75)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0043e4b0-05a5-4fa6-b2ba-3c2981446e9b")
-	)
-	(wire
-		(pts
 			(xy 121.92 72.39) (xy 125.73 72.39)
 		)
 		(stroke
@@ -3253,6 +3431,16 @@
 		)
 		(uuid "0d239bf1-e42e-4017-a164-0a652523b296")
 	)
+	(wire
+		(pts
+			(xy 102.87 43.18) (xy 113.03 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0f3b9c8d-d80b-4651-ae10-aa9c2759ee4e")
+	)
 	(polyline
 		(pts
 			(xy 139.7 81.28) (xy 139.7 96.52)
@@ -3272,16 +3460,6 @@
 			(type dash)
 		)
 		(uuid "12e4c393-bd6d-4298-b113-7fb834ae8891")
-	)
-	(wire
-		(pts
-			(xy 110.49 33.02) (xy 110.49 36.83)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "14d5d1f4-3d6c-4900-a9ef-3d3633b1e60b")
 	)
 	(wire
 		(pts
@@ -3322,6 +3500,26 @@
 			(type default)
 		)
 		(uuid "1b56b2ee-4a0c-4de8-91da-744d959e4159")
+	)
+	(wire
+		(pts
+			(xy 102.87 35.56) (xy 102.87 30.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2018c191-3dd3-4aea-8937-d7038068bc79")
+	)
+	(wire
+		(pts
+			(xy 102.87 30.48) (xy 113.03 30.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2be4dd71-c60d-4e78-8c36-443e1a0c3fff")
 	)
 	(polyline
 		(pts
@@ -3402,6 +3600,16 @@
 			(type dash)
 		)
 		(uuid "47061b39-7ea2-4972-82b7-b39503cc09f1")
+	)
+	(wire
+		(pts
+			(xy 102.87 40.64) (xy 102.87 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4d68db33-3b99-4284-b897-fca05916a446")
 	)
 	(wire
 		(pts
@@ -3493,16 +3701,6 @@
 		)
 		(uuid "5a6d5ce0-369d-487c-b6b3-9c6ba4db446a")
 	)
-	(wire
-		(pts
-			(xy 100.33 33.02) (xy 110.49 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5b28a5e8-6b0b-4d6b-8e7d-bc8b17eb0639")
-	)
 	(polyline
 		(pts
 			(xy 73.025 28.575) (xy 73.025 44.45)
@@ -3515,13 +3713,13 @@
 	)
 	(wire
 		(pts
-			(xy 113.03 34.29) (xy 113.03 36.83)
+			(xy 109.22 36.83) (xy 109.22 38.1)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "5ea5a4e3-2520-46c1-a281-c315eea7c740")
+		(uuid "5e320198-2080-4c41-ab59-dc87b4910a8e")
 	)
 	(polyline
 		(pts
@@ -3563,6 +3761,16 @@
 		)
 		(uuid "6fddb885-050a-48c3-98fb-434b707f4c04")
 	)
+	(wire
+		(pts
+			(xy 109.22 38.1) (xy 102.87 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "737688b3-8d5e-4729-9c4e-b833a526a279")
+	)
 	(polyline
 		(pts
 			(xy 73.025 44.45) (xy 133.985 44.45)
@@ -3572,16 +3780,6 @@
 			(type dash)
 		)
 		(uuid "795fcd44-cd0b-471d-9073-a8fa8a9f0d84")
-	)
-	(wire
-		(pts
-			(xy 100.33 36.83) (xy 100.33 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7ade41cd-11f5-4854-a5ec-7338359ae9d2")
 	)
 	(polyline
 		(pts
@@ -3602,16 +3800,6 @@
 			(type default)
 		)
 		(uuid "7c95f3b8-8a5f-4892-aec8-f1db08983198")
-	)
-	(wire
-		(pts
-			(xy 107.95 31.75) (xy 107.95 36.83)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7e802060-568d-4430-aedd-e4d25e22e4fc")
 	)
 	(polyline
 		(pts
@@ -3712,16 +3900,6 @@
 			(type default)
 		)
 		(uuid "9b2277a4-bb3e-43a6-bb78-4d160e53b263")
-	)
-	(wire
-		(pts
-			(xy 97.79 36.83) (xy 97.79 31.75)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9b7fc46b-5af4-4514-bffc-3b0994dde50c")
 	)
 	(wire
 		(pts
@@ -3833,16 +4011,6 @@
 		)
 		(uuid "b0683ae3-dad7-4d2a-94dd-c1626c35f02c")
 	)
-	(wire
-		(pts
-			(xy 102.87 36.83) (xy 102.87 34.29)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b8673437-a20d-4cae-92b0-a472d1470fc8")
-	)
 	(polyline
 		(pts
 			(xy 30.734 52.578) (xy 30.734 46.482)
@@ -3852,16 +4020,6 @@
 			(type dash)
 		)
 		(uuid "bd1a8d3d-f6b2-4c49-aba3-1653b8158aeb")
-	)
-	(wire
-		(pts
-			(xy 102.87 34.29) (xy 113.03 34.29)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c0e60d63-b1ac-49c4-a792-7fc744a48806")
 	)
 	(polyline
 		(pts
@@ -5160,6 +5318,79 @@
 		)
 	)
 	(symbol
+		(lib_id "Jumper:Jumper_3_Bridged12")
+		(at 113.03 36.83 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "4a6538bf-bc09-443c-9324-5f74312dd174")
+		(property "Reference" "J5"
+			(at 115.57 35.5599 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "5V Select Jumper"
+			(at 115.57 38.0999 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x03_P2.54mm_Vertical_Bridged"
+			(at 113.03 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 113.03 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Jumper, 3-pole, pins 1+2 closed/bridged"
+			(at 113.03 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "3"
+			(uuid "7db9a752-d024-423f-a163-945b6b1c6728")
+		)
+		(pin "1"
+			(uuid "b6cbd344-aa55-459a-837c-f45806825d1f")
+		)
+		(pin "2"
+			(uuid "ab2ea8ed-2dcc-414a-a474-1031e25ee784")
+		)
+		(instances
+			(project ""
+				(path "/0755aee5-bc01-4cb5-b830-583289df50a3/5177fec2-1d9e-492a-862f-5bd7fe2af13f"
+					(reference "J5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "AA_Custom_Components:GND")
 		(at 149.86 72.39 0)
 		(unit 1)
@@ -5627,7 +5858,7 @@
 	)
 	(symbol
 		(lib_id "dk_Rectangular-Connectors-Headers-Male-Pins:640456-3")
-		(at 97.79 39.37 0)
+		(at 100.33 35.56 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5635,7 +5866,7 @@
 		(dnp no)
 		(uuid "6fa1c787-008b-485a-bafe-7362a1402ee2")
 		(property "Reference" "J4"
-			(at 94.234 39.37 0)
+			(at 99.06 33.274 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5643,15 +5874,15 @@
 			)
 		)
 		(property "Value" "5V Select Socket"
-			(at 87.63 41.402 0)
+			(at 89.154 39.116 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" "digikey-footprints:PinHeader_1x3_P2.54_Drill1.1mm"
-			(at 102.87 34.29 0)
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical"
+			(at 105.41 40.64 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -5661,7 +5892,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=640456&DocType=Customer+Drawing&DocLang=English"
-			(at 102.87 31.75 0)
+			(at 107.95 40.64 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -5671,7 +5902,7 @@
 			)
 		)
 		(property "Description" "CONN HEADER VERT 3POS 2.54MM"
-			(at 97.79 39.37 0)
+			(at 100.33 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5680,7 +5911,7 @@
 			)
 		)
 		(property "Digi-Key_PN" "A19470-ND"
-			(at 102.87 29.21 0)
+			(at 110.49 40.64 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -5690,7 +5921,7 @@
 			)
 		)
 		(property "MPN" "640456-3"
-			(at 102.87 26.67 0)
+			(at 113.03 40.64 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -5700,7 +5931,7 @@
 			)
 		)
 		(property "Category" "Connectors, Interconnects"
-			(at 102.87 24.13 0)
+			(at 115.57 40.64 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -5710,7 +5941,7 @@
 			)
 		)
 		(property "Family" "Rectangular Connectors - Headers, Male Pins"
-			(at 102.87 21.59 0)
+			(at 118.11 40.64 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -5720,7 +5951,7 @@
 			)
 		)
 		(property "DK_Datasheet_Link" "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=640456&DocType=Customer+Drawing&DocLang=English"
-			(at 102.87 19.05 0)
+			(at 120.65 40.64 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -5730,7 +5961,7 @@
 			)
 		)
 		(property "DK_Detail_Page" "/product-detail/en/te-connectivity-amp-connectors/640456-3/A19470-ND/259010"
-			(at 102.87 16.51 0)
+			(at 123.19 40.64 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -5740,7 +5971,7 @@
 			)
 		)
 		(property "Description_1" "CONN HEADER VERT 3POS 2.54MM"
-			(at 102.87 13.97 0)
+			(at 125.73 40.64 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -5750,7 +5981,7 @@
 			)
 		)
 		(property "Manufacturer" "TE Connectivity AMP Connectors"
-			(at 102.87 11.43 0)
+			(at 128.27 40.64 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -5760,7 +5991,7 @@
 			)
 		)
 		(property "Status" "Active"
-			(at 102.87 8.89 0)
+			(at 130.81 40.64 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -6846,171 +7077,6 @@
 			(project "Orion-Control-Board"
 				(path "/0755aee5-bc01-4cb5-b830-583289df50a3/5177fec2-1d9e-492a-862f-5bd7fe2af13f"
 					(reference "#GND024")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "dk_Rectangular-Connectors-Headers-Male-Pins:640456-3")
-		(at 107.95 39.37 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "c9b604a8-d7fa-4fef-a07d-22901b066ec0")
-		(property "Reference" "J5"
-			(at 115.57 39.3699 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "5V Select Jumper"
-			(at 115.57 41.9099 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "digikey-footprints:PinHeader_1x3_P2.54_Drill1.1mm"
-			(at 113.03 34.29 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=640456&DocType=Customer+Drawing&DocLang=English"
-			(at 113.03 31.75 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "CONN HEADER VERT 3POS 2.54MM"
-			(at 107.95 39.37 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Digi-Key_PN" "A19470-ND"
-			(at 113.03 29.21 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "MPN" "640456-3"
-			(at 113.03 26.67 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Category" "Connectors, Interconnects"
-			(at 113.03 24.13 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Family" "Rectangular Connectors - Headers, Male Pins"
-			(at 113.03 21.59 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "DK_Datasheet_Link" "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=640456&DocType=Customer+Drawing&DocLang=English"
-			(at 113.03 19.05 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "DK_Detail_Page" "/product-detail/en/te-connectivity-amp-connectors/640456-3/A19470-ND/259010"
-			(at 113.03 16.51 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description_1" "CONN HEADER VERT 3POS 2.54MM"
-			(at 113.03 13.97 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "TE Connectivity AMP Connectors"
-			(at 113.03 11.43 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Status" "Active"
-			(at 113.03 8.89 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "3"
-			(uuid "3a5fc663-fddf-4369-9904-f130ab3a372d")
-		)
-		(pin "1"
-			(uuid "cc255231-0965-47e2-809e-bed556ddbac3")
-		)
-		(pin "2"
-			(uuid "feff6ef7-2fa0-4644-a8bb-1d042f20e752")
-		)
-		(instances
-			(project "Orion-Control-Board"
-				(path "/0755aee5-bc01-4cb5-b830-583289df50a3/5177fec2-1d9e-492a-862f-5bd7fe2af13f"
-					(reference "J5")
 					(unit 1)
 				)
 			)
