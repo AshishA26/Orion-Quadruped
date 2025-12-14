@@ -1393,7 +1393,7 @@
 				)
 			)
 			(symbol "DFR0753_5V_BUCK_1_0"
-				(pin no_connect line
+				(pin passive line
 					(at 10.16 0 180)
 					(length 2.54)
 					(name "THERMAL"
@@ -4022,6 +4022,12 @@
 		(uuid "9f0a826f-22e3-43a3-bbb4-af4a91015fcb")
 	)
 	(junction
+		(at 60.96 185.42)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a46a2df9-94c9-4537-8305-97f5cefafd45")
+	)
+	(junction
 		(at 100.33 124.46)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4542,6 +4548,16 @@
 			(type default)
 		)
 		(uuid "21dae2dc-f072-42a3-8dc9-f1a46a4f11d2")
+	)
+	(wire
+		(pts
+			(xy 73.66 173.99) (xy 73.66 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2258ab34-53ee-469e-88c2-771ed8d6cad6")
 	)
 	(wire
 		(pts
@@ -5825,6 +5841,16 @@
 	)
 	(wire
 		(pts
+			(xy 73.66 185.42) (xy 60.96 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a470b7c4-c4b2-4fa2-8924-3de3a1748696")
+	)
+	(wire
+		(pts
 			(xy 24.13 129.54) (xy 24.13 132.08)
 		)
 		(stroke
@@ -6622,6 +6648,16 @@
 			(type default)
 		)
 		(uuid "fb68429d-7147-4af2-8b28-3d3724d6f7a2")
+	)
+	(wire
+		(pts
+			(xy 71.12 173.99) (xy 73.66 173.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fd2bd9cc-3e3c-4941-a2f9-c4559392dfc3")
 	)
 	(wire
 		(pts
