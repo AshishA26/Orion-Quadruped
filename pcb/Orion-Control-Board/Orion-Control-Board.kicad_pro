@@ -49,7 +49,7 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.3
+          "min_clearance": 0.5
         }
       },
       "diff_pair_dimensions": [
@@ -235,6 +235,10 @@
         {
           "diameter": 0.0,
           "drill": 0.0
+        },
+        {
+          "diameter": 0.6,
+          "drill": 0.2
         },
         {
           "diameter": 0.7,
@@ -532,6 +536,20 @@
         "wire_width": 6
       },
       {
+        "clearance": 0.15,
+        "diff_pair_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "Small Signal",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.15,
+        "via_diameter": 0.6,
+        "via_drill": 0.2
+      },
+      {
         "bus_width": 12,
         "clearance": 0.15,
         "diff_pair_gap": 0.1524,
@@ -557,7 +575,7 @@
     "netclass_patterns": [
       {
         "netclass": "Power",
-        "pattern": "+3V3"
+        "pattern": "+3.3V"
       },
       {
         "netclass": "Power",
@@ -574,6 +592,26 @@
       {
         "netclass": "USB",
         "pattern": "/CONN_*"
+      },
+      {
+        "netclass": "Power",
+        "pattern": "+USB_5V"
+      },
+      {
+        "netclass": "Small Signal",
+        "pattern": "SDA*"
+      },
+      {
+        "netclass": "Small Signal",
+        "pattern": "SCL*"
+      },
+      {
+        "netclass": "Small Signal",
+        "pattern": "PWM*"
+      },
+      {
+        "netclass": "Small Signal",
+        "pattern": "UART*"
       }
     ]
   },

@@ -1,3 +1,4 @@
 (fp_lib_table
   (version 7)
+  (lib (name "Orion-Logo")(type "KiCad")(uri "C:/Users/Abhi/Downloads/PCBs/Quadruped/pcb/Orion-Power-Board/Orion-Logo.pretty")(options "")(descr ""))
 )

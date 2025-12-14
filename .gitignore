@@ -44,3 +44,4 @@ __Previews
 
 *-backups/
 models/Jetson/**
+*.lck
