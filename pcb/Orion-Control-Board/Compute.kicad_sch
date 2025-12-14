@@ -60,7 +60,7 @@
 				)
 			)
 			(property "Description" "Ground Supply (Earth Ground style) Ground supply with a traditional \"earth ground\" symbol."
-				(at 0 0 0)
+				(at 0 -8.128 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -2227,12 +2227,12 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "MountingHole_1"
+		(symbol "Mechanical:MountingHole"
 			(pin_names
 				(offset 1.016)
 			)
 			(exclude_from_sim no)
-			(in_bom yes)
+			(in_bom no)
 			(on_board yes)
 			(property "Reference" "H"
 				(at 0 5.08 0)
@@ -2295,256 +2295,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "MountingHole_1_0_1"
-				(circle
-					(center 0 0)
-					(radius 1.27)
-					(stroke
-						(width 1.27)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "MountingHole_2"
-			(pin_names
-				(offset 1.016)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "H"
-				(at 0 5.08 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "MountingHole"
-				(at 0 3.175 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Mounting Hole without connection"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "mounting hole"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "MountingHole*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "MountingHole_2_0_1"
-				(circle
-					(center 0 0)
-					(radius 1.27)
-					(stroke
-						(width 1.27)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "MountingHole_3"
-			(pin_names
-				(offset 1.016)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "H"
-				(at 0 5.08 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "MountingHole"
-				(at 0 3.175 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Mounting Hole without connection"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "mounting hole"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "MountingHole*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "MountingHole_3_0_1"
-				(circle
-					(center 0 0)
-					(radius 1.27)
-					(stroke
-						(width 1.27)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "MountingHole_4"
-			(pin_names
-				(offset 1.016)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "H"
-				(at 0 5.08 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "MountingHole"
-				(at 0 3.175 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Mounting Hole without connection"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "mounting hole"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "MountingHole*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "MountingHole_4_0_1"
+			(symbol "MountingHole_0_1"
 				(circle
 					(center 0 0)
 					(radius 1.27)
@@ -4535,7 +4286,6 @@
 		)
 	)
 	(symbol
-		(lib_name "MountingHole_4")
 		(lib_id "Mechanical:MountingHole")
 		(at 162.56 25.4 0)
 		(unit 1)
@@ -4580,12 +4330,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Mounting Hole without connection"
 			(at 162.56 25.4 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(instances
@@ -4598,7 +4349,6 @@
 		)
 	)
 	(symbol
-		(lib_name "MountingHole_3")
 		(lib_id "Mechanical:MountingHole")
 		(at 182.88 25.4 0)
 		(unit 1)
@@ -4643,12 +4393,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Mounting Hole without connection"
 			(at 182.88 25.4 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(instances
@@ -4661,7 +4412,6 @@
 		)
 	)
 	(symbol
-		(lib_name "MountingHole_2")
 		(lib_id "Mechanical:MountingHole")
 		(at 162.56 31.75 0)
 		(unit 1)
@@ -4706,12 +4456,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Mounting Hole without connection"
 			(at 162.56 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(instances
@@ -4724,7 +4475,6 @@
 		)
 	)
 	(symbol
-		(lib_name "MountingHole_1")
 		(lib_id "Mechanical:MountingHole")
 		(at 182.88 31.75 0)
 		(unit 1)
@@ -4769,12 +4519,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Mounting Hole without connection"
 			(at 182.88 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(instances
@@ -4787,7 +4538,6 @@
 		)
 	)
 	(symbol
-		(lib_name "MountingHole_2")
 		(lib_id "Mechanical:MountingHole")
 		(at 229.87 25.4 0)
 		(unit 1)
@@ -4833,7 +4583,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Mounting Hole without connection"
 			(at 229.87 25.4 0)
 			(effects
 				(font
@@ -4896,12 +4646,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"+5VD\""
 			(at 125.73 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -4942,7 +4693,7 @@
 				)
 			)
 		)
-		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x03_P2.54mm_Vertical"
+		(property "Footprint" "digikey-footprints:PinHeader_1x3_P2.54_Drill1.1mm"
 			(at 152.4 72.39 0)
 			(effects
 				(font
@@ -5125,12 +4876,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Ground Supply (Earth Ground style) Ground supply with a traditional \"earth ground\" symbol."
 			(at 172.72 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "~"
@@ -5189,12 +4941,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
 			(at 185.42 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -5210,7 +4963,6 @@
 		)
 	)
 	(symbol
-		(lib_name "MountingHole_3")
 		(lib_id "Mechanical:MountingHole")
 		(at 208.28 25.4 0)
 		(unit 1)
@@ -5256,7 +5008,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Mounting Hole without connection"
 			(at 208.28 25.4 0)
 			(effects
 				(font
@@ -5319,12 +5071,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"+5VD\""
 			(at 64.77 68.58 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -5385,12 +5138,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Ground Supply (Earth Ground style) Ground supply with a traditional \"earth ground\" symbol."
 			(at 149.86 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "~"
@@ -5451,12 +5205,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Ground Supply (Earth Ground style) Ground supply with a traditional \"earth ground\" symbol."
 			(at 149.86 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "~"
@@ -5517,12 +5272,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Ground Supply (Earth Ground style) Ground supply with a traditional \"earth ground\" symbol."
 			(at 125.73 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "~"
@@ -5583,7 +5339,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "test point"
 			(at 128.27 22.86 0)
 			(effects
 				(font
@@ -5648,12 +5404,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
 			(at 60.96 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -5713,12 +5470,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"+5VD\""
 			(at 111.76 22.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -5779,7 +5537,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "test point"
 			(at 111.76 22.86 0)
 			(effects
 				(font
@@ -5846,7 +5604,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "test point"
 			(at 144.78 20.32 0)
 			(effects
 				(font
@@ -5892,7 +5650,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical"
+		(property "Footprint" "digikey-footprints:PinHeader_1x3_P2.54_Drill1.1mm"
 			(at 102.87 34.29 0)
 			(effects
 				(font
@@ -6141,12 +5899,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"+5VD\""
 			(at 179.07 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -6363,7 +6122,7 @@
 				)
 			)
 		)
-		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x03_P2.54mm_Vertical"
+		(property "Footprint" "digikey-footprints:PinHeader_1x3_P2.54_Drill1.1mm"
 			(at 175.26 90.17 0)
 			(effects
 				(font
@@ -6544,12 +6303,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
 			(at 128.27 22.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -6590,7 +6350,7 @@
 				)
 			)
 		)
-		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x03_P2.54mm_Vertical"
+		(property "Footprint" "digikey-footprints:PinHeader_1x3_P2.54_Drill1.1mm"
 			(at 152.4 90.17 0)
 			(effects
 				(font
@@ -6773,12 +6533,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Ground Supply (Earth Ground style) Ground supply with a traditional \"earth ground\" symbol."
 			(at 17.78 86.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "~"
@@ -6839,12 +6600,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Ground Supply (Earth Ground style) Ground supply with a traditional \"earth ground\" symbol."
 			(at 62.23 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "~"
@@ -6885,7 +6647,7 @@
 				)
 			)
 		)
-		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x03_P2.54mm_Vertical"
+		(property "Footprint" "digikey-footprints:PinHeader_1x3_P2.54_Drill1.1mm"
 			(at 175.26 72.39 0)
 			(effects
 				(font
@@ -7068,12 +6830,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Ground Supply (Earth Ground style) Ground supply with a traditional \"earth ground\" symbol."
 			(at 72.39 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "~"
@@ -7116,7 +6879,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "AA_Custom_Components:Jumper_PinHeader_1x03_P2.54mm_Vertical"
+		(property "Footprint" "digikey-footprints:PinHeader_1x3_P2.54_Drill1.1mm"
 			(at 113.03 34.29 0)
 			(effects
 				(font
@@ -7299,12 +7062,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Ground Supply (Earth Ground style) Ground supply with a traditional \"earth ground\" symbol."
 			(at 172.72 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "~"
@@ -7540,12 +7304,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Buzzer, polarized"
 			(at 64.77 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -7719,12 +7484,13 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Ground Supply (Earth Ground style) Ground supply with a traditional \"earth ground\" symbol."
 			(at 31.75 38.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "~"
@@ -7740,7 +7506,6 @@
 		)
 	)
 	(symbol
-		(lib_name "MountingHole_1")
 		(lib_id "Mechanical:MountingHole")
 		(at 208.28 31.75 0)
 		(unit 1)
@@ -7786,7 +7551,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Mounting Hole without connection"
 			(at 208.28 31.75 0)
 			(effects
 				(font

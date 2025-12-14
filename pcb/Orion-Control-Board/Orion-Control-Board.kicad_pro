@@ -49,7 +49,7 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.3
+          "min_clearance": 0.5
         }
       },
       "diff_pair_dimensions": [
@@ -557,7 +557,7 @@
     "netclass_patterns": [
       {
         "netclass": "Power",
-        "pattern": "+3V3"
+        "pattern": "+3.3V"
       },
       {
         "netclass": "Power",
@@ -574,6 +574,10 @@
       {
         "netclass": "USB",
         "pattern": "/CONN_*"
+      },
+      {
+        "netclass": "Power",
+        "pattern": "+USB_5V"
       }
     ]
   },
