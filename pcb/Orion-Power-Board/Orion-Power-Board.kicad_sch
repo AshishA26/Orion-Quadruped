@@ -4063,6 +4063,28 @@
 			)
 		)
 	)
+	(global_label "2S_BATT_REAR_CELL2"
+		(shape input)
+		(at 124.46 176.53 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "15328bc5-0c3b-4107-9784-d7e6515a0712")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 147.5231 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "PWM3"
 		(shape input)
 		(at 161.29 69.85 0)
@@ -4151,9 +4173,9 @@
 			)
 		)
 	)
-	(global_label "3S_BATT_CELL2"
+	(global_label "3S_BATT_CELL3"
 		(shape input)
-		(at 107.95 173.99 180)
+		(at 107.95 171.45 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -4161,9 +4183,9 @@
 			)
 			(justify right)
 		)
-		(uuid "2df28256-45e5-48b2-8e37-1822009b4815")
+		(uuid "2dacff6d-ebed-4593-9299-65990f4cd83a")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 90.6321 173.99 0)
+			(at 90.6321 171.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4283,6 +4305,28 @@
 			)
 		)
 	)
+	(global_label "2S_BATT_FRONT_CELL2"
+		(shape input)
+		(at 124.46 171.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "4b9c0b39-4828-4994-a6b1-b0758609471e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 148.7327 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "3S_BATT_CELL3"
 		(shape input)
 		(at 213.36 114.3 0)
@@ -4296,28 +4340,6 @@
 		(uuid "4c29d88f-4170-4d97-8e7c-3ec725cf718c")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 230.0237 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "2S_BATT_REAR_CELL2"
-		(shape input)
-		(at 124.46 173.99 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "4e3a720d-b053-4bc5-a85f-e874b79bfc8c")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 147.5231 173.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4525,28 +4547,6 @@
 			)
 		)
 	)
-	(global_label "2S_BATT_FRONT_CELL2"
-		(shape input)
-		(at 124.46 179.07 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "82318527-6d48-421f-87d9-fa459fed7778")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 148.7327 179.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "PWM10"
 		(shape output)
 		(at 107.95 168.91 180)
@@ -4587,6 +4587,28 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "2S_BATT_REAR_CELL1"
+		(shape input)
+		(at 124.46 179.07 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "87fc49aa-9bee-4329-9c2d-32715b881016")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 147.5231 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4679,6 +4701,28 @@
 			)
 		)
 	)
+	(global_label "3S_BATT_CELL2"
+		(shape input)
+		(at 107.95 173.99 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "9c6d2504-fb82-43b7-82ea-a7ade3b20145")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 90.6321 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "3S_BATT_CELL1"
 		(shape output)
 		(at 44.45 170.18 0)
@@ -4701,9 +4745,31 @@
 			)
 		)
 	)
+	(global_label "3S_BATT_CELL1"
+		(shape input)
+		(at 107.95 176.53 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "be286b8e-c779-4819-936b-133c6593be6b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 90.6321 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "2S_BATT_FRONT_CELL1"
 		(shape input)
-		(at 124.46 176.53 0)
+		(at 124.46 173.99 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -4711,9 +4777,9 @@
 			)
 			(justify left)
 		)
-		(uuid "ca005b9d-1103-4349-af58-20ea73e6c2f0")
+		(uuid "cd890f94-aec9-4186-9b25-06dddf172aab")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 148.7327 176.53 0)
+			(at 148.7327 173.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4811,28 +4877,6 @@
 			)
 		)
 	)
-	(global_label "3S_BATT_CELL3"
-		(shape input)
-		(at 107.95 176.53 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "e99e23c2-52b5-4bb8-b58f-080f8482c838")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 90.6321 176.53 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "PWM8"
 		(shape input)
 		(at 161.29 109.22 0)
@@ -4921,28 +4965,6 @@
 			)
 		)
 	)
-	(global_label "3S_BATT_CELL1"
-		(shape input)
-		(at 107.95 171.45 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "fe832c60-8e21-42ab-9c06-9f1c8fb9a019")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 90.6321 171.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "PWM6"
 		(shape output)
 		(at 107.95 163.83 180)
@@ -4961,28 +4983,6 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "2S_BATT_REAR_CELL1"
-		(shape input)
-		(at 124.46 171.45 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "ff8052c6-6dee-4bd4-bfa1-17504dc2a9db")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 147.5231 171.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 				(hide yes)
 			)
 		)
@@ -5245,7 +5245,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "024bc2ed-fdeb-4891-9f5b-0863f9c192e5")
-		(property "Reference" "#GND05"
+		(property "Reference" "#GND011"
 			(at 144.78 85.09 0)
 			(effects
 				(font
@@ -5298,7 +5298,7 @@
 		(instances
 			(project "power_pcb"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND05")
+					(reference "#GND011")
 					(unit 1)
 				)
 			)
@@ -5313,7 +5313,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "03c7ccad-d9d7-4867-91ae-8035b94abf07")
-		(property "Reference" "C5"
+		(property "Reference" "C3"
 			(at 112.268 54.61 90)
 			(effects
 				(font
@@ -5367,7 +5367,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "C5")
+					(reference "C3")
 					(unit 1)
 				)
 			)
@@ -5383,7 +5383,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "08044aff-c386-4f9e-8211-bb2a16c98300")
-		(property "Reference" "#FLG03"
+		(property "Reference" "#FLG01"
 			(at 44.45 98.425 0)
 			(effects
 				(font
@@ -5433,7 +5433,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#FLG03")
+					(reference "#FLG01")
 					(unit 1)
 				)
 			)
@@ -5449,7 +5449,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "1a6bedd9-cb9f-4e4c-b995-b34653b794ac")
-		(property "Reference" "#GND022"
+		(property "Reference" "#GND05"
 			(at 45.72 179.07 0)
 			(effects
 				(font
@@ -5502,7 +5502,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND022")
+					(reference "#GND05")
 					(unit 1)
 				)
 			)
@@ -5517,7 +5517,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "1db44a8e-0c19-4895-b8df-9aa8898c5483")
-		(property "Reference" "#PWR09"
+		(property "Reference" "#PWR01"
 			(at 31.75 64.77 0)
 			(effects
 				(font
@@ -5567,7 +5567,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#PWR09")
+					(reference "#PWR01")
 					(unit 1)
 				)
 			)
@@ -5671,7 +5671,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "20e4b78d-d976-4052-9f6a-6bfe33ff908c")
-		(property "Reference" "#PWR010"
+		(property "Reference" "#PWR02"
 			(at 31.75 88.9 0)
 			(effects
 				(font
@@ -5721,7 +5721,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#PWR010")
+					(reference "#PWR02")
 					(unit 1)
 				)
 			)
@@ -5737,7 +5737,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "2a26ac82-083b-466f-968d-68442ba12a11")
-		(property "Reference" "#GND023"
+		(property "Reference" "#GND08"
 			(at 107.95 52.07 0)
 			(effects
 				(font
@@ -5790,7 +5790,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND023")
+					(reference "#GND08")
 					(unit 1)
 				)
 			)
@@ -5806,7 +5806,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "3179960c-24e0-4f4f-9107-c7bac637a48b")
-		(property "Reference" "#GND024"
+		(property "Reference" "#GND06"
 			(at 87.63 68.58 0)
 			(effects
 				(font
@@ -5859,7 +5859,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND024")
+					(reference "#GND06")
 					(unit 1)
 				)
 			)
@@ -5875,7 +5875,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "3cca0a8a-a390-4d9e-b4c8-e54f0091f50f")
-		(property "Reference" "#GND020"
+		(property "Reference" "#GND03"
 			(at 45.72 143.51 0)
 			(effects
 				(font
@@ -5928,7 +5928,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND020")
+					(reference "#GND03")
 					(unit 1)
 				)
 			)
@@ -5944,7 +5944,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "3d5b2749-daac-4c16-aef6-65ca18582d3c")
-		(property "Reference" "#GND016"
+		(property "Reference" "#GND02"
 			(at 33.02 93.98 0)
 			(effects
 				(font
@@ -5997,7 +5997,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND016")
+					(reference "#GND02")
 					(unit 1)
 				)
 			)
@@ -6083,7 +6083,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "42e414b3-906f-478e-aa99-d4ff76f1a3dc")
-		(property "Reference" "J5"
+		(property "Reference" "J7"
 			(at 208.28 95.25 0)
 			(effects
 				(font
@@ -6156,7 +6156,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "J5")
+					(reference "J7")
 					(unit 1)
 				)
 			)
@@ -6172,7 +6172,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "50e789e2-da68-4ea0-aed3-2bbab09b9634")
-		(property "Reference" "#GND021"
+		(property "Reference" "#GND04"
 			(at 45.72 160.02 0)
 			(effects
 				(font
@@ -6225,7 +6225,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND021")
+					(reference "#GND04")
 					(unit 1)
 				)
 			)
@@ -6241,7 +6241,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "511fb69a-4f34-413c-b242-680113e83680")
-		(property "Reference" "U1"
+		(property "Reference" "U2"
 			(at 143.51 96.52 0)
 			(effects
 				(font
@@ -6342,7 +6342,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "U1")
+					(reference "U2")
 					(unit 1)
 				)
 			)
@@ -6357,7 +6357,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "58750704-0d8d-4de4-a936-257042553281")
-		(property "Reference" "#GND029"
+		(property "Reference" "#GND014"
 			(at 214.63 92.71 0)
 			(effects
 				(font
@@ -6409,7 +6409,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND029")
+					(reference "#GND014")
 					(unit 1)
 				)
 			)
@@ -6424,7 +6424,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "5d9f3b15-7d55-4e7c-b639-1136cbe3b6f1")
-		(property "Reference" "#PWR05"
+		(property "Reference" "#PWR03"
 			(at 102.87 64.77 0)
 			(effects
 				(font
@@ -6474,7 +6474,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#PWR05")
+					(reference "#PWR03")
 					(unit 1)
 				)
 			)
@@ -6499,7 +6499,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "CENTER_POS"
+		(property "Value" "ORION_LOGO"
 			(at 191.77 160.3374 0)
 			(effects
 				(font
@@ -6508,7 +6508,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "AA_Custom_Components:Polarity_Center_Positive_7.5mm_SilkScreen"
+		(property "Footprint" "Orion-Logo:Orion-Logo-20mm"
 			(at 189.23 157.48 0)
 			(effects
 				(font
@@ -6553,7 +6553,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6daf5878-d232-47c1-a456-aab0b95c1ad1")
-		(property "Reference" "#FLG02"
+		(property "Reference" "#FLG03"
 			(at 62.23 83.185 0)
 			(effects
 				(font
@@ -6603,7 +6603,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#FLG02")
+					(reference "#FLG03")
 					(unit 1)
 				)
 			)
@@ -6619,7 +6619,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6f2beaca-5314-4f51-a762-578d7867527f")
-		(property "Reference" "#GND019"
+		(property "Reference" "#GND010"
 			(at 109.22 180.34 0)
 			(effects
 				(font
@@ -6672,7 +6672,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND019")
+					(reference "#GND010")
 					(unit 1)
 				)
 			)
@@ -6688,7 +6688,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "760e9fa9-6a2a-43e4-b408-6f18e6bd538f")
-		(property "Reference" "#GND015"
+		(property "Reference" "#GND01"
 			(at 33.02 69.85 0)
 			(effects
 				(font
@@ -6741,7 +6741,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND015")
+					(reference "#GND01")
 					(unit 1)
 				)
 			)
@@ -6757,7 +6757,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "77490a1a-23bf-4adf-8286-d98612b9fb20")
-		(property "Reference" "#GND027"
+		(property "Reference" "#GND012"
 			(at 144.78 127 0)
 			(effects
 				(font
@@ -6810,7 +6810,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND027")
+					(reference "#GND012")
 					(unit 1)
 				)
 			)
@@ -6826,7 +6826,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "78cb673d-2a14-4a53-b2b6-9257e8b06b8e")
-		(property "Reference" "J8"
+		(property "Reference" "J4"
 			(at 116.205 149.86 0)
 			(effects
 				(font
@@ -6950,7 +6950,7 @@
 		(instances
 			(project ""
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "J8")
+					(reference "J4")
 					(unit 1)
 				)
 			)
@@ -6965,7 +6965,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "86bb441f-c5d7-4cb6-b85a-4634023b1546")
-		(property "Reference" "C6"
+		(property "Reference" "C1"
 			(at 93.218 71.12 90)
 			(effects
 				(font
@@ -7019,7 +7019,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "C6")
+					(reference "C1")
 					(unit 1)
 				)
 			)
@@ -7034,7 +7034,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "93be4260-4881-4dd0-9a12-32920b660dff")
-		(property "Reference" "#PWR011"
+		(property "Reference" "#PWR04"
 			(at 102.87 106.68 0)
 			(effects
 				(font
@@ -7084,7 +7084,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#PWR011")
+					(reference "#PWR04")
 					(unit 1)
 				)
 			)
@@ -7100,7 +7100,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "a1aae130-76d9-42ba-b5db-b035280f9050")
-		(property "Reference" "#GND026"
+		(property "Reference" "#GND09"
 			(at 107.95 93.98 0)
 			(effects
 				(font
@@ -7153,7 +7153,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND026")
+					(reference "#GND09")
 					(unit 1)
 				)
 			)
@@ -7169,7 +7169,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b0a6086d-1710-42a0-bdd9-b353cdeb5f12")
-		(property "Reference" "J4"
+		(property "Reference" "J3"
 			(at 39.37 163.83 0)
 			(effects
 				(font
@@ -7227,7 +7227,7 @@
 		(instances
 			(project ""
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "J4")
+					(reference "J3")
 					(unit 1)
 				)
 			)
@@ -7243,7 +7243,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b47ce3bf-20cf-45a9-ab0b-4e2e8466eb8b")
-		(property "Reference" "#GND025"
+		(property "Reference" "#GND07"
 			(at 87.63 110.49 0)
 			(effects
 				(font
@@ -7296,7 +7296,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND025")
+					(reference "#GND07")
 					(unit 1)
 				)
 			)
@@ -7311,7 +7311,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "b53ba03f-5a8b-4c0a-aae2-b07c0fbcfabf")
-		(property "Reference" "#PWR04"
+		(property "Reference" "#PWR05"
 			(at 120.65 50.8 0)
 			(effects
 				(font
@@ -7361,7 +7361,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#PWR04")
+					(reference "#PWR05")
 					(unit 1)
 				)
 			)
@@ -7377,7 +7377,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b8a891ce-d5f1-4391-be8a-174c4d69825c")
-		(property "Reference" "#FLG01"
+		(property "Reference" "#FLG02"
 			(at 62.23 59.055 0)
 			(effects
 				(font
@@ -7427,7 +7427,7 @@
 		(instances
 			(project ""
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#FLG01")
+					(reference "#FLG02")
 					(unit 1)
 				)
 			)
@@ -7442,7 +7442,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "bab9410d-9ed1-4aa7-af30-aba9f071c656")
-		(property "Reference" "C7"
+		(property "Reference" "C2"
 			(at 93.218 113.03 90)
 			(effects
 				(font
@@ -7496,7 +7496,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "C7")
+					(reference "C2")
 					(unit 1)
 				)
 			)
@@ -7513,7 +7513,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "bc8f7573-7b71-40c0-b1e2-e17a9db65a4d")
-		(property "Reference" "J2"
+		(property "Reference" "J1"
 			(at 39.37 130.81 0)
 			(effects
 				(font
@@ -7568,7 +7568,7 @@
 		(instances
 			(project ""
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "J2")
+					(reference "J1")
 					(unit 1)
 				)
 			)
@@ -7654,7 +7654,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c6693034-985b-4978-8501-5661f249633d")
-		(property "Reference" "U2"
+		(property "Reference" "U1"
 			(at 143.51 54.61 0)
 			(effects
 				(font
@@ -7755,7 +7755,7 @@
 		(instances
 			(project ""
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "U2")
+					(reference "U1")
 					(unit 1)
 				)
 			)
@@ -7770,7 +7770,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "c7cbae07-de2e-4dd0-a16a-bf1663e53147")
-		(property "Reference" "J7"
+		(property "Reference" "J5"
 			(at 208.28 34.29 0)
 			(effects
 				(font
@@ -7843,7 +7843,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "J7")
+					(reference "J5")
 					(unit 1)
 				)
 			)
@@ -7858,7 +7858,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "ce160be1-d640-4c14-a78b-a7070a7931d3")
-		(property "Reference" "#GND030"
+		(property "Reference" "#GND015"
 			(at 214.63 123.19 0)
 			(effects
 				(font
@@ -7910,7 +7910,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND030")
+					(reference "#GND015")
 					(unit 1)
 				)
 			)
@@ -7925,7 +7925,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "d1340acd-da0f-4b90-8206-9718e307afc5")
-		(property "Reference" "#GND028"
+		(property "Reference" "#GND013"
 			(at 214.63 62.23 0)
 			(effects
 				(font
@@ -7977,7 +7977,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "#GND028")
+					(reference "#GND013")
 					(unit 1)
 				)
 			)
@@ -7992,7 +7992,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "e5621760-a3fa-4ee1-ba37-198ea0c50698")
-		(property "Reference" "C8"
+		(property "Reference" "C4"
 			(at 112.268 96.52 90)
 			(effects
 				(font
@@ -8046,7 +8046,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "C8")
+					(reference "C4")
 					(unit 1)
 				)
 			)
@@ -8127,7 +8127,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "fcc13a32-e795-421f-933a-996c92b65dcf")
-		(property "Reference" "J3"
+		(property "Reference" "J2"
 			(at 39.37 147.32 0)
 			(effects
 				(font
@@ -8182,7 +8182,7 @@
 		(instances
 			(project "Orion-Power-Board"
 				(path "/508bdbb9-9493-4d6b-846f-b4beedd88a34"
-					(reference "J3")
+					(reference "J2")
 					(unit 1)
 				)
 			)
