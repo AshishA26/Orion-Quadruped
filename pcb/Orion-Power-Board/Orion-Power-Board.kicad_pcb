@@ -732,7 +732,7 @@
 			(remove_unused_layers no)
 			(net 1 "GND")
 			(pinfunction "19")
-			(pintype "power_in")
+			(pintype "bidirectional")
 			(solder_mask_margin 0.102)
 			(uuid "ebd04a6a-2892-42e8-b1de-2c5051e8a634")
 		)
@@ -4679,6 +4679,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 			)
 		)
@@ -4690,6 +4691,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 			)
 		)
@@ -12765,6 +12767,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 			)
 		)
@@ -12776,6 +12779,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 			)
 		)
@@ -14334,6 +14338,18 @@
 		(at 123.4 110.1 -0)
 		(layer "B.SilkS")
 		(uuid "3930e58e-ce94-48e7-bc57-5fcd9244ba95")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.153)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "JLCJLCJLCJLC"
+		(at 174.075 128.625 0)
+		(layer "B.SilkS")
+		(uuid "6f299e38-f816-40fc-ac5a-c8d8d96227d2")
 		(effects
 			(font
 				(size 1 1)

@@ -23764,6 +23764,18 @@
 			(justify left bottom)
 		)
 	)
+	(gr_text "JLCJLCJLCJLC"
+		(at 122.075 151.7 0)
+		(layer "B.SilkS")
+		(uuid "61fc0758-a232-4347-a7f5-053f22b60872")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.153)
+			)
+			(justify left bottom mirror)
+		)
+	)
 	(segment
 		(start 111.9 135.1)
 		(end 111.9 135)

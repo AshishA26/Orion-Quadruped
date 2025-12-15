@@ -709,20 +709,22 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "J4"
-				(at -0.635 17.78 0)
+			(property "Reference" "J"
+				(at -5.08 13.97 0)
 				(effects
 					(font
 						(size 1.143 1.143)
 					)
+					(justify left bottom)
 				)
 			)
 			(property "Value" "CONN_20_POS_KEYED_SOCKET"
-				(at -0.635 15.24 0)
+				(at -12.7 -15.494 0)
 				(effects
 					(font
 						(size 1.143 1.143)
 					)
+					(justify left bottom)
 				)
 			)
 			(property "Footprint" "AA_Custom_Components:SULLINS_SBH11-PBPC-D10-ST-BK_SOCKET"
@@ -964,7 +966,7 @@
 						)
 					)
 				)
-				(pin power_in line
+				(pin bidirectional line
 					(at -8.89 -11.43 0)
 					(length 2.54)
 					(name "19"
