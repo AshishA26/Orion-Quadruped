@@ -11,138 +11,6 @@
 		(comment 4 "Author: Ashish Agrahari")
 	)
 	(lib_symbols
-		(symbol "2S_BATTERY_BALANCE_HEADER_1"
-			(pin_names
-				(offset 1.016)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "J"
-				(at -3.302 7.112 0)
-				(effects
-					(font
-						(size 1.143 1.143)
-					)
-					(justify left bottom)
-				)
-			)
-			(property "Value" "2S_BATTERY_BALANCE_HEADER"
-				(at -16.256 -3.81 0)
-				(effects
-					(font
-						(size 1.143 1.143)
-					)
-					(justify left bottom)
-				)
-			)
-			(property "Footprint" "AA_Custom_Components:JST_XH_1x03_P2.54mm_Vertical"
-				(at 0 10.16 0)
-				(effects
-					(font
-						(size 0.508 0.508)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "*JST-3-PTH-VERT*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "2S_BATTERY_BALANCE_HEADER_1_0_1"
-				(rectangle
-					(start 0 -1.27)
-					(end -5.08 6.35)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type background)
-					)
-				)
-			)
-			(symbol "2S_BATTERY_BALANCE_HEADER_1_1_1"
-				(pin bidirectional line
-					(at 2.54 5.08 180)
-					(length 2.54)
-					(name "C1"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 2.54 2.54 180)
-					(length 2.54)
-					(name "C2"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 2.54 0 180)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "AA_Custom_Components:2S_BATTERY_BALANCE_HEADER"
 			(pin_names
 				(offset 1.016)
@@ -206,8 +74,8 @@
 			)
 			(symbol "2S_BATTERY_BALANCE_HEADER_0_1"
 				(rectangle
-					(start 0 -1.27)
-					(end -5.08 6.35)
+					(start -5.08 6.35)
+					(end 0 -1.27)
 					(stroke
 						(width 0)
 						(type default)
@@ -221,7 +89,7 @@
 				(pin bidirectional line
 					(at 2.54 5.08 180)
 					(length 2.54)
-					(name "C1"
+					(name "C2"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -239,7 +107,7 @@
 				(pin bidirectional line
 					(at 2.54 2.54 180)
 					(length 2.54)
-					(name "C2"
+					(name "C1"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -353,7 +221,7 @@
 				(pin bidirectional line
 					(at 2.54 5.08 180)
 					(length 2.54)
-					(name "C1"
+					(name "C3"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -389,7 +257,7 @@
 				(pin bidirectional line
 					(at 2.54 0 180)
 					(length 2.54)
-					(name "C3"
+					(name "C1"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -841,22 +709,20 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "J"
-				(at -5.08 13.97 0)
+			(property "Reference" "J4"
+				(at -0.635 17.78 0)
 				(effects
 					(font
 						(size 1.143 1.143)
 					)
-					(justify left bottom)
 				)
 			)
 			(property "Value" "CONN_20_POS_KEYED_SOCKET"
-				(at -12.7 -15.494 0)
+				(at -0.635 15.24 0)
 				(effects
 					(font
 						(size 1.143 1.143)
 					)
-					(justify left bottom)
 				)
 			)
 			(property "Footprint" "AA_Custom_Components:SULLINS_SBH11-PBPC-D10-ST-BK_SOCKET"
@@ -1098,7 +964,7 @@
 						)
 					)
 				)
-				(pin bidirectional line
+				(pin power_in line
 					(at -8.89 -11.43 0)
 					(length 2.54)
 					(name "19"
@@ -4312,7 +4178,7 @@
 			)
 		)
 	)
-	(global_label "2S_BATT_FRONT_CELL1"
+	(global_label "2S_BATT_FRONT_CELL2"
 		(shape output)
 		(at 44.45 154.94 0)
 		(fields_autoplaced yes)
@@ -4334,7 +4200,7 @@
 			)
 		)
 	)
-	(global_label "2S_BATT_REAR_CELL1"
+	(global_label "2S_BATT_REAR_CELL2"
 		(shape output)
 		(at 44.45 171.45 0)
 		(fields_autoplaced yes)
@@ -4422,7 +4288,7 @@
 			)
 		)
 	)
-	(global_label "2S_BATT_REAR_CELL2"
+	(global_label "2S_BATT_REAR_CELL1"
 		(shape output)
 		(at 44.45 173.99 0)
 		(fields_autoplaced yes)
@@ -4686,7 +4552,7 @@
 			)
 		)
 	)
-	(global_label "2S_BATT_FRONT_CELL2"
+	(global_label "2S_BATT_FRONT_CELL1"
 		(shape output)
 		(at 44.45 157.48 0)
 		(fields_autoplaced yes)
@@ -4928,7 +4794,7 @@
 			)
 		)
 	)
-	(global_label "3S_BATT_CELL1"
+	(global_label "3S_BATT_CELL3"
 		(shape output)
 		(at 44.45 187.96 0)
 		(fields_autoplaced yes)
@@ -5126,7 +4992,7 @@
 			)
 		)
 	)
-	(global_label "3S_BATT_CELL3"
+	(global_label "3S_BATT_CELL1"
 		(shape output)
 		(at 44.45 193.04 0)
 		(fields_autoplaced yes)
@@ -5511,7 +5377,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Polarized_US")
-		(at 118.11 66.04 90)
+		(at 118.11 66.04 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5519,7 +5385,7 @@
 		(dnp no)
 		(uuid "03c7ccad-d9d7-4867-91ae-8035b94abf07")
 		(property "Reference" "C3"
-			(at 117.348 69.85 90)
+			(at 118.872 62.23 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5528,7 +5394,7 @@
 			)
 		)
 		(property "Value" "470uF_CAP"
-			(at 113.284 72.136 90)
+			(at 124.968 69.342 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5885,7 +5751,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+7.4V_BACK_BATT"
+		(property "Value" "+7.4V_REAR_BATT"
 			(at 33.02 91.44 0)
 			(effects
 				(font
@@ -7163,7 +7029,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Polarized_US")
-		(at 99.06 82.55 90)
+		(at 99.06 82.55 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7171,7 +7037,7 @@
 		(dnp no)
 		(uuid "86bb441f-c5d7-4cb6-b85a-4634023b1546")
 		(property "Reference" "C1"
-			(at 98.298 86.36 90)
+			(at 100.076 78.994 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7180,7 +7046,7 @@
 			)
 		)
 		(property "Value" "470uF_CAP"
-			(at 94.234 88.392 90)
+			(at 105.156 85.852 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7248,7 +7114,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+7.4V_BACK_BATT"
+		(property "Value" "+7.4V_REAR_BATT"
 			(at 98.552 114.808 0)
 			(effects
 				(font
@@ -7640,7 +7506,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Polarized_US")
-		(at 99.06 124.46 90)
+		(at 99.06 124.46 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7648,7 +7514,7 @@
 		(dnp no)
 		(uuid "bab9410d-9ed1-4aa7-af30-aba9f071c656")
 		(property "Reference" "C2"
-			(at 98.298 128.27 90)
+			(at 97.536 123.19 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7657,7 +7523,7 @@
 			)
 		)
 		(property "Value" "470uF_CAP"
-			(at 94.234 130.302 90)
+			(at 105.41 127.762 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7708,7 +7574,6 @@
 		)
 	)
 	(symbol
-		(lib_name "2S_BATTERY_BALANCE_HEADER_1")
 		(lib_id "AA_Custom_Components:2S_BATTERY_BALANCE_HEADER")
 		(at 41.91 160.02 0)
 		(unit 1)
@@ -8190,7 +8055,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Polarized_US")
-		(at 118.11 107.95 90)
+		(at 118.11 107.95 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8198,7 +8063,7 @@
 		(dnp no)
 		(uuid "e5621760-a3fa-4ee1-ba37-198ea0c50698")
 		(property "Reference" "C4"
-			(at 117.348 111.76 90)
+			(at 118.872 104.394 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8207,7 +8072,7 @@
 			)
 		)
 		(property "Value" "470uF_CAP"
-			(at 113.284 114.046 90)
+			(at 124.714 111.252 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8275,7 +8140,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+7.4V_BACK_BATT"
+		(property "Value" "+7.4V_REAR_BATT"
 			(at 125.73 100.076 0)
 			(effects
 				(font

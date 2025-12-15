@@ -552,7 +552,7 @@
       },
       {
         "netclass": "Power",
-        "pattern": "+7.4V_BACK_BATT"
+        "pattern": "+7.4V_REAR_BATT"
       }
     ]
   },
@@ -651,6 +651,12 @@
           "group_by": false,
           "label": "#",
           "name": "${ITEM_NUMBER}",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Digikey Part #",
+          "name": "Digikey Part #",
           "show": false
         }
       ],
