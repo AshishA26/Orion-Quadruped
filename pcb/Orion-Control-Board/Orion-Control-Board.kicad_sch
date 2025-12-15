@@ -79,6 +79,15 @@
 					(hide yes)
 				)
 			)
+			(property "FT Rotation Offset" "-90"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
 			(property "ki_keywords" "IMU Fusion I2C UART"
 				(at 0 0 0)
 				(effects
@@ -1361,7 +1370,7 @@
 					(hide yes)
 				)
 			)
-			(property "Digikay Part Number" "1738-DFR0753-ND"
+			(property "Digikey Part #" "1738-DFR0753-ND"
 				(at 0.254 -21.59 0)
 				(effects
 					(font
@@ -2118,6 +2127,15 @@
 			)
 			(property "Reference Schematic" "https://cdn-learn.adafruit.com/assets/assets/000/036/269/original/adafruit_products_schem.png?1475858980"
 				(at -1.27 -29.972 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "FT Rotation Offset" "90"
+				(at 0 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -3765,7 +3783,7 @@
 	)
 	(text "OpenDrain Outputs can generally be left unconnected. Here, added 10k pullups anyways in case IC uses requires it internally"
 		(exclude_from_sim no)
-		(at 17.526 157.734 0)
+		(at 17.018 158.496 0)
 		(effects
 			(font
 				(size 1.016 1.016)
@@ -7838,7 +7856,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "0197b9af-34e1-4418-8661-a1ffccb0d523")
 		(property "Reference" "JP1"
@@ -7876,6 +7894,24 @@
 			)
 		)
 		(property "Description" "Jumper, 2-pole, closed/bridged"
+			(at 53.34 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 53.34 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 53.34 38.1 0)
 			(effects
 				(font
@@ -7955,6 +7991,24 @@
 		)
 		(property "JLCPCB Part #" "C25804"
 			(at 107.95 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 107.95 132.08 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 107.95 132.08 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8049,7 +8103,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "0388cf50-9055-4084-b084-3e59724d4167")
 		(property "Reference" "R33"
 			(at 226.822 42.418 0)
@@ -8096,6 +8150,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 224.79 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 224.79 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "c1e6197c-08b1-4b60-9f61-e9d3909098e4")
 		)
@@ -8118,7 +8190,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "045a590c-cc5b-40a0-825c-16a8480ae256")
 		(property "Reference" "J1"
@@ -8175,6 +8247,24 @@
 		)
 		(property "Digikey Part #" "S9172-ND"
 			(at 109.728 205.486 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 110.49 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 110.49 185.42 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8381,6 +8471,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 39.37 43.18 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 39.37 43.18 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "449614ac-e4a2-45f9-b9c3-467faf84557f")
 		)
@@ -8450,8 +8558,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 100.33 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 100.33 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 100.33 66.04 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8723,8 +8849,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 100.33 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 100.33 55.88 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 100.33 55.88 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8895,6 +9039,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 198.12 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 198.12 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "6"
 			(uuid "e3b5e578-cd6c-47c6-831b-1dedc0f2386f")
 		)
@@ -9027,7 +9189,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "2ac0345b-89fb-4c94-a1fc-cadf5cd55845")
 		(property "Reference" "JP2"
 			(at 57.15 105.41 0)
@@ -9064,6 +9226,24 @@
 			)
 		)
 		(property "Description" "Jumper, 2-pole, closed/bridged"
+			(at 57.15 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 57.15 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 57.15 110.49 0)
 			(effects
 				(font
@@ -9141,8 +9321,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 100.33 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 100.33 60.96 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 100.33 60.96 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9172,7 +9370,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "2f8316f8-8201-4833-a8f5-105e674aa36b")
 		(property "Reference" "R27"
 			(at 201.422 42.418 0)
@@ -9211,6 +9409,24 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 199.39 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 199.39 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 199.39 43.18 0)
 			(effects
 				(font
@@ -9288,8 +9504,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 140.97 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 140.97 71.12 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 140.97 71.12 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9375,6 +9609,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 181.61 124.46 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 181.61 124.46 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "c3218bee-4da8-45c4-a9da-816feaff33bc")
 		)
@@ -9444,8 +9696,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 100.33 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 100.33 68.58 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 100.33 68.58 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9596,6 +9866,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 68.58 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 68.58 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "5a5c4390-8f87-46d9-a549-14a48d985e58")
 		)
@@ -9667,6 +9955,24 @@
 		)
 		(property "JLCPCB Part #" "C25804"
 			(at 181.61 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 181.61 127 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 181.61 127 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9810,6 +10116,24 @@
 		)
 		(property "JLCPCB Part #" "C25804"
 			(at 181.61 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 181.61 129.54 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 181.61 129.54 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9962,6 +10286,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 31.75 127 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 31.75 127 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "1946e327-edfc-471e-b737-2eb0e1dd3fc6")
 		)
@@ -10040,6 +10382,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 107.95 129.54 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 107.95 129.54 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "8782f2d3-312c-4771-87f1-b9d372cc107e")
 		)
@@ -10109,8 +10469,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 100.33 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 100.33 71.12 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 100.33 71.12 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10397,6 +10775,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 215.9 115.57 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 215.9 115.57 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "742159dd-98e2-4174-b1f7-335097ba1e9d")
 		)
@@ -10475,6 +10871,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 31.75 132.08 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 31.75 132.08 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "0084740e-ac2d-418f-ae89-e12d4fcd65ef")
 		)
@@ -10545,6 +10959,24 @@
 			)
 		)
 		(property "JLCPCB Part #" "C4275"
+			(at 227.33 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 227.33 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 227.33 81.28 0)
 			(effects
 				(font
@@ -10649,6 +11081,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 247.65 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 247.65 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "33dc16fb-0308-4df4-a900-607579804647")
 		)
@@ -10728,7 +11178,16 @@
 				(hide yes)
 			)
 		)
-		(property "ReferenceSchematic" "https://cdn-learn.adafruit.com/assets/assets/000/024/546/original/sensors_BNO055_REV-C.png?1429569060"
+		(property "Reference Schematic" "https://cdn-learn.adafruit.com/assets/assets/000/024/546/original/sensors_BNO055_REV-C.png?1429569060"
+			(at 47.498 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "FT Rotation Offset" "-90"
 			(at 45.72 66.04 0)
 			(effects
 				(font
@@ -10737,8 +11196,8 @@
 				(hide yes)
 			)
 		)
-		(property "Reference Schematic" "https://cdn-learn.adafruit.com/assets/assets/000/024/546/original/sensors_BNO055_REV-C.png?1429569060"
-			(at 47.498 99.06 0)
+		(property "ReferenceSchematic" ""
+			(at 45.72 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10902,6 +11361,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 107.95 127 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 107.95 127 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "1c3c9674-39fc-43cf-a1be-17e77b07bf32")
 		)
@@ -10971,8 +11448,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 140.97 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 140.97 76.2 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 140.97 76.2 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11051,6 +11546,24 @@
 		)
 		(property "JLCPCB Part #" "C1653"
 			(at 68.58 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 68.58 53.34 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 68.58 53.34 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11268,6 +11781,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 60.96 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 60.96 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "da8ce030-d591-4746-92d7-84595b7596ab")
 		)
@@ -11340,6 +11871,24 @@
 		)
 		(property "JLCPCB Part #" "C97606"
 			(at 67.056 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 64.77 59.69 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 64.77 59.69 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11492,6 +12041,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 31.75 124.46 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 31.75 124.46 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "78800fbb-90a4-42a3-8e70-d91500bf44f6")
 		)
@@ -11563,6 +12130,24 @@
 		)
 		(property "JLCPCB Part #" "C14663"
 			(at 142.24 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 142.24 115.57 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 142.24 115.57 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11706,8 +12291,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 140.97 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 140.97 68.58 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 140.97 68.58 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11878,6 +12481,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 227.33 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 227.33 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "00a7e319-73d5-4170-995d-a8446aefbeaf")
 		)
@@ -11900,7 +12521,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "9ae43448-8fd2-4a06-a141-2c616e2764f0")
 		(property "Reference" "U3"
 			(at 60.96 164.846 0)
@@ -11956,7 +12577,16 @@
 				(hide yes)
 			)
 		)
-		(property "Field6" ""
+		(property "Digikey Part #" "1738-DFR0753-ND"
+			(at 61.214 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
 			(at 60.96 173.99 0)
 			(effects
 				(font
@@ -11965,8 +12595,8 @@
 				(hide yes)
 			)
 		)
-		(property "Digikay Part Number" "1738-DFR0753-ND"
-			(at 61.214 195.58 0)
+		(property "ReferenceSchematic" ""
+			(at 60.96 173.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12005,7 +12635,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "a2161d6b-b23b-4131-805c-69577c256f14")
 		(property "Reference" "R34"
 			(at 234.442 42.418 0)
@@ -12044,6 +12674,24 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 232.41 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 232.41 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 232.41 43.18 0)
 			(effects
 				(font
@@ -12130,6 +12778,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 31.75 129.54 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 31.75 129.54 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f40059a6-70e9-4d26-a221-7b7277dbe98b")
 		)
@@ -12199,8 +12865,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 140.97 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 140.97 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 140.97 73.66 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12297,7 +12981,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "ac73cd18-7f2c-42ef-95cc-c3d7bf481dc9")
 		(property "Reference" "JP3"
 			(at 133.35 105.41 0)
@@ -12334,6 +13018,24 @@
 			)
 		)
 		(property "Description" "Jumper, 2-pole, closed/bridged"
+			(at 133.35 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 133.35 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 133.35 110.49 0)
 			(effects
 				(font
@@ -12438,6 +13140,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 207.01 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 207.01 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "09b3dd07-96d4-446c-a8d3-0776f237cfb5")
 		)
@@ -12516,6 +13236,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 57.15 43.18 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 57.15 43.18 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "011c8e22-bd43-46d2-ad48-890122e7f35a")
 		)
@@ -12586,6 +13324,24 @@
 			)
 		)
 		(property "JLCPCB Part #" "C23179"
+			(at 207.01 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 207.01 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 207.01 81.28 0)
 			(effects
 				(font
@@ -12683,6 +13439,24 @@
 		)
 		(property "Reference Schematic" "https://cdn-learn.adafruit.com/assets/assets/000/133/206/original/adafruit_products_schem.png?1729184593"
 			(at 123.952 167.386 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 124.46 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 124.46 134.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12831,6 +13605,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 48.26 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 48.26 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "6"
 			(uuid "2684a57a-67f5-4a18-abf8-507e5a3d3765")
 		)
@@ -12963,6 +13755,33 @@
 			)
 		)
 		(property "Reference Schematic" "https://cdn-learn.adafruit.com/assets/assets/000/036/269/original/adafruit_products_schem.png?1475858980"
+			(at 120.65 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 120.65 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 120.65 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "FT Rotation Offset" "90"
 			(at 120.65 59.69 0)
 			(effects
 				(font
@@ -13192,6 +14011,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 181.61 132.08 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 181.61 132.08 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "9cba5dda-2ecb-4d8a-b6b3-4e4ca8f1b65c")
 		)
@@ -13328,8 +14165,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 100.33 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 100.33 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 100.33 73.66 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13406,8 +14261,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 100.33 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 100.33 63.5 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 100.33 63.5 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13503,7 +14376,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "c6a7a915-0e68-43ca-9fce-75dda67b4004")
 		(property "Reference" "JP4"
@@ -13541,6 +14414,24 @@
 			)
 		)
 		(property "Description" "Jumper, 2-pole, closed/bridged"
+			(at 142.24 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 142.24 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 142.24 38.1 0)
 			(effects
 				(font
@@ -13620,6 +14511,24 @@
 		)
 		(property "JLCPCB Part #" "C25804"
 			(at 107.95 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 107.95 124.46 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 107.95 124.46 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13772,6 +14681,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 247.65 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 247.65 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "9f1aeb91-97e2-4dd0-9502-382e9bb391cd")
 		)
@@ -13794,7 +14721,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "d12051c1-3bdb-4060-a670-e8ed695fc226")
 		(property "Reference" "R29"
 			(at 209.042 42.418 0)
@@ -13833,6 +14760,24 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 207.01 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 207.01 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 207.01 43.18 0)
 			(effects
 				(font
@@ -13911,6 +14856,24 @@
 			)
 		)
 		(property "JLCPCB Part #" "C23179"
+			(at 186.69 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 186.69 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 186.69 81.28 0)
 			(effects
 				(font
@@ -14056,6 +15019,24 @@
 		)
 		(property "JLCPCB Part #" "C96446"
 			(at 140.97 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 140.97 43.18 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 140.97 43.18 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14274,6 +15255,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 66.04 115.57 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 66.04 115.57 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "57590775-7136-417f-9e53-c8fd9beddcf1")
 		)
@@ -14408,8 +15407,26 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C25804"
+		(property "JLCPCB Part #" "C22962"
 			(at 100.33 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 100.33 58.42 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 100.33 58.42 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14553,6 +15570,24 @@
 		)
 		(property "JLCPCB Part #" "C25804"
 			(at 140.97 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 140.97 55.88 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 140.97 55.88 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14924,6 +15959,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 186.69 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 186.69 73.66 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "2851a923-3c77-4cb6-9d78-aa591c6711e9")
 		)
@@ -15013,7 +16066,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "fe34b397-4fae-42ff-8a37-dafade5fdb4d")
 		(property "Reference" "JP7"
 			(at 207.01 105.41 0)
@@ -15050,6 +16103,24 @@
 			)
 		)
 		(property "Description" "Jumper, 2-pole, closed/bridged"
+			(at 207.01 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 207.01 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 207.01 110.49 0)
 			(effects
 				(font

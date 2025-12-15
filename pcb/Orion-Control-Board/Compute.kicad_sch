@@ -4846,7 +4846,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "02ceaf51-73b9-42a2-b643-c106c0d7de83")
 		(property "Reference" "H7"
@@ -4886,6 +4886,24 @@
 			)
 		)
 		(property "Description" "Mounting Hole without connection"
+			(at 184.15 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 184.15 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 184.15 25.4 0)
 			(effects
 				(font
@@ -4976,7 +4994,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "2a953d26-23ba-4798-a792-55c0407fc333")
 		(property "Reference" "J7"
@@ -5111,6 +5129,24 @@
 					(size 1.524 1.524)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 146.05 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 146.05 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -5271,7 +5307,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "3e8214c1-8551-4c14-94b3-3a94ca6e5bc5")
 		(property "Reference" "H5"
@@ -5311,6 +5347,24 @@
 			)
 		)
 		(property "Description" "Mounting Hole without connection"
+			(at 162.56 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 162.56 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 162.56 25.4 0)
 			(effects
 				(font
@@ -5466,9 +5520,9 @@
 		(at 113.03 36.83 270)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "4a6538bf-bc09-443c-9324-5f74312dd174")
 		(property "Reference" "J5"
@@ -5516,6 +5570,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 113.03 36.83 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 113.03 36.83 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "7db9a752-d024-423f-a163-945b6b1c6728")
 		)
@@ -5541,7 +5613,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "615f3dc2-9e98-4e12-83b0-1875835fcbf3")
 		(property "Reference" "N1"
@@ -5586,6 +5658,24 @@
 				(font
 					(size 1.27 1.27)
 				)
+			)
+		)
+		(property "Standard" ""
+			(at 215.9 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 215.9 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(instances
@@ -5738,7 +5828,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "68ec06ff-2a03-4153-8b68-18f65be8955e")
 		(property "Reference" "TP2"
@@ -5778,6 +5868,24 @@
 			)
 		)
 		(property "Description" "test point"
+			(at 128.27 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 128.27 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 128.27 22.86 0)
 			(effects
 				(font
@@ -5936,7 +6044,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "6d2ce060-90f7-4adb-bc5e-2fbb4699bbf3")
 		(property "Reference" "TP1"
@@ -5984,6 +6092,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 111.76 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 111.76 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f6479bda-afe8-4940-b7a2-24ebdd1dac6f")
 		)
@@ -6003,7 +6129,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "6f76fc63-35d9-46f1-8799-1869c8eebfb3")
 		(property "Reference" "TP3"
@@ -6051,6 +6177,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 144.78 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 144.78 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "d5fa577e-31b5-47dc-a4d5-62cae8575bcf")
 		)
@@ -6070,7 +6214,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "6fa1c787-008b-485a-bafe-7362a1402ee2")
 		(property "Reference" "J4"
 			(at 99.06 33.274 90)
@@ -6204,6 +6348,24 @@
 					(size 1.524 1.524)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 100.33 35.56 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 100.33 35.56 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -6365,7 +6527,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "87b75e1c-712b-4bca-a86d-7299851ad3a3")
 		(property "Reference" "J2"
@@ -6404,6 +6566,24 @@
 		)
 		(property "Description" "NUCLEO64_CN7 connector, double row, 02x19, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers), script generated (kicad-library-utils/schlib/autogen/connector/)"
 			(at 42.926 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 40.64 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 40.64 86.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6541,7 +6721,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "8a379e15-47f6-497e-a0b2-c853e2abd87b")
 		(property "Reference" "J10"
@@ -6679,6 +6859,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 168.91 74.93 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 168.91 74.93 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "29baa063-d828-4fe5-bf51-31ae90715177")
 		)
@@ -6769,7 +6967,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "9cd4052b-7616-417c-835b-bd69025a61b7")
 		(property "Reference" "J8"
@@ -6904,6 +7102,24 @@
 					(size 1.524 1.524)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 146.05 74.93 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 146.05 74.93 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -7066,7 +7282,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "a8489e81-9d45-4f12-a60a-e78a5c308d90")
 		(property "Reference" "J9"
@@ -7201,6 +7417,24 @@
 					(size 1.524 1.524)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 168.91 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 168.91 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -7363,7 +7597,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "d6b907ab-b89d-4e9e-9348-2a7cab5392b5")
 		(property "Reference" "J6"
@@ -7402,6 +7636,24 @@
 		)
 		(property "Description" "NUCLEO64_CN7 connector, double row, 02x19, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers), script generated (kicad-library-utils/schlib/autogen/connector/)"
 			(at 108.966 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 106.68 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 106.68 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7539,7 +7791,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "de6fc362-2d04-442a-8225-19adc38a315c")
 		(property "Reference" "BZ1"
 			(at 68.6308 98.3234 0)
@@ -7586,6 +7838,24 @@
 				(hide yes)
 			)
 		)
+		(property "Standard" ""
+			(at 64.77 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 64.77 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "43845a05-3330-4754-840b-c6d1337f6811")
 		)
@@ -7608,7 +7878,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "e2d6901f-2b1f-432e-8a21-97c94414205d")
 		(property "Reference" "J3"
@@ -7665,6 +7935,24 @@
 		)
 		(property "Digikey Part #" "S9169-ND"
 			(at 44.196 46.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 44.45 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
+			(at 44.45 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7785,7 +8073,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "f5daa531-cac2-4ec3-a51c-cac92fdb08b7")
 		(property "Reference" "H6"
@@ -7825,6 +8113,24 @@
 			)
 		)
 		(property "Description" "Mounting Hole without connection"
+			(at 162.56 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Standard" ""
+			(at 162.56 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ReferenceSchematic" ""
 			(at 162.56 31.75 0)
 			(effects
 				(font
