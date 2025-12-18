@@ -7856,7 +7856,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "0197b9af-34e1-4418-8661-a1ffccb0d523")
 		(property "Reference" "JP1"
@@ -8103,7 +8103,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "0388cf50-9055-4084-b084-3e59724d4167")
 		(property "Reference" "R33"
 			(at 226.822 42.418 0)
@@ -8190,7 +8190,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "045a590c-cc5b-40a0-825c-16a8480ae256")
 		(property "Reference" "J1"
@@ -9189,7 +9189,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "2ac0345b-89fb-4c94-a1fc-cadf5cd55845")
 		(property "Reference" "JP2"
 			(at 57.15 105.41 0)
@@ -9370,7 +9370,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "2f8316f8-8201-4833-a8f5-105e674aa36b")
 		(property "Reference" "R27"
 			(at 201.422 42.418 0)
@@ -12521,7 +12521,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "9ae43448-8fd2-4a06-a141-2c616e2764f0")
 		(property "Reference" "U3"
 			(at 60.96 164.846 0)
@@ -12635,7 +12635,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "a2161d6b-b23b-4131-805c-69577c256f14")
 		(property "Reference" "R34"
 			(at 234.442 42.418 0)
@@ -12981,7 +12981,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "ac73cd18-7f2c-42ef-95cc-c3d7bf481dc9")
 		(property "Reference" "JP3"
 			(at 133.35 105.41 0)
@@ -14376,7 +14376,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c6a7a915-0e68-43ca-9fce-75dda67b4004")
 		(property "Reference" "JP4"
@@ -14721,7 +14721,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "d12051c1-3bdb-4060-a670-e8ed695fc226")
 		(property "Reference" "R29"
 			(at 209.042 42.418 0)
@@ -16066,7 +16066,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "fe34b397-4fae-42ff-8a37-dafade5fdb4d")
 		(property "Reference" "JP7"
 			(at 207.01 105.41 0)
