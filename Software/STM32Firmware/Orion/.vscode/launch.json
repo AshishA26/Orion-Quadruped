@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "stlinkgdbtarget",
+            "request": "launch",
+            "name": "STM32Cube: STM32 Launch ST-Link GDB Server",
+            "origin": "snippet",
+            "cwd": "${workspaceFolder}",
+            "preBuild": "${command:st-stm32-ide-debug-launch.build}",
+            "runEntry": "main",
+            "imagesAndSymbols": [
+                {
+                    "imageFileName": "${command:st-stm32-ide-debug-launch.get-projects-binary-from-context1}"
+                }
+            ]
+        }
+    ]
+}
