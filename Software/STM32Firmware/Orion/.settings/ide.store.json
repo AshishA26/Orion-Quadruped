@@ -1,0 +1,7 @@
+{
+  "board": "NUCLEO-F401RE",
+  "device": "STM32F401RET6",
+  "core": "Cortex-M4",
+  "order": 0,
+  "toolchain": "GCC"
+}
