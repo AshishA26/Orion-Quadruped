@@ -109,3 +109,5 @@ models/Jetson/**
 build/
 install/
 log/
+
+Jetson_Orin_Nano_DevKit.stp
