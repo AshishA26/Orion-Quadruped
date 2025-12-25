@@ -1,0 +1,9 @@
+From bottom of screw hole to top of servo arm for dsservo is 20.3
+For sunfounder, it is 20.63
+
+
+gap between servo holder and front plate is 5.67
+
+since dsservo is a bit less in height, gap would increase by 0.33.
+
+Thus the ridge on the servo holder needs to be  needs to be 5.67 + 0.33 = 6
