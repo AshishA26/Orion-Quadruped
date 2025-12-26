@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# https://github.com/engineerm-jp/Inverse_Kinematics_YouTube/tree/main/4Legs
 
 import numpy as np
 from numpy.linalg import inv, norm
@@ -37,7 +39,6 @@ class kinematics():
     # offset of that rotation from the center of the robot
     ## Orientation control  / accounting for shift in center of rotation
     def leg_IK(self, xyz, rot = [0,0,0], legID=0, is_radians=True, center_offset=[0,0,0]):
-        
         # check is the leg is from the right side 
         is_right = (legID in self.right_legs)
         
@@ -55,7 +56,6 @@ class kinematics():
 
     # IK calculator
     def leg_IK_calc(self, xyz, is_right=False): 
-
         x, y, z = xyz[0], xyz[1], xyz[2]    # unpack coordinates
         
         # length of vector projected on the YZ plane. equiv. to len_A = sqrt(y**2 + z**2)
