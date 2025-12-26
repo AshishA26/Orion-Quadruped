@@ -31,7 +31,7 @@ def my_inverse_kinematics(target_xyz):
 # Loop to test
 for i in range(1000):
     # Move target in a circle
-    target = [0.12, 0.05 * np.sin(i*0.05), -0.1]
+    target = [0.05 * np.sin(i*0.05), 0.05 * np.sin(i*0.05), -0.05 * np.sin(i*0.05)]
     
     angles = my_inverse_kinematics(target)
     
