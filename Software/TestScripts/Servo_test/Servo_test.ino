@@ -1,4 +1,4 @@
-// This program moves the leg up and down in a straight vertical fashion
+// This program moves the leg up and down in approximately a straight vertical fashion
 
 #include <Adafruit_PWMServoDriver.h>
 
@@ -37,11 +37,6 @@ void loop() {
       bot_microsec+=increment;
       pwm.writeMicroseconds(0, int(top_microsec));
       pwm.writeMicroseconds(1, int(bot_microsec));
-      // Serial.print("Top ms: ");
-      // Serial.print(top_microsec);
-      // Serial.print("  Bottom ms: ");
-      // Serial.print(bot_microsec);
-      // Serial.println();
       delayMicroseconds(2);
   }
   for(float i = 0; i <= 350/increment; i += 1) {
