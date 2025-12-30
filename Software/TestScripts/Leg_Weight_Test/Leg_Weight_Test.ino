@@ -1,4 +1,6 @@
 // This program moves the leg up and down in approximately a straight vertical fashion
+// for testing the weight limit of a single leg
+// Used with Arduino Nano and PCA servo Driver
 
 #include <Adafruit_PWMServoDriver.h>
 
@@ -44,18 +46,6 @@ void loop() {
       bot_microsec-=increment;
       pwm.writeMicroseconds(0, int(top_microsec));
       pwm.writeMicroseconds(1, int(bot_microsec));
-      // Serial.print("Top ms: ");
-      // Serial.print(top_microsec);
-      // Serial.print("  Bottom ms: ");
-      // Serial.print(bot_microsec);
-      // Serial.println();
       delayMicroseconds(2);
   }
 }
-
-// int angleToPulse(int ang) {
-//   int pulse = map(ang, 0, 270, SERVOMIN, SERVOMAX);
-//   Serial.print("Angle: "); Serial.print(ang);
-//   Serial.print(" pulse: "); Serial.println(pulse);
-//   return pulse;
-// }
