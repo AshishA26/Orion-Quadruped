@@ -17,7 +17,7 @@ void setup() {
   pwm.setOscillatorFrequency(27000000);
   // The Animos 35KG servo is a digital servo - theoretically can use 50-330Hz
   pwm.setPWMFreq(50);  // Analog servos run at ~50 Hz updates
-  pwm.writeMicroseconds(0, SERVO_MIN);
+  pwm.writeMicroseconds(1, angleToPulse(135));
 }
 
 void loop() {
@@ -35,13 +35,13 @@ void loop() {
     {
       Serial.print("writing Microseconds: ");
       Serial.println(n);
-      pwm.writeMicroseconds(0, n);
+      pwm.writeMicroseconds(1, n);
     }
     else
     {   
       Serial.print("writing Angle: ");
       Serial.println(n);
-      pwm.writeMicroseconds(0, angleToPulse(n));
+      pwm.writeMicroseconds(1, angleToPulse(n));
     }
 
     readString="";
