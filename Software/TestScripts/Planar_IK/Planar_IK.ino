@@ -43,26 +43,60 @@ void loop() {
   //   delay(2);
   // }
   // if (readString.length() > 0) {
-  //   float newX = readString.toFloat();
-  //   Serial.print("Moving X to: "); Serial.println(newX);
+  //   float newZ = readString.toFloat();
+  //   Serial.print("Moving Z to: "); Serial.println(newZ);
     
   //   // Update X, keep Y and Z fixed at home position
-  //   currentX = newX;
+  //   currentZ = newZ;
   //   updateLeg(currentX, currentY, currentZ);
     
   //   readString = "";
   // } 
   
+  // for(int i = -80; i < 80; i+=5){
+  //   // Update X, keep Y and Z fixed at home position
+  //   updateLeg(i, currentY, currentZ);
+  // }
+  // for(int i = 80; i > -80; i-=5){
+  //   // Update X, keep Y and Z fixed at home position
+  //   updateLeg(i, currentY, currentZ);
+  // }
 
-  for(int i = -80; i < 80; i+=5){
-    // Update X, keep Y and Z fixed at home position
-    updateLeg(i, currentY, currentZ);
-  }
-  for(int i = 80; i > -80; i-=5){
-    // Update X, keep Y and Z fixed at home position
-    updateLeg(i, currentY, currentZ);
-  }
+  // for(int i = 60; i < 180; i+=5){
+  //   // Update X, keep Y and Z fixed at home position
+  //   updateLeg(currentX, currentY, i);
+  // }
+  // for(int i = 180; i > 60; i-=5){
+  //   // Update X, keep Y and Z fixed at home position
+  //   updateLeg(currentX, currentY, i);
+  // }
+  stepGait();
+}
+
+void stepGait() {
+  int xMin = -80;
+  int xMax = 80;
+  int zBase = 180;    // "Ground" level
+  int stepHeight = 60; // How high to lift (180 - 60 = 120 units of lift)
   
+  // SWING PHASE: Move from Back (-80) to Front (80) in a semicircle
+  // We use a float for 'i' to ensure smooth math for the sine wave
+  for (float i = -80; i < 80; i += 10) {
+    // Map the X position to a 0-180 degree range for the Sine wave
+    float angle = ( (i - xMin) / (xMax - xMin) ) * PI;
+    
+    // Calculate Z: Start at base and subtract the sine offset
+    int offsetZ = sin(angle) * stepHeight;
+    int currentZ = zBase - offsetZ;
+    
+    updateLeg(i, currentY, currentZ);
+  }
+
+  // STANCE PHASE: Move from Front (80) back to Back (-80) horizontally
+  // This is the part where the robot actually pushes its body forward
+  for (int i = 80; i > -80; i -= 10) {
+    updateLeg(i, currentY, zBase); 
+  }
 }
 
 void updateLeg(float x, float y, float z) {

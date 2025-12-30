@@ -13,7 +13,7 @@ bool LegIK::calculate(float x, float y, float z) {
   // D = sqrt(GivenY^2 + GivenZ^2 - L1^2) 
   float term1 = (y * y) + (z * z) - (L1_HIP * L1_HIP);
   if (term1 < 0) return false; // Impossible geometry
-  float D = sqrt(term1);
+  float D = z;
   // Calculate virtual Hip Angle
   // Note: atan2(y, z) handles the quadrant logic better than atan(y/z)
   float theta1_rad = atan2(y, z); 
