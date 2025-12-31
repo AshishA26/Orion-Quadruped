@@ -3630,7 +3630,7 @@
 	)
 	(text "Through-hole Resistors, for ease of tuning bus speeds"
 		(exclude_from_sim no)
-		(at 184.15 57.15 0)
+		(at 198.882 56.896 0)
 		(effects
 			(font
 				(size 1.016 1.016)
@@ -3768,6 +3768,17 @@
 		)
 		(uuid "c3bde455-66b5-491f-8348-c9269536a4c3")
 	)
+	(text "On seperate I2C bus to \nensure uninterrupted communication"
+		(exclude_from_sim no)
+		(at 150.114 53.594 0)
+		(effects
+			(font
+				(size 1.016 1.016)
+			)
+			(justify left bottom)
+		)
+		(uuid "c57a9d73-8e50-497e-8b00-620525e1770b")
+	)
 	(text "Power-board Connection"
 		(exclude_from_sim no)
 		(at 82.55 165.608 0)
@@ -3843,7 +3854,7 @@
 		)
 		(uuid "f1d3ccec-e5a6-4387-b366-99fe0f621bbb")
 	)
-	(text "12-bit PWM driver\nI2C Addr: 0x40"
+	(text "I2C Addr: 0x40"
 		(exclude_from_sim no)
 		(at 113.284 84.328 0)
 		(effects
