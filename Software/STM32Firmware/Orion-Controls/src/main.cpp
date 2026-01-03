@@ -1,4 +1,72 @@
 #include <Arduino.h>
+
+
+
+// // Designed for an Arduino Nano and PCA servo driver
+// // Use this to find the 'middle position' and bounds of a servo
+
+// #include <Adafruit_PWMServoDriver.h>
+
+// Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
+// // 0 to 270 degrees is 500 to 2500 microseconds
+// #define SERVO_MIN 500 
+// #define SERVO_MAX 2500 
+// String readString = "";
+
+// int angleToPulse(int);
+
+// void setup() {
+//   Serial.begin(9600);
+//   Serial.println("Servo Clocking. Ready!");
+//   pwm.begin();
+//   pwm.setOscillatorFrequency(27000000);
+//   // The Animos 35KG servo is a digital servo - theoretically can use 50-330Hz
+//   pwm.setPWMFreq(50);  // Analog servos run at ~50 Hz updates
+//   pwm.writeMicroseconds(2, angleToPulse(135));
+// }
+
+// void loop() {
+//    while (Serial.available()) {
+//     char c = Serial.read();  //gets one byte from serial buffer
+//     readString += c;
+//     delay(2);
+//   }
+
+//   if (readString.length() >0) {
+//     Serial.println(readString);
+//     int n = readString.toInt();
+
+//     if(n >= 270)
+//     {
+//       Serial.print("writing Microseconds: ");
+//       Serial.println(n);
+//       pwm.writeMicroseconds(2, n);
+//     }
+//     else
+//     {   
+//       Serial.print("writing Angle: ");
+//       Serial.println(n);
+//       pwm.writeMicroseconds(2, angleToPulse(n));
+//     }
+
+//     readString="";
+//   } 
+// }
+
+// int angleToPulse(int ang) {
+//   int pulse = map(ang, 0, 270, SERVO_MIN, SERVO_MAX);
+//   Serial.print("Angle: "); Serial.print(ang);
+//   Serial.print(" Pulse: "); Serial.println(pulse);
+//   return pulse;
+// }
+
+
+
+
+
+
+
 #include <Adafruit_PWMServoDriver.h>
 #include "LegIK.h"
 
@@ -10,9 +78,9 @@ LegIK leg;
 #define SERVO_MAX 2500 
 
 // Servo Channels
-#define CH_FEMUR 0
-#define CH_TIBIA 1
-#define CH_HIP   2
+#define CH_FEMUR 1
+#define CH_TIBIA 2
+#define CH_HIP   0
 
 String readString = "";
 
@@ -34,8 +102,8 @@ void setup() {
   // Move to home position
   updateLeg(currentX, currentY, currentZ);
   
-  Serial.begin(9600);
-  Serial.println("Inverse Kinematics Ready. Enter X value:");
+  // Serial.begin(9600);
+  // Serial.println("Inverse Kinematics Ready. Enter X value:");
 }
 
 void loop() {
@@ -84,7 +152,7 @@ void stepGait() {
   
   // SWING PHASE: Move from Back (-80) to Front (80) in a semicircle
   // We use a float for 'i' to ensure smooth math for the sine wave
-  for (float i = -80; i < 80; i += 10) {
+  for (float i = -80; i < 80; i += 2) {
     // Map the X position to a 0-180 degree range for the Sine wave
     float angle = ( (i - xMin) / (xMax - xMin) ) * PI;
     
@@ -97,7 +165,7 @@ void stepGait() {
 
   // STANCE PHASE: Move from Front (80) back to Back (-80) horizontally
   // This is the part where the robot actually pushes its body forward
-  for (int i = 80; i > -80; i -= 10) {
+  for (int i = 80; i > -80; i -= 2) {
     updateLeg(i, currentY, zBase); 
   }
 }
@@ -109,15 +177,16 @@ void updateLeg(float x, float y, float z) {
     float t = leg.getTibiaServoAngle();
 
     // Debug output
-    Serial.print(" Hip: "); Serial.print(h);
-    Serial.print(" Femur: "); Serial.print(f);
-    Serial.print(" Tibia: "); Serial.println(t);
+    // Serial.print(" Hip: "); Serial.print(h);
+    // Serial.print(" Femur: "); Serial.print(f);
+    // Serial.print(" Tibia: "); Serial.println(t);
+    delay(5);
 
     setServoAngle(CH_HIP, h);
     setServoAngle(CH_FEMUR, f);
     setServoAngle(CH_TIBIA, t);
   } else {
-    Serial.println("Error: Target out of reach.");
+    // Serial.println("Error: Target out of reach.");
   }
 }
 

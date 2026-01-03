@@ -26,9 +26,9 @@ class LegIK {
     // Design offsets
     const float THETA_TIBIA_OFFSET = 5.88; // degrees
     // Servo Clocking Offsets, calibrated through clocking script
-    const float SERVO_CENTER_HIP = 135.0;
-    const float SERVO_CENTER_FEMUR = 75.0;
-    const float SERVO_CENTER_TIBIA = 134.0;
+    const float SERVO_CENTER_HIP = 153;
+    const float SERVO_CENTER_FEMUR = 153;
+    const float SERVO_CENTER_TIBIA = 147;
 
     float thetaHipServo;
     float thetaFemurServo;

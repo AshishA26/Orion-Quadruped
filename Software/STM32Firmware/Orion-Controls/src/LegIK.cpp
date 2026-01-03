@@ -45,7 +45,7 @@ bool LegIK::calculate(float x, float y, float z) {
   return true;
 }
 
-float LegIK::getHipServoAngle() { return thetaHipServo; }
+float LegIK::getHipServoAngle() { return SERVO_CENTER_HIP; }
 float LegIK::getFemurServoAngle() { return thetaFemurServo; }
 float LegIK::getTibiaServoAngle() { return thetaTibiaServo; }
 
