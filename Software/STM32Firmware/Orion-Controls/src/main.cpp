@@ -19,6 +19,7 @@ float currentZ = 160; // Height of Dog, mm
 
 // Function declarations
 void stepGait();
+void unisonGait();
 void updateLeg(LegIK &leg, float, float, float);
 void setServoAngle(int, float);
 
@@ -79,14 +80,73 @@ void loop() {
 }
 
 void stepGait() {
+  const int Z_BASE = 180;     // "Ground" level
+  const int STEP_HEIGHT = 20; // Lift height
+  const int INTERPOLATION_INCREMENT = 2; // Speed/Resolution
+  const int GAIT_X_MAX = 20;
+  const int GAIT_X_MIN = -20;
+  const float TOTAL_X_DIST = GAIT_X_MAX - GAIT_X_MIN;
+
+  // --- HALF CYCLE 1 ---
+  // Pair A (Front Left + Back Right) -> SWING (Move forward + Lift)
+  // Pair B (Front Right + Back Left) -> STANCE (Move backward + Ground)
+  for (float i = GAIT_X_MIN; i <= GAIT_X_MAX; i += INTERPOLATION_INCREMENT) {
+    
+    // Calculate SWING Geometry (Sinewave arc)
+    float progress = (i - GAIT_X_MIN) / TOTAL_X_DIST; // 0.0 to 1.0
+    float angle = progress * PI; 
+    int offsetZ = sin(angle) * STEP_HEIGHT;
+    int swingZ = Z_BASE - offsetZ;
+    float swingX = i; // Moves Min -> Max
+    
+    // Calculate STANCE Geometry (Linear line)
+    // Stance moves opposite to swing (Max -> Min)
+    float stanceX = GAIT_X_MAX - (i - GAIT_X_MIN); 
+    int stanceZ = Z_BASE;
+
+    // Apply to Diagonal Pairs
+    // Pair A: Swing
+    updateLeg(legFrontLeft, swingX, currentY, swingZ);
+    updateLeg(legBackRight, swingX, currentY, swingZ);
+    
+    // Pair B: Stance
+    updateLeg(legFrontRight, stanceX, currentY, stanceZ);
+    updateLeg(legBackLeft, stanceX, currentY, stanceZ);
+  }
+
+  // --- HALF CYCLE 2 ---
+  // Pair A (Front Left + Back Right) -> STANCE
+  // Pair B (Front Right + Back Left) -> SWING
+  for (float i = GAIT_X_MIN; i <= GAIT_X_MAX; i += INTERPOLATION_INCREMENT) {
+    
+    // Recalculate geometry (same math, just swapped targets)
+    float progress = (i - GAIT_X_MIN) / TOTAL_X_DIST;
+    float angle = progress * PI;
+    int offsetZ = sin(angle) * STEP_HEIGHT;
+    int swingZ = Z_BASE - offsetZ;
+    float swingX = i;
+    
+    float stanceX = GAIT_X_MAX - (i - GAIT_X_MIN);
+    int stanceZ = Z_BASE;
+
+    // Pair A: Stance
+    updateLeg(legFrontLeft, stanceX, currentY, stanceZ);
+    updateLeg(legBackRight, stanceX, currentY, stanceZ);
+    
+    // Pair B: Swing
+    updateLeg(legFrontRight, swingX, currentY, swingZ);
+    updateLeg(legBackLeft, swingX, currentY, swingZ);
+  }
+}
+
+void unisonGait() {
   const int Z_BASE = 180;    // "Ground" level
   const int STEP_HEIGHT = 60; // How high to lift (180 - 60 = 120 units of lift)
   const int INTERPOLATION_INCREMENT = 2;
   const int GAIT_X_MAX = 80;
   const int GAIT_X_MIN = -80;
   
-  // SWING PHASE: Move from Back (-80) to Front (80) in a semicircle
-  // We use a float for 'i' to ensure smooth math for the sine wave
+  // SWING PHASE: Move from Back to Front in a semicircle
   for (float i = GAIT_X_MIN; i < GAIT_X_MAX; i += INTERPOLATION_INCREMENT) {
     // Map the X position to a 0-180 degree range for the Sine wave
     float angle = ( (i - GAIT_X_MIN) / (GAIT_X_MAX - GAIT_X_MIN) ) * PI;
@@ -100,7 +160,7 @@ void stepGait() {
     updateLeg(legBackRight, i, currentY, currentZ);
   }
 
-  // STANCE PHASE: Move from Front (80) back to Back (-80) horizontally
+  // STANCE PHASE: Move from Front to Back horizontally
   // This is the part where the robot actually pushes its body forward
   for (int i = GAIT_X_MAX; i > GAIT_X_MIN; i -= INTERPOLATION_INCREMENT) {
     updateLeg(legFrontLeft, i, currentY, Z_BASE); 
