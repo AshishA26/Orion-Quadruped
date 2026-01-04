@@ -1,0 +1,8 @@
+name: orion_eyes
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - pip:
+    - numpy
+    - opencv-python

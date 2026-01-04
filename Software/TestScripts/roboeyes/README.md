@@ -18,3 +18,8 @@ The original Roboeyes library has the following functionality:
     - Flicker -> flickering horizontal / vertical by 1 pixels. Pairing horizontal with 'scared' or "angry" mood emphasizes the mood.
 - [Youtube:  #2 - Getting Started With the Free Robo Eyes Arduino Library ](https://www.youtube.com/watch?v=WtLWc5zzrmI)
     - 
+
+# Jetson Env setup
+- `wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh`
+- `bash ~/Miniconda3-latest-Linux-aarch64.sh`
+`conda env create --name envname --file=environment.yaml`
