@@ -6,3 +6,7 @@
 1. Assemble Entire Leg
 1. Use Servo Clocking script to finetune i.e. clock position. Record the angle/microseconds needed to put the servo arm in the middle position.
 1. This angle will be added in the code for each servo.
+
+# STM32 setup in Arduino IDE:
+ - In Arduino IDE, go to File -> Preferences
+ - Add this URL to `Additional Board Manager URLs`: https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json

@@ -1,0 +1,39 @@
+#ifndef SERVO_CONFIGS
+#define SERVO_CONFIGS
+
+// SERVO Offset Configs
+#define FL_SERVO_CENTER_HIP 153
+#define FL_SERVO_CENTER_FEMUR 153
+#define FL_SERVO_CENTER_TIBIA 147
+
+#define FR_SERVO_CENTER_HIP 154
+#define FR_SERVO_CENTER_FEMUR 152
+#define FR_SERVO_CENTER_TIBIA 143
+
+#define BR_SERVO_CENTER_HIP 153
+#define BR_SERVO_CENTER_FEMUR 161
+#define BR_SERVO_CENTER_TIBIA 159
+
+#define BL_SERVO_CENTER_HIP 160
+#define BL_SERVO_CENTER_FEMUR 157
+#define BL_SERVO_CENTER_TIBIA 161
+
+// Servo Channels
+#define CH_FL_HIP   0
+#define CH_FL_FEMUR 1
+#define CH_FL_TIBIA 2
+#define CH_FR_HIP   3
+#define CH_FR_FEMUR 4
+#define CH_FR_TIBIA 5
+#define CH_BL_HIP   11
+#define CH_BL_FEMUR 10
+#define CH_BL_TIBIA 9
+#define CH_BR_HIP   8
+#define CH_BR_FEMUR 7
+#define CH_BR_TIBIA 6
+
+// Generic Servo Limits
+#define SERVO_MIN 500 
+#define SERVO_MAX 2500 
+
+#endif // SERVO_CONFIGS

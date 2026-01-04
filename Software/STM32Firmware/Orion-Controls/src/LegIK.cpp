@@ -1,10 +1,12 @@
 #include "LegIK.h"
 
-LegIK::LegIK() {
-  thetaHipServo = SERVO_CENTER_HIP;
-  thetaFemurServo = SERVO_CENTER_FEMUR;
-  thetaTibiaServo = SERVO_CENTER_TIBIA;
-}
+LegIK::LegIK(float servoCenterHip, float servoCenterFemur, float servoCenterTibia, 
+             int channelHip, int channelFemur, int channelTibia, 
+             bool isFrontLeg, bool isLeftLeg) : 
+  SERVO_CENTER_HIP(servoCenterHip), SERVO_CENTER_FEMUR(servoCenterFemur), SERVO_CENTER_TIBIA(servoCenterTibia),
+  CHANNEL_HIP(channelHip), CHANNEL_FEMUR(channelFemur), CHANNEL_TIBIA(channelTibia),
+  IS_FRONT_LEG(isFrontLeg), IS_LEFT_LEG(isLeftLeg),
+  thetaHipServo_(servoCenterHip), thetaFemurServo_(servoCenterFemur), thetaTibiaServo_(servoCenterTibia)  {}
 
 bool LegIK::calculate(float x, float y, float z) {
   // --- Hip Calculation ---
@@ -18,7 +20,12 @@ bool LegIK::calculate(float x, float y, float z) {
   // Note: atan2(y, z) handles the quadrant logic better than atan(y/z)
   float theta1_rad = atan2(y, z); 
   // Final Hip Servo Angle
-  thetaHipServo = SERVO_CENTER_HIP + toDegrees(theta1_rad);
+  if(IS_FRONT_LEG) {
+    thetaHipServo_ = SERVO_CENTER_HIP + toDegrees(theta1_rad);
+  } else {
+    // For rear legs Hip servo moves in the oppsite direction
+    thetaHipServo_ = SERVO_CENTER_HIP - toDegrees(theta1_rad);
+  }
 
   // --- Leg Plane (Femur & Tibia) ---
   // D is now the desired vertical distance in the leg-plane
@@ -35,19 +42,29 @@ bool LegIK::calculate(float x, float y, float z) {
   float beta_femur = asin((L3_TIBIA * sin(theta3_rad)) / G);
   float theta2_rad = toRadians(90) - (beta_femur - alpha_femur); // TODO: will this reference to 90 deg cause issues if moving femur above horizontal?
   
-  // Final Femur Servo Angle
-  thetaFemurServo = SERVO_CENTER_FEMUR - toDegrees(theta2_rad);
-  // Final Tibia Servo Angle
+  // Accounting for Tibia servo offset and femur coupling
   float phi = toDegrees(theta3_rad) - THETA_TIBIA_OFFSET;
   float theta_s = 90 - phi + toDegrees(theta2_rad);
-  thetaTibiaServo = SERVO_CENTER_TIBIA - theta_s; 
-
+  
+  // Final Femur and Tibia Servo Angles
+  if(IS_LEFT_LEG) {
+    thetaFemurServo_ = SERVO_CENTER_FEMUR - toDegrees(theta2_rad);
+    thetaTibiaServo_ = SERVO_CENTER_TIBIA - theta_s; 
+  } else {
+    // For right legs femur and tibia servo moves in the oppsite direction
+    thetaFemurServo_ = SERVO_CENTER_FEMUR + toDegrees(theta2_rad);
+    thetaTibiaServo_ = SERVO_CENTER_TIBIA + theta_s; 
+  }
   return true;
 }
 
-float LegIK::getHipServoAngle() { return SERVO_CENTER_HIP; }
-float LegIK::getFemurServoAngle() { return thetaFemurServo; }
-float LegIK::getTibiaServoAngle() { return thetaTibiaServo; }
+int LegIK::getHipServoChannel() { return CHANNEL_HIP;}
+int LegIK::getFemurServoChannel() { return CHANNEL_FEMUR;}
+int LegIK::getTibiaServoChannel() { return CHANNEL_TIBIA;}
+
+float LegIK::getHipServoAngle() { return SERVO_CENTER_HIP; } // thetaHipServo_;
+float LegIK::getFemurServoAngle() { return thetaFemurServo_; }
+float LegIK::getTibiaServoAngle() { return thetaTibiaServo_; }
 
 float LegIK::toDegrees(float rad) { return rad * 180.0 / PI; }
 float LegIK::toRadians(float deg) { return deg * PI / 180.0; }
