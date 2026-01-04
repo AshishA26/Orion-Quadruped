@@ -20,6 +20,11 @@ The original Roboeyes library has the following functionality:
     - 
 
 # Jetson Env setup
-- `wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh`
-- `bash ~/Miniconda3-latest-Linux-aarch64.sh`
-`conda env create --name envname --file=environment.yaml`
+- Install Firefox via [this](https://support.mozilla.org/en-US/kb/install-firefox-linux)
+- Install NoMachine from [here](https://download.nomachine.com/download/?id=30&platform=linux&distro=arm)
+- Miniconda
+    - `cd Downloads`
+    - `wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh`
+    - `bash ~/Downloads/Miniconda3-latest-Linux-aarch64.sh`
+    - `conda config --set auto_activate_base false`
+    - `conda env create --name envname --file=environment.yaml`
