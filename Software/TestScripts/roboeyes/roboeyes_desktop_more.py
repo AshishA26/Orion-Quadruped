@@ -3,6 +3,8 @@ import numpy as np
 import time
 import random
 
+# blink animation seems slower
+# Some states (curious) are glitchy
 class RoboEyes:
     def __init__(self, width, height):
         self.width, self.height = width, height
@@ -131,7 +133,7 @@ def main():
     eyes = RoboEyes(WIDTH, HEIGHT)
     canvas = np.zeros((HEIGHT, WIDTH, 3), dtype=np.uint8)
     
-    print("Commands: [a]ngry, [h]appy, [s]cary, [c]urious, [t]ired, [d]efault, [w]ink, [y]cyclops")
+    print("Commands: [a]ngry, [h]appy, [s]cary, [c]urious, [d]efault, [w]ink, [y]cyclops")
 
     while True:
         eyes.update()
@@ -144,7 +146,6 @@ def main():
         elif key == ord('h'): eyes.set_mood('happy')
         elif key == ord('s'): eyes.set_mood('scary')
         elif key == ord('c'): eyes.set_mood('curious')
-        elif key == ord('t'): eyes.set_mood('tired')
         elif key == ord('d'): eyes.set_mood('default')
         elif key == ord('w'): eyes.wink(True)
         elif key == ord('y'): eyes.cyclops = not eyes.cyclops

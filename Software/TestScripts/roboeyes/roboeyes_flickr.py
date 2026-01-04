@@ -3,6 +3,8 @@ import numpy as np
 import time
 import random
 
+# eyes are wider, 
+# option for shaking eyes horizontally/vertically - only want this functionality
 class RoboEyes:
     def __init__(self, width, height):
         self.width, self.height = width, height
