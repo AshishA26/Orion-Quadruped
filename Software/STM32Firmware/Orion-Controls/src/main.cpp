@@ -79,21 +79,21 @@ void loop() {
 }
 
 void stepGait() {
-  int xMin = -80;
-  int xMax = 80;
-  int zBase = 180;    // "Ground" level
-  int stepHeight = 60; // How high to lift (180 - 60 = 120 units of lift)
+  const int Z_BASE = 180;    // "Ground" level
+  const int STEP_HEIGHT = 60; // How high to lift (180 - 60 = 120 units of lift)
+  const int INTERPOLATION_INCREMENT = 2;
+  const int GAIT_X_MAX = 80;
+  const int GAIT_X_MIN = -80;
   
   // SWING PHASE: Move from Back (-80) to Front (80) in a semicircle
   // We use a float for 'i' to ensure smooth math for the sine wave
-  for (float i = -80; i < 80; i += 2) {
+  for (float i = GAIT_X_MIN; i < GAIT_X_MAX; i += INTERPOLATION_INCREMENT) {
     // Map the X position to a 0-180 degree range for the Sine wave
-    float angle = ( (i - xMin) / (xMax - xMin) ) * PI;
+    float angle = ( (i - GAIT_X_MIN) / (GAIT_X_MAX - GAIT_X_MIN) ) * PI;
     
     // Calculate Z: Start at base and subtract the sine offset
-    int offsetZ = sin(angle) * stepHeight;
-    int currentZ = zBase - offsetZ;
-    
+    int offsetZ = sin(angle) * STEP_HEIGHT;
+    int currentZ = Z_BASE - offsetZ;
     updateLeg(legFrontLeft, i, currentY, currentZ);
     updateLeg(legFrontRight, i, currentY, currentZ);
     updateLeg(legBackLeft, i, currentY, currentZ);
@@ -102,11 +102,11 @@ void stepGait() {
 
   // STANCE PHASE: Move from Front (80) back to Back (-80) horizontally
   // This is the part where the robot actually pushes its body forward
-  for (int i = 80; i > -80; i -= 2) {
-    updateLeg(legFrontLeft, i, currentY, zBase); 
-    updateLeg(legFrontRight, i, currentY, zBase);
-    updateLeg(legBackLeft, i, currentY, zBase);
-    updateLeg(legBackRight, i, currentY, zBase);
+  for (int i = GAIT_X_MAX; i > GAIT_X_MIN; i -= INTERPOLATION_INCREMENT) {
+    updateLeg(legFrontLeft, i, currentY, Z_BASE); 
+    updateLeg(legFrontRight, i, currentY, Z_BASE);
+    updateLeg(legBackLeft, i, currentY, Z_BASE);
+    updateLeg(legBackRight, i, currentY, Z_BASE);
   }
 }
 
@@ -125,7 +125,7 @@ void updateLeg(LegIK &leg, float x, float y, float z) {
     // Serial.print(" Tibia: "); Serial.println(t);
     // delay(1);
   } else {
-    // Serial.println("Error: Target out of reach.");
+    Serial.println("Error: Target out of reach.");
   }
 }
 
