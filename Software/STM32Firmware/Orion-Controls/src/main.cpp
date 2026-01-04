@@ -81,7 +81,7 @@ void loop() {
 
 void stepGait() {
   const int Z_BASE = 180;     // "Ground" level
-  const int STEP_HEIGHT = 20; // Lift height
+  const int STEP_HEIGHT = 40; // Lift height
   const int INTERPOLATION_INCREMENT = 2; // Speed/Resolution
   const int GAIT_X_MAX = 20;
   const int GAIT_X_MIN = -20;
@@ -105,13 +105,13 @@ void stepGait() {
     int stanceZ = Z_BASE;
 
     // Apply to Diagonal Pairs
-    // Pair A: Swing
-    updateLeg(legFrontLeft, swingX, currentY, swingZ);
-    updateLeg(legBackRight, swingX, currentY, swingZ);
-    
     // Pair B: Stance
     updateLeg(legFrontRight, stanceX, currentY, stanceZ);
     updateLeg(legBackLeft, stanceX, currentY, stanceZ);
+
+    // Pair A: Swing
+    updateLeg(legFrontLeft, swingX, currentY, swingZ);
+    updateLeg(legBackRight, swingX, currentY, swingZ);
   }
 
   // --- HALF CYCLE 2 ---
@@ -128,14 +128,14 @@ void stepGait() {
     
     float stanceX = GAIT_X_MAX - (i - GAIT_X_MIN);
     int stanceZ = Z_BASE;
-
-    // Pair A: Stance
-    updateLeg(legFrontLeft, stanceX, currentY, stanceZ);
-    updateLeg(legBackRight, stanceX, currentY, stanceZ);
     
     // Pair B: Swing
     updateLeg(legFrontRight, swingX, currentY, swingZ);
     updateLeg(legBackLeft, swingX, currentY, swingZ);
+    // Pair A: Stance
+    updateLeg(legFrontLeft, stanceX, currentY, stanceZ);
+    updateLeg(legBackRight, stanceX, currentY, stanceZ);
+
   }
 }
 
