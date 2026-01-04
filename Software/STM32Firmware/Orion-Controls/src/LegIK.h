@@ -6,7 +6,9 @@
 
 class LegIK {
   public:
-    LegIK();
+    LegIK(float servoCenterHip, float servoCenterFemur, float servoCenterTibia, 
+          int channelHip, int channelFemur, int channelTibia, 
+          bool isFrontLeg, bool isLeftLeg);
     
     // Calculates target angles for servo (0-270 range)
     // Returns true if position is reachable, false if not
@@ -17,22 +19,33 @@ class LegIK {
     float getFemurServoAngle();
     float getTibiaServoAngle();
 
+    // Getters for the servo channels
+    int getHipServoChannel();
+    int getFemurServoChannel();
+    int getTibiaServoChannel();
+    
   private:
     // Limb lengths    
     const float L1_HIP = 39.3;
     const float L2_FEMUR = 109.50; 
     const float L3_TIBIA = 119.90; 
-
     // Design offsets
     const float THETA_TIBIA_OFFSET = 5.88; // degrees
     // Servo Clocking Offsets, calibrated through clocking script
-    const float SERVO_CENTER_HIP = 153;
-    const float SERVO_CENTER_FEMUR = 153;
-    const float SERVO_CENTER_TIBIA = 147;
+    const float SERVO_CENTER_HIP;
+    const float SERVO_CENTER_FEMUR;
+    const float SERVO_CENTER_TIBIA;
+    // Channels
+    const int CHANNEL_HIP;
+    const int CHANNEL_FEMUR;
+    const int CHANNEL_TIBIA;
+    // Configs
+    const bool IS_FRONT_LEG;
+    const bool IS_LEFT_LEG;
 
-    float thetaHipServo;
-    float thetaFemurServo;
-    float thetaTibiaServo;
+    float thetaHipServo_;
+    float thetaFemurServo_;
+    float thetaTibiaServo_;
 
     float toDegrees(float rad);
     float toRadians(float deg);
