@@ -3,6 +3,8 @@ import numpy as np
 import time
 import random
 
+# Blink animation is nice
+# Best and most robust version
 class RoboEyes:
     def __init__(self, width, height, bg_color=(0, 0, 0), eye_color=(255, 190, 0)):
         self.width = width
@@ -10,11 +12,19 @@ class RoboEyes:
         self.bg_color = bg_color
         self.eye_color = eye_color
         
-        # --- Configuration ---
-        self.eye_w = 120   # Width of one eye
-        self.eye_h = 130   # Height
-        self.eye_r = 30    # Corner radius
-        self.eye_spacing = 40 # Space between eyes
+        # --- Configuration --- at 640x480
+        if self.width == 640 and self.height == 480:
+            self.eye_w = 120   # Width of one eye
+            self.eye_h = 130   # Height
+            self.eye_r = 30    # Corner radius
+            self.eye_spacing = 40 # Space between eyes
+
+        # --- Configuration --- at 1920 x 1080
+        if self.width == 1920 and self.height == 1080:
+            self.eye_w = int(280*1.5)   # Width of one eye
+            self.eye_h = int(350*1.5)   # Height
+            self.eye_r = int(70*1.5)    # Corner radius
+            self.eye_spacing = int(100*1.2) # Space between eyes
         
         # Moods: 'default', 'happy', 'angry', 'tired', 'confused'
         self.mood = 'default'
@@ -64,8 +74,12 @@ class RoboEyes:
         # --- 2. Idle Movement ---
         if self.auto_idle:
             if current_time > self.next_move_time:
-                self.target_x = random.randint(-40, 40)
-                self.target_y = random.randint(-30, 30)
+                if self.width == 640 and self.height == 480:
+                    self.target_x = random.randint(-40, 40)
+                    self.target_y = random.randint(-30, 30)
+                if self.width == 1920 and self.height == 1080:
+                    self.target_x = random.randint(-250, 250)
+                    self.target_y = random.randint(-200, 200)
                 self.next_move_time = current_time + random.uniform(1.0, 3.0)
         
         # Smooth interpolation
@@ -186,11 +200,15 @@ class RoboEyes:
 # --- Main Application Loop ---
 def main():
     WIN_NAME = "RoboEyes Port"
-    WIDTH, HEIGHT = 640, 480
+    # WIDTH, HEIGHT = 640, 480
+    WIDTH, HEIGHT = 1920, 1080
     
     cv2.namedWindow(WIN_NAME, cv2.WINDOW_NORMAL)
-    cv2.resizeWindow(WIN_NAME, WIDTH, HEIGHT)
-    
+    if WIDTH==640 and HEIGHT==480:
+        cv2.resizeWindow(WIN_NAME, WIDTH, HEIGHT)
+    elif WIDTH==1920 and HEIGHT==1080:
+        cv2.setWindowProperty(WIN_NAME, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
     eyes = RoboEyes(WIDTH, HEIGHT)
     
     canvas = np.zeros((HEIGHT, WIDTH, 3), dtype=np.uint8)
