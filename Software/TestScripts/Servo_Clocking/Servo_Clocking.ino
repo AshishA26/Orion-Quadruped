@@ -9,6 +9,7 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 #define SERVO_MIN 500 
 #define SERVO_MAX 2500 
 String readString = "";
+int channel = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -17,7 +18,7 @@ void setup() {
   pwm.setOscillatorFrequency(27000000);
   // The Animos 35KG servo is a digital servo - theoretically can use 50-330Hz
   pwm.setPWMFreq(50);  // Analog servos run at ~50 Hz updates
-  pwm.writeMicroseconds(1, angleToPulse(135));
+  // pwm.writeMicroseconds(1, angleToPulse(135));
 }
 
 void loop() {
@@ -27,23 +28,43 @@ void loop() {
     delay(2);
   }
 
-  if (readString.length() >0) {
+  if (readString.length() > 0) {
+    readString.trim(); // Remove any leading/trailing whitespace or newlines
+    Serial.print("Received: ");
     Serial.println(readString);
+
+    // Check if the string contains "ch"
+    int chIndex = readString.indexOf("ch");
+    if (chIndex >= 0) {
+      // Find where the number starts (usually right after 'ch' + space)
+      String channelPart = readString.substring(chIndex + 2); 
+      channel = channelPart.toInt();
+      Serial.print("Channel changed to: ");
+      Serial.println(channel);
+      
+      // Clear readString so it doesn't try to move a servo to "ch 5" degrees
+      readString = ""; 
+    } 
+    else {
+      // No "ch" found, treat the input as a position value
     int n = readString.toInt();
 
     if(n >= 270)
     {
-      Serial.print("writing Microseconds: ");
+      Serial.print("Writing Microseconds to channel ");
+      Serial.print(channel);
+      Serial.print(": ");
       Serial.println(n);
-      pwm.writeMicroseconds(1, n);
+      pwm.writeMicroseconds(channel, n);
     }
     else
-    {   
-      Serial.print("writing Angle: ");
+    { 
+      Serial.print("Writing Angle to channel ");
+      Serial.print(channel);
+      Serial.print(": ");
       Serial.println(n);
-      pwm.writeMicroseconds(1, angleToPulse(n));
+      pwm.writeMicroseconds(channel, angleToPulse(n));
     }
-
     readString="";
   } 
 }
