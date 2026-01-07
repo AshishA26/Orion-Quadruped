@@ -6,8 +6,8 @@
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
 // 0 to 270 degrees is 500 to 2500 microseconds
-#define SERVO_MIN 500 
-#define SERVO_MAX 2500 
+#define SERVO_MIN 500
+#define SERVO_MAX 2500
 String readString = "";
 int channel = 0;
 
@@ -22,14 +22,14 @@ void setup() {
 }
 
 void loop() {
-   while (Serial.available()) {
+  while (Serial.available()) {
     char c = Serial.read();  //gets one byte from serial buffer
     readString += c;
     delay(2);
   }
 
   if (readString.length() > 0) {
-    readString.trim(); // Remove any leading/trailing whitespace or newlines
+    readString.trim();  // Remove any leading/trailing whitespace or newlines
     Serial.print("Received: ");
     Serial.println(readString);
 
@@ -37,41 +37,39 @@ void loop() {
     int chIndex = readString.indexOf("ch");
     if (chIndex >= 0) {
       // Find where the number starts (usually right after 'ch' + space)
-      String channelPart = readString.substring(chIndex + 2); 
+      String channelPart = readString.substring(chIndex + 2);
       channel = channelPart.toInt();
       Serial.print("Channel changed to: ");
       Serial.println(channel);
-      
+
       // Clear readString so it doesn't try to move a servo to "ch 5" degrees
-      readString = ""; 
-    } 
-    else {
+      readString = "";
+    } else {
       // No "ch" found, treat the input as a position value
-    int n = readString.toInt();
+      int n = readString.toInt();
 
-    if(n >= 270)
-    {
-      Serial.print("Writing Microseconds to channel ");
-      Serial.print(channel);
-      Serial.print(": ");
-      Serial.println(n);
-      pwm.writeMicroseconds(channel, n);
+      if (n >= 270) {
+        Serial.print("Writing Microseconds to channel ");
+        Serial.print(channel);
+        Serial.print(": ");
+        Serial.println(n);
+        pwm.writeMicroseconds(channel, n);
+      } else {
+        Serial.print("Writing Angle to channel ");
+        Serial.print(channel);
+        Serial.print(": ");
+        Serial.println(n);
+        pwm.writeMicroseconds(channel, angleToPulse(n));
+      }
+      readString = "";
     }
-    else
-    { 
-      Serial.print("Writing Angle to channel ");
-      Serial.print(channel);
-      Serial.print(": ");
-      Serial.println(n);
-      pwm.writeMicroseconds(channel, angleToPulse(n));
-    }
-    readString="";
-  } 
+  }
 }
-
 int angleToPulse(int ang) {
   int pulse = map(ang, 0, 270, SERVO_MIN, SERVO_MAX);
-  Serial.print("Angle: "); Serial.print(ang);
-  Serial.print(" Pulse: "); Serial.println(pulse);
+  Serial.print("Angle: ");
+  Serial.print(ang);
+  Serial.print(" Pulse: ");
+  Serial.println(pulse);
   return pulse;
 }
