@@ -22,6 +22,8 @@ void stepGait();
 void unisonGait();
 void updateLeg(LegIK &leg, float, float, float);
 void setServoAngle(int, float);
+void standingPose();
+void heelingPose();
 
 void setup() {
   pwm.begin();
@@ -76,7 +78,9 @@ void loop() {
   // }
   
   // Gait pattern
-  stepGait();
+  // stepGait();
+  // standingPose();
+  heelingPose();
 }
 
 void stepGait() {
@@ -168,6 +172,32 @@ void unisonGait() {
     updateLeg(legBackLeft, i, currentY, Z_BASE);
     updateLeg(legBackRight, i, currentY, Z_BASE);
   }
+}
+
+void standingPose() {
+    int back_x = 0;
+    int front_x = 0;
+    int back_z = 160;
+    int front_z = 160;
+    int y = 0; // y is not used
+
+    updateLeg(legFrontLeft, front_x, y, front_z);
+    updateLeg(legFrontRight, front_x, y, front_z);
+    updateLeg(legBackLeft, back_x, y, back_z);
+    updateLeg(legBackRight, back_x, y, back_z);
+}
+
+void heelingPose() {
+    int back_x = -20;
+    int front_x = -20;
+    int back_z = 120;
+    int front_z = 180;
+    int y = 0; // y is not used
+
+    updateLeg(legFrontLeft, front_x, y, front_z);
+    updateLeg(legFrontRight, front_x, y, front_z);
+    updateLeg(legBackLeft, back_x, y, back_z);
+    updateLeg(legBackRight, back_x, y, back_z);
 }
 
 void updateLeg(LegIK &leg, float x, float y, float z) {
