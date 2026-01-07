@@ -47,6 +47,8 @@ class LegIK {
     float thetaFemurServo_;
     float thetaTibiaServo_;
 
+    float offset_hip;
+
     float toDegrees(float rad);
     float toRadians(float deg);
 };
