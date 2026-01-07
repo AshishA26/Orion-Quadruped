@@ -21,10 +21,10 @@ class RoboEyes:
 
         # --- Configuration --- at 1920 x 1080
         if self.width == 1920 and self.height == 1080:
-            self.eye_w = 280   # Width of one eye
-            self.eye_h = 350   # Height
-            self.eye_r = 70    # Corner radius
-            self.eye_spacing = 100 # Space between eyes
+            self.eye_w = int(280*1.5)   # Width of one eye
+            self.eye_h = int(350*1.5)   # Height
+            self.eye_r = int(70*1.5)    # Corner radius
+            self.eye_spacing = int(100*1.2) # Space between eyes
         
         # Moods: 'default', 'happy', 'angry', 'tired', 'confused'
         self.mood = 'default'
