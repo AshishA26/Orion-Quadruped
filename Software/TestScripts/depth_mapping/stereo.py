@@ -4,9 +4,9 @@ import numpy as np
 # === CONFIGURATION ===
 CALIB_FILE = "stereo_calibration.npz"
 # Lower resolution for SGBM performance
-WIDTH, HEIGHT = 640, 480 
+WIDTH, HEIGHT = 640, 360
 
-def gstreamer_pipeline(sensor_id=0, width=640, height=480, framerate=30):
+def gstreamer_pipeline(sensor_id=0, width=WIDTH, height=HEIGHT, framerate=30):
     return (
         f"nvarguscamerasrc sensor-id={sensor_id} ! "
         f"video/x-raw(memory:NVMM), width={width}, height={height}, format=NV12, framerate={framerate}/1 ! "
@@ -81,8 +81,13 @@ def run_depth_sensing():
         cv2.imshow("Left Rectified", rectified_L)
         cv2.imshow("Depth (Disparity)", disp_color)
 
-        if cv2.waitKey(1) == ord('q'):
+        key =cv2.waitKey(1)
+        # Hit "q" or "ESC" to close the window
+        if key == ord('q') or key == 27:
             break
+        if key == ord('s'):
+            cv2.imwrite("left.jpeg", rectified_L)
+            cv2.imwrite("right.jpeg", rectified_R)
 
     cap_left.release()
     cap_right.release()
