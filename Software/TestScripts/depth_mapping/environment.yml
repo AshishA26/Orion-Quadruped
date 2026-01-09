@@ -1,0 +1,11 @@
+name: stereo_env
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+    - numpy
+    - opencv-python
+    - onnxruntime       # Use 'onnxruntime-gpu' here if you have a GPU and CUDA installed
+    - requests          # For downloading the model automatically
