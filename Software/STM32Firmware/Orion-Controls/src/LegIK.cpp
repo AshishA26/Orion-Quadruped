@@ -22,11 +22,11 @@ bool LegIK::calculate(float x, float y, float z) {
   // Final Hip Servo Angle
   if(IS_FRONT_LEG) {
     thetaHipServo_ = SERVO_CENTER_HIP + toDegrees(theta1_rad);
-    // offset_hip = SERVO_CENTER_HIP; // + 10
+    offset_hip = SERVO_CENTER_HIP + 4;
   } else {
     // For rear legs Hip servo moves in the oppsite direction
     thetaHipServo_ = SERVO_CENTER_HIP - toDegrees(theta1_rad);
-    // offset_hip = SERVO_CENTER_HIP; // - 10
+    offset_hip = SERVO_CENTER_HIP - 4;
   }
 
   // --- Leg Plane (Femur & Tibia) ---
@@ -64,7 +64,7 @@ int LegIK::getHipServoChannel() { return CHANNEL_HIP;}
 int LegIK::getFemurServoChannel() { return CHANNEL_FEMUR;}
 int LegIK::getTibiaServoChannel() { return CHANNEL_TIBIA;}
 
-float LegIK::getHipServoAngle() { return SERVO_CENTER_HIP; } // thetaHipServo_;
+float LegIK::getHipServoAngle() { return offset_hip; } // thetaHipServo_;
 float LegIK::getFemurServoAngle() { return thetaFemurServo_; }
 float LegIK::getTibiaServoAngle() { return thetaTibiaServo_; }
 
