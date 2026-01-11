@@ -23,19 +23,22 @@ void unisonGait();
 void updateLeg(LegIK &leg, float, float, float);
 void setServoAngle(int, float);
 void standingPose();
+void crouchingPose();
 void heelingPose();
 
 void setup() {
+  delay(40000);
   pwm.begin();
   pwm.setOscillatorFrequency(27000000);
   pwm.setPWMFreq(50); 
   
   // Move all legs to home position
-  updateLeg(legFrontLeft, currentX, currentY, currentZ);
-  updateLeg(legFrontRight, currentX, currentY, currentZ);
-  updateLeg(legBackLeft, currentX, currentY, currentZ);
-  updateLeg(legBackRight, currentX, currentY, currentZ);
-  
+  // updateLeg(legFrontLeft, currentX, currentY, currentZ);
+  // updateLeg(legFrontRight, currentX, currentY, currentZ);
+  // updateLeg(legBackLeft, currentX, currentY, currentZ);
+  // updateLeg(legBackRight, currentX, currentY, currentZ);
+  standingPose();
+  delay(2000);
   // Serial.begin(9600);
   // Serial.println("Inverse Kinematics Ready. Enter X value:");
 }
@@ -78,14 +81,15 @@ void loop() {
   // }
   
   // Gait pattern
-  // stepGait();
+  stepGait();
   // standingPose();
-  heelingPose();
+  // heelingPose();
+  // crouchingPose();
 }
 
 void stepGait() {
   const int Z_BASE = 180;     // "Ground" level
-  const int STEP_HEIGHT = 40; // Lift height
+  const int STEP_HEIGHT = 50; // Lift height
   const int INTERPOLATION_INCREMENT = 2; // Speed/Resolution
   const int GAIT_X_MAX = 20;
   const int GAIT_X_MIN = -20;
@@ -179,6 +183,19 @@ void standingPose() {
     int front_x = 0;
     int back_z = 160;
     int front_z = 160;
+    int y = 0; // y is not used
+
+    updateLeg(legFrontLeft, front_x, y, front_z);
+    updateLeg(legFrontRight, front_x, y, front_z);
+    updateLeg(legBackLeft, back_x, y, back_z);
+    updateLeg(legBackRight, back_x, y, back_z);
+}
+
+void crouchingPose() {
+    int back_x = 0;
+    int front_x = 0;
+    int back_z = 100;
+    int front_z = 100;
     int y = 0; // y is not used
 
     updateLeg(legFrontLeft, front_x, y, front_z);

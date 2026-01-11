@@ -76,7 +76,6 @@ models/Jetson/**
 # Misc
 *.map
 *.m
-*.png
 
 # Eclipse CDT project files
 .cproject
@@ -331,3 +330,6 @@ __marimo__/
 
 
 Jetson_Orin_Nano_DevKit.stp
+**/depth_mapping/models/
+isaac_ros_common
+rf2o_laser_odometry
