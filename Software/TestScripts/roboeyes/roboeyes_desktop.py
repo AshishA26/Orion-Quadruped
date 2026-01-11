@@ -49,6 +49,10 @@ class RoboEyes:
 
     def set_mood(self, mood):
         self.mood = mood
+    
+    def toggle_animation(self):
+        self.auto_blink = not self.auto_blink
+        self.auto_idle = not self.auto_idle
 
     def update(self):
         current_time = time.time()
@@ -58,7 +62,7 @@ class RoboEyes:
             if not self.is_blinking and current_time > self.next_blink_time:
                 self.is_blinking = True
                 self.blink_start_time = current_time
-                self.next_blink_time = current_time + random.uniform(2, 6)
+                self.next_blink_time = current_time + random.uniform(1, 3) # Original was (2, 6)
         
         if self.is_blinking:
             t = (current_time - self.blink_start_time) / self.blink_duration
@@ -80,11 +84,18 @@ class RoboEyes:
                 if self.width == 1920 and self.height == 1080:
                     self.target_x = random.randint(-250, 250)
                     self.target_y = random.randint(-200, 200)
-                self.next_move_time = current_time + random.uniform(1.0, 3.0)
+                self.next_move_time = current_time + random.uniform(0.0, 2.0) # Original was (1.0, 3.0)
         
         # Smooth interpolation
         self.x += (self.target_x - self.x) * 0.1
         self.y += (self.target_y - self.y) * 0.1
+
+        # Override
+        if not self.auto_idle and not self.auto_blink:
+            self.x = 0
+            self.y = 0
+            self.target_x = 0
+            self.target_y = 0
 
     def draw(self, frame):
         # Clear background
@@ -226,6 +237,7 @@ def main():
         elif key == ord('h'): eyes.set_mood('happy')
         elif key == ord('a'): eyes.set_mood('angry')
         elif key == ord('t'): eyes.set_mood('tired')
+        elif key == ord('s'): eyes.toggle_animation()
         elif key == ord('d'): eyes.set_mood('default')
 
     cv2.destroyAllWindows()
