@@ -23,14 +23,14 @@ A control board was created to house all compute-related items.
 
 ![Control board](./photos/Control_Board.jpg)
 
-| Control Board  | Schematics |
+| Control Board Schematic  | Compute Sub-Schematic |
 | :---: | :---: |
-| ![Control board](./photos/Control_Board.jpg)  | ![Schematic Board](./photos/Power_Board.jpg) |
+| ![Control board](./photos/Orion-Control-Board.svg)  | ![Schematic Board](./photos/Orion-Control-Board-Compute.svg) |
 
 
 | Control Board  | Schematics |
 | :---: | :---: |
-| ![Control board](./photos/Control_Board.jpg)  | ![Power Board](./photos/Power_Board.jpg) |
+| ![Control board](./photos/Power_Board.jpg)  | ![Power Board](./photos/Orion-Power-Board.svg) |
 
 ## Mechanical
 
