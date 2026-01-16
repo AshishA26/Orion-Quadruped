@@ -1,9 +1,9 @@
 # Orion - Quadruped Robot Dog
 Orion is a ROS2-driven, 12-DOF quadruped robot dog that I designed, built, and programmed from scratch.
 
-![Orion](./photos/Orion_Isometric.JPG)
+[![Orion](./photos/Orion_Isometric_Thumb.JPG)](./photos/Orion_Isometric.JPG)
 
-![Orion Pose](./photos/Orion_Pose.JPG)
+[![Orion Pose](./photos/Orion_Pose_Thumb.JPG)](./photos/Orion_Pose_Thumb.JPG)
 
 [Demo](https://youtu.be/V8gZQcQaEmc)
 
@@ -19,18 +19,17 @@ Disparity Mapping
 GIF?
 
 ## Electrical
-A control board was created to house all compute-related items.
+The Control Board PCB was created to house all compute-related items.
 
 ![Control board](./photos/Control_Board.jpg)
 
-| Control Board Schematic  | Compute Sub-Schematic |
+| Control Board Schematic  | Control Board Compute Schematic |
 | :---: | :---: |
 | ![Control board](./photos/Orion-Control-Board.svg)  | ![Schematic Board](./photos/Orion-Control-Board-Compute.svg) |
 
+The Power Board PCB was created to handle battery distribution, servo connections, and battery alarms.
 
-| Control Board  | Schematics |
-| :---: | :---: |
-| ![Control board](./photos/Power_Board.jpg)  | ![Power Board](./photos/Orion-Power-Board.svg) |
-
+![Control board](./photos/Power_Board.jpg)
+![Power Board](./photos/Orion-Power-Board.svg)
 ## Mechanical
 
