@@ -30,11 +30,15 @@ The Power Board PCB was created to handle battery distribution, servo connection
 ### Schematics
 | Control Board Schematic | Control Board Compute Schematic |
 | :---: | :---: |
-| ![Control board](./photos/Orion-Control-Board.svg) | ![Schematic Board](./photos/Orion-Control-Board-Compute.svg) |
+| ![Control board schematic](./photos/Orion-Control-Board.svg) | ![Compute schematic](./photos/Orion-Control-Board-Compute.svg) |
 | Power Board Schematic | |
-| ![Power Board](./photos/Orion-Power-Board.svg) | |
+| ![Power Board schematic](./photos/Orion-Power-Board.svg) | |
 
 
 ## Mechanical
+![Body Parts](./photos/Body_Parts.png)
+![Leg Assembly](./photos/Leg_Assembly.jpg)
+![Orion_Inside](./photos/Orion_Inside.JPG)
+![Orion_Inside_with_Shelves](./photos/Orion_Inside_with_Shelves.JPG)
 
-![Power Board](./photos/Orion-Power-Board.svg)
+
