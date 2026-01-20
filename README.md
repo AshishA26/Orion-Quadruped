@@ -23,13 +23,22 @@ The Control Board PCB was created to house all compute-related items.
 
 ![Control board](./photos/Control_Board.jpg)
 
-| Control Board Schematic  | Control Board Compute Schematic |
-| :---: | :---: |
-| ![Control board](./photos/Orion-Control-Board.svg)  | ![Schematic Board](./photos/Orion-Control-Board-Compute.svg) |
-
 The Power Board PCB was created to handle battery distribution, servo connections, and battery alarms.
 
-![Control board](./photos/Power_Board.jpg)
-![Power Board](./photos/Orion-Power-Board.svg)
+![Power board](./photos/Power_Board.jpg)
+
+### Schematics
+| Control Board Schematic | Control Board Compute Schematic |
+| :---: | :---: |
+| ![Control board schematic](./photos/Orion-Control-Board.svg) | ![Compute schematic](./photos/Orion-Control-Board-Compute.svg) |
+| Power Board Schematic | |
+| ![Power Board schematic](./photos/Orion-Power-Board.svg) | |
+
+
 ## Mechanical
+![Body Parts](./photos/Body_Parts.png)
+![Leg Assembly](./photos/Leg_Assembly.jpg)
+![Orion_Inside](./photos/Orion_Inside.JPG)
+![Orion_Inside_with_Shelves](./photos/Orion_Inside_with_Shelves.JPG)
+
 
