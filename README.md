@@ -16,8 +16,6 @@ Disparity Mapping
 
 ![SLAM](./photos/lidar_slam.png)
 
-GIF?
-
 ## Electrical
 The Control Board PCB was created to house all compute-related items.
 
