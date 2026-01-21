@@ -1,11 +1,11 @@
 # Orion - Quadruped Robot Dog
 Orion is a ROS2-driven, 12-DOF quadruped robot dog that I designed, built, and programmed from scratch.
 
+Check out the quick [demo video](https://youtu.be/V8gZQcQaEmc)!
+
 [![Orion](./photos/Orion_Isometric_Thumb.JPG)](./photos/Orion_Isometric.JPG)
 
 [![Orion Pose](./photos/Orion_Pose_Thumb.JPG)](./photos/Orion_Pose_Thumb.JPG)
-
-[Demo](https://youtu.be/V8gZQcQaEmc)
 
 ## Software
 Disparity Mapping
