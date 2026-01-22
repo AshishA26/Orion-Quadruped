@@ -8,13 +8,16 @@ Check out the quick [demo video](https://youtu.be/V8gZQcQaEmc)!
 [![Orion Pose](./photos/Orion_Pose_Thumb.JPG)](./photos/Orion_Pose_Thumb.JPG)
 
 ## Software
-Disparity Mapping
+| LiDAR SLAM  | Exploring reinforcement learning in Isaac Lab |
+| :---: | :---: |
+| ![SLAM](./photos/lidar_slam.png)  | ![RL](./photos/Isaac_Lab.png)
 
-| Before  | After |
+| Original image  | Disparity map generated |
 | :---: | :---: |
 | ![Original Image](./photos/original_depth.png)  | ![Depth Map](./photos/midas_depth.png) |
 
-![SLAM](./photos/lidar_slam.png)
+LiDAR SLAM:
+
 
 ## Electrical
 The Control Board PCB was created to house all compute-related items.
@@ -34,9 +37,8 @@ The Power Board PCB was created to handle battery distribution, servo connection
 
 
 ## Mechanical
-![Body Parts](./photos/Body_Parts.png)
-![Leg Assembly](./photos/Leg_Assembly.jpg)
-![Orion_Inside](./photos/Orion_Inside.JPG)
-![Orion_Inside_with_Shelves](./photos/Orion_Inside_with_Shelves.JPG)
-
-
+| Main body parts | Leg design |
+| :---: | :---: |
+| ![Body Parts](./photos/Body_Parts.png) | ![Leg Assembly](./photos/Leg_Assembly.jpg) |
+| Inside Orion (without shelves) | Inside Orion (with shelves) |
+| ![Orion_Inside](./photos/Orion_Inside.JPG) | ![Orion_Inside_with_Shelves](./photos/Orion_Inside_with_Shelves.JPG) |
