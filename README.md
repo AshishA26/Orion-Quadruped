@@ -12,12 +12,9 @@ Check out the quick [demo video](https://youtu.be/V8gZQcQaEmc)!
 | :---: | :---: |
 | ![SLAM](./photos/lidar_slam.png)  | ![RL](./photos/Isaac_Lab.png)
 
-| Original image  | Disparity map generated |
+| Original image from Jetson camera feed  | Disparity map generated |
 | :---: | :---: |
 | ![Original Image](./photos/original_depth.png)  | ![Depth Map](./photos/midas_depth.png) |
-
-LiDAR SLAM:
-
 
 ## Electrical
 The Control Board PCB was created to house all compute-related items.
