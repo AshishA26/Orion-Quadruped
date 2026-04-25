@@ -15,12 +15,13 @@ bool LegIK::calculate(float x, float y, float z) {
   // D = sqrt(GivenY^2 + GivenZ^2 - L1^2) 
   float term1 = (y * y) + (z * z) - (L1_HIP * L1_HIP);
   if (term1 < 0) return false; // Impossible geometry
-  float D = z;
+  float D = sqrt(term1);
   // Calculate virtual Hip Angle
   // Note: atan2(y, z) handles the quadrant logic better than atan(y/z)
-  float theta1_rad = atan2(y, z); 
+  // Note: Subtract the L1 offset angle so straight down equals 0 degrees
+  float theta1_rad = atan2(y, z) - atan2(L1_HIP, D); 
   // Final Hip Servo Angle
-  if(IS_FRONT_LEG) {
+  if(IS_LEFT_LEG) { // Left/right symmetry
     thetaHipServo_ = SERVO_CENTER_HIP + toDegrees(theta1_rad);
     offset_hip = SERVO_CENTER_HIP + 4;
   } else {
@@ -64,7 +65,7 @@ int LegIK::getHipServoChannel() { return CHANNEL_HIP;}
 int LegIK::getFemurServoChannel() { return CHANNEL_FEMUR;}
 int LegIK::getTibiaServoChannel() { return CHANNEL_TIBIA;}
 
-float LegIK::getHipServoAngle() { return offset_hip; } // thetaHipServo_;
+float LegIK::getHipServoAngle() { return thetaHipServo_; } // thetaHipServo_;
 float LegIK::getFemurServoAngle() { return thetaFemurServo_; }
 float LegIK::getTibiaServoAngle() { return thetaTibiaServo_; }
 

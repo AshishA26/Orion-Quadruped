@@ -27,7 +27,7 @@ void crouchingPose();
 void heelingPose();
 
 void setup() {
-  delay(40000);
+  delay(5000);
   pwm.begin();
   pwm.setOscillatorFrequency(27000000);
   pwm.setPWMFreq(50); 
