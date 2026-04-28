@@ -19,6 +19,7 @@ float currentZ = 160; // Height of Dog, mm
 
 // Function declarations
 void stepGait();
+void sineStepGait();
 void unisonGait();
 void updateLeg(LegIK &leg, float, float, float);
 void setServoAngle(int, float);
@@ -27,7 +28,7 @@ void crouchingPose();
 void heelingPose();
 
 void setup() {
-  delay(40000);
+  delay(5000);
   pwm.begin();
   pwm.setOscillatorFrequency(27000000);
   pwm.setPWMFreq(50); 
@@ -81,7 +82,8 @@ void loop() {
   // }
   
   // Gait pattern
-  stepGait();
+  // stepGait();
+  sineStepGait();
   // standingPose();
   // heelingPose();
   // crouchingPose();
@@ -144,6 +146,66 @@ void stepGait() {
     updateLeg(legFrontLeft, stanceX, currentY, stanceZ);
     updateLeg(legBackRight, stanceX, currentY, stanceZ);
 
+  }
+}
+
+void sineStepGait() {
+  const int Z_BASE = 180;        // "Ground" level
+  const int STEP_HEIGHT = 50;    // Lift height for the swing phase
+  const int STANCE_DEPTH = 15;   // Dip depth for the stance phase (pushes down)
+  const int INTERPOLATION_INCREMENT = 2; // Speed/Resolution
+  const int GAIT_X_MAX = 20;
+  const int GAIT_X_MIN = -20;
+  const float TOTAL_X_DIST = GAIT_X_MAX - GAIT_X_MIN;
+
+  // --- HALF CYCLE 1 ---
+  // Pair A: Front Left + Back Right -> SWING (Move forward + Lift)
+  // Pair B: Front Right + Back Left -> STANCE (Move backward + Dip)
+  for (float i = GAIT_X_MIN; i <= GAIT_X_MAX; i += INTERPOLATION_INCREMENT) {
+    
+    float progress = (i - GAIT_X_MIN) / TOTAL_X_DIST; // 0.0 to 1.0
+    float angle = progress * PI; 
+    
+    // Calculate SWING Geometry (Sinewave arc UP)
+    int swingZ = Z_BASE - (sin(angle) * STEP_HEIGHT);
+    float swingX = i; 
+    
+    // Calculate STANCE Geometry (Sinewave arc DOWN)
+    int stanceZ = Z_BASE + (sin(angle) * STANCE_DEPTH);
+    float stanceX = GAIT_X_MAX - (i - GAIT_X_MIN); 
+
+    // Pair B: Stance (Pushing down)
+    updateLeg(legFrontRight, stanceX, currentY, stanceZ);
+    updateLeg(legBackLeft, stanceX, currentY, stanceZ);
+
+    // Pair A: Swing (Lifting up)
+    updateLeg(legFrontLeft, swingX, currentY, swingZ);
+    updateLeg(legBackRight, swingX, currentY, swingZ);
+  }
+
+  // --- HALF CYCLE 2 ---
+  // Pair A: Front Left + Back Right -> STANCE (Move backward + Dip)
+  // Pair B: Front Right + Back Left -> SWING (Move forward + Lift)
+  for (float i = GAIT_X_MIN; i <= GAIT_X_MAX; i += INTERPOLATION_INCREMENT) {
+    
+    float progress = (i - GAIT_X_MIN) / TOTAL_X_DIST;
+    float angle = progress * PI;
+    
+    // SWING Geometry
+    int swingZ = Z_BASE - (sin(angle) * STEP_HEIGHT);
+    float swingX = i;
+    
+    // STANCE Geometry
+    int stanceZ = Z_BASE + (sin(angle) * STANCE_DEPTH);
+    float stanceX = GAIT_X_MAX - (i - GAIT_X_MIN);
+    
+    // Pair B: Swing (Lifting up)
+    updateLeg(legFrontRight, swingX, currentY, swingZ);
+    updateLeg(legBackLeft, swingX, currentY, swingZ);
+    
+    // Pair A: Stance (Pushing down)
+    updateLeg(legFrontLeft, stanceX, currentY, stanceZ);
+    updateLeg(legBackRight, stanceX, currentY, stanceZ);
   }
 }
 
