@@ -84,6 +84,10 @@
       "selected_by": [
         {
           "name": "gnu-tools-for-stm32-14_3_1-description",
+          "version": "1.0.1+st.1"
+        },
+        {
+          "name": "gnu-tools-for-stm32-14_3_1-description",
           "version": ">=0.0.1"
         }
       ]
