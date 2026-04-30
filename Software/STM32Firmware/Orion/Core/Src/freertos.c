@@ -25,6 +25,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "pca9685.h"
+#include "i2c.h"
 
 /* USER CODE END Includes */
 
@@ -45,7 +47,8 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+extern I2C_HandleTypeDef hi2c1;   // PCA driver is on i2c1
+extern UART_HandleTypeDef huart2; // huart1 is used for jetson, so use huart2 for debug prints
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -115,9 +118,15 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
+  osDelay(2000); // wait peripherals up
+  I2C_Scan(&hi2c1, &huart2);
+  PCA9685_Init(&hi2c1);
+  PCA9685_SetPWM_us(0, 1500);
+
   for(;;)
   {
     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+    I2C_Scan(&hi2c1, &huart2);
     osDelay(1000);
   }
   /* USER CODE END StartDefaultTask */

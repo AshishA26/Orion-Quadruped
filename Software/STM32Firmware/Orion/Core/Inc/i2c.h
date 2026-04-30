@@ -29,6 +29,8 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
+#include "stdio.h"
+#include "string.h"
 
 /* USER CODE END Includes */
 
@@ -38,12 +40,18 @@ extern I2C_HandleTypeDef hi2c3;
 
 /* USER CODE BEGIN Private defines */
 
+/* Timeout for HAL I2C operations (ms) */
+#ifndef PCA9685_I2C_TIMEOUT_MS
+#define PCA9685_I2C_TIMEOUT_MS 100
+#endif
+
 /* USER CODE END Private defines */
 
 void MX_I2C1_Init(void);
 void MX_I2C3_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+HAL_StatusTypeDef I2C_Scan(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart);
 
 /* USER CODE END Prototypes */
 
