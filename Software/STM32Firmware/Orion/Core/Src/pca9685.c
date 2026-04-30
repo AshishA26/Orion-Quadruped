@@ -1,148 +1,185 @@
 /**
  * pca9685.c
  *
- * Minimal PCA9685 driver (HAL I2C)
- *
- * Usage:
- *  - Place this file in Core/Src and the companion header in Core/Inc.
- *  - Include `pca9685.h` where needed.
- *  - Call `PCA9685_Init(&hi2c1)` (pass the HAL I2C handle).
- *  - Use `PCA9685_SetPWM_us(channel, microseconds)` to set servo pulses.
- *
- * Safety notes:
- *  - HAL blocking I2C calls are used; call from a FreeRTOS task (not an ISR).
- *  - Test with servos powered/disconnected as appropriate to avoid mechanical movement.
+ * Minimal PCA9685 driver (HAL I2C) 
+ * Ported from Adafruit_PWMServoDriver C++ library. (https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library)
  */
 
 #include "pca9685.h"
 
-/* PCA9685 register definitions (from datasheet / Adafruit library) */
-#define PCA9685_ADDR_7BIT   0x40
-#define PCA9685_ADDR        (PCA9685_ADDR_7BIT << 1)   /* HAL expects 8-bit address */
-#define PCA9685_MODE1       0x00
-#define PCA9685_PRESCALE    0xFE
-#define PCA9685_LED0_ON_L   0x06
+// Internal State
+static I2C_HandleTypeDef *pca_i2c = NULL;
+static uint8_t pca_addr = PCA9685_I2C_ADDRESS << 1;
+static uint32_t _oscillator_freq = FREQUENCY_OSCILLATOR;
 
-/* Default oscillator used by Adafruit library; matches your PlatformIO code */
-#define PCA9685_OSC_CLOCK_HZ 27000000UL
+#ifndef min
+#define min(a,b) ((a)<(b)?(a):(b))
+#endif
 
-
-
-/* Internal I2C handle used by driver; set during init */
-static I2C_HandleTypeDef *pca_hi2c = NULL;
-
-/* ---------- Helper low-level operations ---------- */
-
-/* Write single byte to PCA9685 register */
-static HAL_StatusTypeDef pca_write8(uint8_t reg, uint8_t val)
-{
-    if (!pca_hi2c) return HAL_ERROR;
-    return HAL_I2C_Mem_Write(pca_hi2c, PCA9685_ADDR, reg, I2C_MEMADD_SIZE_8BIT, &val, 1, PCA9685_I2C_TIMEOUT_MS);
+// Low Level I2C Write/Read
+static uint8_t read8(uint8_t addr) {
+    uint8_t buffer;
+    HAL_I2C_Mem_Read(pca_i2c, pca_addr, addr, I2C_MEMADD_SIZE_8BIT, &buffer, 1, HAL_MAX_DELAY);
+    return buffer;
 }
 
-/* Read single byte from PCA9685 register */
-static HAL_StatusTypeDef pca_read8(uint8_t reg, uint8_t *out)
-{
-    if (!pca_hi2c || !out) return HAL_ERROR;
-    return HAL_I2C_Mem_Read(pca_hi2c, PCA9685_ADDR, reg, I2C_MEMADD_SIZE_8BIT, out, 1, PCA9685_I2C_TIMEOUT_MS);
+static void write8(uint8_t addr, uint8_t d) {
+    HAL_I2C_Mem_Write(pca_i2c, pca_addr, addr, I2C_MEMADD_SIZE_8BIT, &d, 1, HAL_MAX_DELAY);
 }
 
-/* ---------- Public API ---------- */
+bool PCA9685_Init(I2C_HandleTypeDef *hi2c, uint8_t addr, uint8_t prescale) {
+    pca_i2c = hi2c;
+    pca_addr = addr << 1; // HAL demands 8-bit shifted address
 
-/**
- * PCA9685_Init
- *  - Stores the I2C handle and performs a soft reset (MODE1=0).
- *  - Then sets a default PWM frequency (50 Hz) suitable for servos.
- */
-void PCA9685_Init(I2C_HandleTypeDef *hi2c)
-{
-    if (!hi2c) return;
-    pca_hi2c = hi2c;
+    // Make sure device is ready
+    if (HAL_I2C_IsDeviceReady(pca_i2c, pca_addr, 3, HAL_MAX_DELAY) != HAL_OK) {
+        return false;
+    }
 
-    /* Reset MODE1 to 0 (normal mode) */
-    uint8_t mode = 0x00;
-    (void)HAL_I2C_Mem_Write(pca_hi2c, PCA9685_ADDR, PCA9685_MODE1, I2C_MEMADD_SIZE_8BIT, &mode, 1, PCA9685_I2C_TIMEOUT_MS);
+    PCA9685_Reset();
 
-    /* Default to 50 Hz for servos */
-    (void)PCA9685_SetPWMFreq(hi2c, 50.0f);
+    // set default internal frequency
+    PCA9685_SetOscillatorFrequency(FREQUENCY_OSCILLATOR);
+
+    if (prescale) {
+        PCA9685_SetExtClk(prescale);
+    } else {
+        // set default frequency of 1000
+        PCA9685_SetPWMFreq(1000);
+    }
+
+    return true;
 }
 
-/**
- * PCA9685_SetPWMFreq
- *  - Sets the PWM frequency by writing PRESCALE register.
- *  - Uses the formula from datasheet: prescale = round(osc/(4096*freq)) - 1
- *  - Returns HAL_OK on success, HAL_ERROR on bus error.
- */
-HAL_StatusTypeDef PCA9685_SetPWMFreq(I2C_HandleTypeDef *hi2c, float freq_hz)
-{
-    if (!hi2c) return HAL_ERROR;
-    pca_hi2c = hi2c;
-
-    if (freq_hz < 1.0f) freq_hz = 1.0f;
-    if (freq_hz > 3500.0f) freq_hz = 3500.0f; /* safe clamp */
-
-    float prescaleval = ((float)PCA9685_OSC_CLOCK_HZ / (4096.0f * freq_hz)) - 1.0f;
-    uint8_t prescale = (uint8_t)(prescaleval + 0.5f);
-
-    uint8_t oldmode;
-    if (pca_read8(PCA9685_MODE1, &oldmode) != HAL_OK) return HAL_ERROR;
-
-    /* Enter sleep to set prescale */
-    uint8_t sleepmode = (oldmode & 0x7F) | 0x10; /* set SLEEP bit */
-    if (pca_write8(PCA9685_MODE1, sleepmode) != HAL_OK) return HAL_ERROR;
-
-    /* Write prescale */
-    if (pca_write8(PCA9685_PRESCALE, prescale) != HAL_OK) return HAL_ERROR;
-
-    /* Restore MODE1 and restart */
-    if (pca_write8(PCA9685_MODE1, oldmode) != HAL_OK) return HAL_ERROR;
-    HAL_Delay(1); /* allow oscillator to restart */
-
-    uint8_t restart = oldmode | 0x80; /* set RESTART bit */
-    return pca_write8(PCA9685_MODE1, restart);
+void PCA9685_Reset(void) {
+    write8(PCA9685_MODE1, MODE1_RESTART);
+    HAL_Delay(10);
 }
 
-/**
- * PCA9685_SetPWM
- *  - Set ON and OFF tick values (0..4095) for the given channel (0..15).
- *  - Returns HAL_OK on success.
- *
- * Note: channel wrap/clamp should be handled by caller.
- */
-HAL_StatusTypeDef PCA9685_SetPWM(uint8_t channel, uint16_t on, uint16_t off)
-{
-    if (!pca_hi2c) return HAL_ERROR;
-    if (channel > 15) return HAL_ERROR;
-
-    uint8_t reg = PCA9685_LED0_ON_L + 4 * (channel & 0x0F);
-    uint8_t buf[4];
-
-    buf[0] = (uint8_t)(on & 0xFF);
-    buf[1] = (uint8_t)((on >> 8) & 0x0F);
-    buf[2] = (uint8_t)(off & 0xFF);
-    buf[3] = (uint8_t)((off >> 8) & 0x0F);
-
-    /* Write 4 bytes starting at LEDn_ON_L */
-    return HAL_I2C_Mem_Write(pca_hi2c, PCA9685_ADDR, reg, I2C_MEMADD_SIZE_8BIT, buf, 4, PCA9685_I2C_TIMEOUT_MS);
+void PCA9685_Sleep(void) {
+    uint8_t awake = read8(PCA9685_MODE1);
+    uint8_t sleep = awake | MODE1_SLEEP; // set sleep bit high
+    write8(PCA9685_MODE1, sleep);
+    HAL_Delay(5); // wait until cycle ends for sleep to be active
 }
 
-/**
- * PCA9685_SetPWM_us
- *  - Convenience wrapper: set pulse using microseconds.
- *  - Computes ticks assuming 50 Hz unless you previously set another freq.
- *  - Returns HAL_OK on success, HAL_ERROR if not initialized.
- */
-HAL_StatusTypeDef PCA9685_SetPWM_us(uint8_t channel, uint16_t microseconds)
-{
-    if (!pca_hi2c) return HAL_ERROR;
+void PCA9685_Wakeup(void) {
+    uint8_t sleep = read8(PCA9685_MODE1);
+    uint8_t wakeup = sleep & ~MODE1_SLEEP; // set sleep bit low
+    write8(PCA9685_MODE1, wakeup);
+}
 
-    /* Default assumption: 50 Hz operation (servo) */
-    float freq_hz = 50.0f;
+void PCA9685_SetExtClk(uint8_t prescale) {
+    uint8_t oldmode = read8(PCA9685_MODE1);
+    uint8_t newmode = (oldmode & ~MODE1_RESTART) | MODE1_SLEEP; // sleep
+    write8(PCA9685_MODE1, newmode); // go to sleep, turn off internal oscillator
 
-    /* Compute microseconds per tick: (1e6 / freq) / 4096 */
-    float tick_us = (1000000.0f / freq_hz) / 4096.0f;
-    uint32_t ticks = (uint32_t)((float)microseconds / tick_us);
-    if (ticks > 4095U) ticks = 4095U;
+    // sets both SPLLEEP and EXTCLK bits of the MODE1 register
+    write8(PCA9685_MODE1, (newmode |= MODE1_EXTCLK));
+    write8(PCA9685_PRESCALE, prescale); // set the prescaler
+    HAL_Delay(5);
+    
+    // clear SLEEP bit to start
+    write8(PCA9685_MODE1, (newmode & ~MODE1_SLEEP) | MODE1_RESTART | MODE1_AI);
+}
 
-    return PCA9685_SetPWM(channel, 0, (uint16_t)ticks);
+void PCA9685_SetPWMFreq(float freq) {
+    if (freq < 1) freq = 1;
+    if (freq > 3500) freq = 3500;
+
+    float prescaleval = (((float)_oscillator_freq / (freq * 4096.0f)) + 0.5f) - 1.0f;
+    if (prescaleval < PCA9685_PRESCALE_MIN) prescaleval = PCA9685_PRESCALE_MIN;
+    if (prescaleval > PCA9685_PRESCALE_MAX) prescaleval = PCA9685_PRESCALE_MAX;
+    uint8_t prescale = (uint8_t)prescaleval;
+
+    uint8_t oldmode = read8(PCA9685_MODE1);
+    uint8_t newmode = (oldmode & ~MODE1_RESTART) | MODE1_SLEEP; // sleep
+    write8(PCA9685_MODE1, newmode); // go to sleep
+    write8(PCA9685_PRESCALE, prescale); // set the prescaler
+    write8(PCA9685_MODE1, oldmode);
+    HAL_Delay(5);
+    // turn on auto increment
+    write8(PCA9685_MODE1, oldmode | MODE1_RESTART | MODE1_AI);
+}
+
+void PCA9685_SetOutputMode(bool totempole) {
+    uint8_t oldmode = read8(PCA9685_MODE2);
+    uint8_t newmode;
+    if (totempole) {
+        newmode = oldmode | MODE2_OUTDRV;
+    } else {
+        newmode = oldmode & ~MODE2_OUTDRV;
+    }
+    write8(PCA9685_MODE2, newmode);
+}
+
+uint8_t PCA9685_ReadPrescale(void) {
+    return read8(PCA9685_PRESCALE);
+}
+
+uint16_t PCA9685_GetPWM(uint8_t num, bool off) {
+    uint8_t reg = PCA9685_LED0_ON_L + 4 * num;
+    if (off) reg += 2;
+    
+    uint8_t buffer[2];
+    HAL_I2C_Mem_Read(pca_i2c, pca_addr, reg, I2C_MEMADD_SIZE_8BIT, buffer, 2, HAL_MAX_DELAY);
+    return (uint16_t)buffer[0] | ((uint16_t)buffer[1] << 8);
+}
+
+uint8_t PCA9685_SetPWM(uint8_t num, uint16_t on, uint16_t off) {
+    uint8_t buffer[4];
+    buffer[0] = on;
+    buffer[1] = on >> 8;
+    buffer[2] = off;
+    buffer[3] = off >> 8;
+
+    uint8_t reg = PCA9685_LED0_ON_L + 4 * num;
+    if (HAL_I2C_Mem_Write(pca_i2c, pca_addr, reg, I2C_MEMADD_SIZE_8BIT, buffer, 4, HAL_MAX_DELAY) == HAL_OK) {
+        return 0; // Success
+    }
+    return 1; // Error
+}
+
+void PCA9685_SetPin(uint8_t num, uint16_t val, bool invert) {
+    val = min(val, (uint16_t)4095);
+    if (invert) {
+        if (val == 0) {
+            PCA9685_SetPWM(num, 4096, 0);
+        } else if (val == 4095) {
+            PCA9685_SetPWM(num, 0, 4096);
+        } else {
+            PCA9685_SetPWM(num, 0, 4095 - val);
+        }
+    } else {
+        if (val == 4095) {
+            PCA9685_SetPWM(num, 4096, 0);
+        } else if (val == 0) {
+            PCA9685_SetPWM(num, 0, 4096);
+        } else {
+            PCA9685_SetPWM(num, 0, val);
+        }
+    }
+}
+
+void PCA9685_WriteMicroseconds(uint8_t num, uint16_t Microseconds) {
+    double pulse = Microseconds;
+    double pulselength = 1000000;
+
+    uint16_t prescale = PCA9685_ReadPrescale();
+
+    prescale += 1;
+    pulselength *= prescale;
+    pulselength /= _oscillator_freq;
+
+    pulse /= pulselength;
+
+    PCA9685_SetPWM(num, 0, pulse);
+}
+
+uint32_t PCA9685_GetOscillatorFrequency(void) {
+    return _oscillator_freq;
+}
+
+void PCA9685_SetOscillatorFrequency(uint32_t freq) {
+    _oscillator_freq = freq;
 }

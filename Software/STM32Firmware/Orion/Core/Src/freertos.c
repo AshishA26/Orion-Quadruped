@@ -27,7 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "pca9685.h"
 #include "i2c.h"
-
+#include "ServoConfig.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,8 +47,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-extern I2C_HandleTypeDef hi2c1;   // PCA driver is on i2c1
-extern UART_HandleTypeDef huart2; // huart1 is used for jetson, so use huart2 for debug prints
+extern I2C_HandleTypeDef hi2c1;   // PCA driver is on I2C1
+extern I2C_HandleTypeDef hi2c3;   // I2C3 is used for IMU and voltage monitors
+extern UART_HandleTypeDef huart2; // HUART1 is used for Jetson, so use HUART2 for debug prints
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -60,7 +61,9 @@ const osThreadAttr_t defaultTask_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-
+static long map(long x, long in_min, long in_max, long out_min, long out_max);
+static int angleToPulse(int ang);
+static void centerAllServos();
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -120,13 +123,24 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   osDelay(2000); // wait peripherals up
   I2C_Scan(&hi2c1, &huart2);
-  PCA9685_Init(&hi2c1);
-  PCA9685_SetPWM_us(0, 1500);
+  I2C_Scan(&hi2c3, &huart2);
+  PCA9685_Init(&hi2c1, PCA9685_I2C_ADDRESS, 0);
+  PCA9685_SetOscillatorFrequency(27000000);
+  PCA9685_SetPWMFreq(50.0f);
+
+  // OPTIONAL: Explicitly turn off ALL 16 channels at startup so they don't hold old positions
+  // for (uint8_t i = 0; i < 16; i++) {
+  //     PCA9685_SetPWM(i, 0, 4096); // 4096 turns the pin fully OFF
+  // }
+
+  // Center all 12 servos
+  centerAllServos();
 
   for(;;)
   {
     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    I2C_Scan(&hi2c1, &huart2);
+    // PCA9685_WriteMicroseconds(0, 1648);
+
     osDelay(1000);
   }
   /* USER CODE END StartDefaultTask */
@@ -135,5 +149,38 @@ void StartDefaultTask(void *argument)
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
+// Interpolation function to map angles to pulse widths
+static long map(long x, long in_min, long in_max, long out_min, long out_max) {
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+// Helper function to map angles to PWM pulses
+static int angleToPulse(int ang) {
+  int pulse = map(ang, 0, 270, SERVO_MIN, SERVO_MAX);
+  return pulse;
+}
+
+// Function to drive all servos to their configured centers
+static void centerAllServos() {
+  // Front Left Leg
+  PCA9685_WriteMicroseconds(CH_FL_HIP, angleToPulse(FL_SERVO_CENTER_HIP));
+  PCA9685_WriteMicroseconds(CH_FL_FEMUR, angleToPulse(FL_SERVO_CENTER_FEMUR));
+  PCA9685_WriteMicroseconds(CH_FL_TIBIA, angleToPulse(FL_SERVO_CENTER_TIBIA));
+
+  // Front Right Leg
+  PCA9685_WriteMicroseconds(CH_FR_HIP, angleToPulse(FR_SERVO_CENTER_HIP));
+  PCA9685_WriteMicroseconds(CH_FR_FEMUR, angleToPulse(FR_SERVO_CENTER_FEMUR));
+  PCA9685_WriteMicroseconds(CH_FR_TIBIA, angleToPulse(FR_SERVO_CENTER_TIBIA));
+
+  // Back Left Leg
+  PCA9685_WriteMicroseconds(CH_BL_HIP, angleToPulse(BL_SERVO_CENTER_HIP));
+  PCA9685_WriteMicroseconds(CH_BL_FEMUR, angleToPulse(BL_SERVO_CENTER_FEMUR));
+  PCA9685_WriteMicroseconds(CH_BL_TIBIA, angleToPulse(BL_SERVO_CENTER_TIBIA));
+
+  // Back Right Leg
+  PCA9685_WriteMicroseconds(CH_BR_HIP, angleToPulse(BR_SERVO_CENTER_HIP));
+  PCA9685_WriteMicroseconds(CH_BR_FEMUR, angleToPulse(BR_SERVO_CENTER_FEMUR));
+  PCA9685_WriteMicroseconds(CH_BR_TIBIA, angleToPulse(BR_SERVO_CENTER_TIBIA));
+}
 /* USER CODE END Application */
 
