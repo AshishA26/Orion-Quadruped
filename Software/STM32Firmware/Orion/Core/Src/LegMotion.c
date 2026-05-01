@@ -1,6 +1,6 @@
 #include "LegMotion.h"
 
-/* Global Leg Objects for RTOS task */
+/* Global Leg Objects */
 LegIK_t legFrontLeft;
 LegIK_t legFrontRight;
 LegIK_t legBackLeft;
@@ -13,7 +13,6 @@ float currentZ = 160.0f; // Height of Dog, mm
 static long map(long x, long in_min, long in_max, long out_min, long out_max);
 static int angleToPulse(int ang);
 static void setServoAngle(int channel, float angle);
-static void updateLeg(LegIK_t *leg, float x, float y, float z);
 
 // Interpolation function to map angles to pulse widths
 static long map(long x, long in_min, long in_max, long out_min, long out_max) {
@@ -34,17 +33,6 @@ void LegIK_HardwareInit(void) {
     LegIK_Init(&legBackRight, BR_SERVO_CENTER_HIP, BR_SERVO_CENTER_FEMUR, BR_SERVO_CENTER_TIBIA, CH_BR_HIP, CH_BR_FEMUR, CH_BR_TIBIA, false, false);
 }
 
-static void updateLeg(LegIK_t *leg, float x, float y, float z) {
-  if (LegIK_Calculate(leg, x, y, z)) {
-    float h = LegIK_GetHipServoAngle(leg);
-    float f = LegIK_GetFemurServoAngle(leg);
-    float t = LegIK_GetTibiaServoAngle(leg);
-    setServoAngle(LegIK_GetHipServoChannel(leg), h);
-    setServoAngle(LegIK_GetFemurServoChannel(leg), f);
-    setServoAngle(LegIK_GetTibiaServoChannel(leg), t);
-  }
-}
-
 static void setServoAngle(int channel, float angle) {
   // Constraint for safety
   if (angle < 0.0f) angle = 0.0f;
@@ -53,6 +41,17 @@ static void setServoAngle(int channel, float angle) {
   // Create mapping with extra precision to reduce integer float rounding loss
   long pulse = map((long)(angle * 100.0f), 0, 27000, SERVO_MIN, SERVO_MAX);
   PCA9685_WriteMicroseconds((uint8_t)channel, (uint16_t)pulse);
+}
+
+void updateLeg(LegIK_t *leg, float x, float y, float z) {
+  if (LegIK_Calculate(leg, x, y, z)) {
+    float h = LegIK_GetHipServoAngle(leg);
+    float f = LegIK_GetFemurServoAngle(leg);
+    float t = LegIK_GetTibiaServoAngle(leg);
+    setServoAngle(LegIK_GetHipServoChannel(leg), h);
+    setServoAngle(LegIK_GetFemurServoChannel(leg), f);
+    setServoAngle(LegIK_GetTibiaServoChannel(leg), t);
+  }
 }
 
 void standingPose(void) {
