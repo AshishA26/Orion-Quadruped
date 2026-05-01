@@ -151,15 +151,14 @@ void StartDefaultTask(void *argument)
     float time = (float)HAL_GetTick() / 1000.0f;
 
     // Example: Slowly pitch the front of the body up and down using a sine wave
-    pitch = sinf(time * 5.0f) * 0.2f; 
-    z_translation = -sinf(time * 5.0f) * 20.0f;
+    // pitch = sinf(time * 5.0f) * 0.2f; 
+    // z_translation = -sinf(time * 5.0f) * 20.0f;
     // Example: Yaw the body left and right
-    // yaw = sinf(time * 3.0f) * 0.3f;
-
+    yaw = sinf(time * 3.0f) * 0.3f;
     // Example: Roll the body left and right
     // roll = sinf(time * 4.0f) * 0.2f;
     
-    updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw);
+    updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 0.0f, 0.0f, 0.0f);
 
     osDelay(20);
 
