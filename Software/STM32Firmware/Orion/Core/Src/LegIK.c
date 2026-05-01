@@ -36,7 +36,6 @@ void LegIK_Init(LegIK_t *leg, float servoCenterHip, float servoCenterFemur, floa
 bool LegIK_Calculate(LegIK_t *leg, float x, float y, float z) 
 {
     // --- Hip Calculation ---
-    // TODO: need to revisit eqns for hip....
     // Solve for the length D in the hip plane
     // D = sqrt(GivenY^2 + GivenZ^2 - L1^2) 
     float term1 = (y * y) + (z * z) - (L1_HIP * L1_HIP);
