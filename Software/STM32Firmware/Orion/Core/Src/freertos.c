@@ -148,15 +148,20 @@ void StartDefaultTask(void *argument)
   for(;;)
   {
     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    
-    // Example: Slowly pitch the body up and down using a sine wave
     float time = (float)HAL_GetTick() / 1000.0f;
-    pitch = sinf(time) * 0.2f; // ~11 degrees of pitch
-    z_translation = sinf(time * 0.5f) * 20.0f; // Bouncing up and down 20mm
+
+    // Example: Slowly pitch the front of the body up and down using a sine wave
+    pitch = sinf(time * 5.0f) * 0.2f; 
+    z_translation = -sinf(time * 5.0f) * 20.0f;
+    // Example: Yaw the body left and right
+    // yaw = sinf(time * 3.0f) * 0.3f;
+
+    // Example: Roll the body left and right
+    // roll = sinf(time * 4.0f) * 0.2f;
     
     updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw);
-    
-    osDelay(10);
+
+    osDelay(20);
 
     // sineStepGait calculates and steps all legs
     // sineStepGait();

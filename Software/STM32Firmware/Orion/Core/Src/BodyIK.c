@@ -1,3 +1,5 @@
+// Orientation and translation of the body (Body IK) to compute foot positions for all 4 legs
+
 #include "BodyIK.h"
 
 /**
