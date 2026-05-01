@@ -60,7 +60,7 @@ void standingPose(void) {
     float front_x = 0;
     float back_z = 160;
     float front_z = 160;
-    float y = 0; // The leg equations use absolute Y
+    float y = currentY; // The leg equations use absolute Y
 
     updateLeg(&legFrontLeft, front_x, y, front_z);
     updateLeg(&legFrontRight, front_x, y, front_z);
@@ -73,7 +73,7 @@ void crouchingPose(void) {
     float front_x = 0;
     float back_z = 100;
     float front_z = 100;
-    float y = 0; 
+    float y = currentY; 
 
     updateLeg(&legFrontLeft, front_x, y, front_z);
     updateLeg(&legFrontRight, front_x, y, front_z);
@@ -86,7 +86,7 @@ void heelingPose(void) {
     float front_x = -20;
     float back_z = 120;
     float front_z = 180;
-    float y = 0; 
+    float y = currentY; 
 
     updateLeg(&legFrontLeft, front_x, y, front_z);
     updateLeg(&legFrontRight, front_x, y, front_z);

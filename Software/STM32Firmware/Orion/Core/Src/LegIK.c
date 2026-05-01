@@ -51,12 +51,19 @@ bool LegIK_Calculate(LegIK_t *leg, float x, float y, float z)
     float theta1_rad = atan2f(y, z) - atan2f(L1_HIP, D); 
     
     // Final Hip Servo Angle
-    if (leg->IS_LEFT_LEG) { // Left/right symmetry
-        leg->thetaHipServo_ = leg->SERVO_CENTER_HIP + toDegrees(theta1_rad);
+    if (leg->IS_LEFT_LEG) {
+        if (leg->IS_FRONT_LEG) {
+            leg->thetaHipServo_ = leg->SERVO_CENTER_HIP + toDegrees(theta1_rad);
+        } else {
+            leg->thetaHipServo_ = leg->SERVO_CENTER_HIP - toDegrees(theta1_rad);
+        }
         leg->offset_hip = leg->SERVO_CENTER_HIP + 4.0f;
     } else {
-        // For rear legs Hip servo moves in the oppsite direction
-        leg->thetaHipServo_ = leg->SERVO_CENTER_HIP - toDegrees(theta1_rad);
+        if (leg->IS_FRONT_LEG) {
+            leg->thetaHipServo_ = leg->SERVO_CENTER_HIP - toDegrees(theta1_rad);
+        } else {
+            leg->thetaHipServo_ = leg->SERVO_CENTER_HIP + toDegrees(theta1_rad);
+        }
         leg->offset_hip = leg->SERVO_CENTER_HIP - 4.0f;
     }
 

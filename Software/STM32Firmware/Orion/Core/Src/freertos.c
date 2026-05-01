@@ -135,7 +135,7 @@ void StartDefaultTask(void *argument)
   // centerAllServos();
 
   LegIK_HardwareInit(); // Init the IK leg structs 
-  // standingPose(); // Drive to neutral pose
+  standingPose(); // Drive to neutral pose
   osDelay(2000);
 
   for(;;)
