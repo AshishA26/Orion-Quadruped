@@ -2,34 +2,34 @@
   "resolved": [
     {
       "name": "cmake",
-      "version": "4.0.1+st.3",
+      "version": "4.2.3+st.1",
       "platform": "darwin",
       "selected_by": [
         {
           "name": "cmake",
-          "version": "4.0.1+st.3"
+          "version": "4.2.3+st.1"
         }
       ]
     },
     {
       "name": "cmake",
-      "version": "4.0.1+st.3",
+      "version": "4.2.3+st.1",
       "platform": "x86_64-linux",
       "selected_by": [
         {
           "name": "cmake",
-          "version": "4.0.1+st.3"
+          "version": "4.2.3+st.1"
         }
       ]
     },
     {
       "name": "cmake",
-      "version": "4.0.1+st.3",
+      "version": "4.2.3+st.1",
       "platform": "x86_64-windows",
       "selected_by": [
         {
           "name": "cmake",
-          "version": "4.0.1+st.3"
+          "version": "4.2.3+st.1"
         }
       ]
     },
@@ -79,9 +79,13 @@
     },
     {
       "name": "gnu-tools-for-stm32-14_3_1-description",
-      "version": "1.0.1+st.1",
+      "version": "1.0.1+st.2",
       "platform": "all",
       "selected_by": [
+        {
+          "name": "gnu-tools-for-stm32-14_3_1-description",
+          "version": "1.0.1+st.2"
+        },
         {
           "name": "gnu-tools-for-stm32-14_3_1-description",
           "version": ">=0.0.1"
@@ -90,133 +94,155 @@
     },
     {
       "name": "ninja",
-      "version": "1.13.1+st.1",
+      "version": "1.13.2+st.1",
       "platform": "darwin",
       "selected_by": [
         {
           "name": "ninja",
-          "version": "1.13.1+st.1"
+          "version": "1.13.2+st.1"
         }
       ]
     },
     {
       "name": "ninja",
-      "version": "1.13.1+st.1",
+      "version": "1.13.2+st.1",
       "platform": "x86_64-linux",
       "selected_by": [
         {
           "name": "ninja",
-          "version": "1.13.1+st.1"
+          "version": "1.13.2+st.1"
         }
       ]
     },
     {
       "name": "ninja",
-      "version": "1.13.1+st.1",
+      "version": "1.13.2+st.1",
       "platform": "x86_64-windows",
       "selected_by": [
         {
           "name": "ninja",
-          "version": "1.13.1+st.1"
+          "version": "1.13.2+st.1"
         }
       ]
     },
     {
       "name": "programmer",
-      "version": "2.21.0",
-      "platform": "darwin",
+      "version": "2.22.0+st.1",
+      "platform": "aarch64-darwin",
       "selected_by": [
         {
           "name": "programmer",
-          "version": "2.21.0"
+          "version": "2.22.0+st.1"
         }
       ]
     },
     {
       "name": "programmer",
-      "version": "2.21.0",
-      "platform": "x86_64-linux",
+      "version": "2.22.0+st.1",
+      "platform": "darwin",
       "selected_by": [
         {
           "name": "programmer",
-          "version": "2.21.0"
+          "version": "2.22.0+st.1"
         }
       ]
     },
     {
       "name": "programmer",
-      "version": "2.21.0",
+      "version": "2.22.0+st.1",
+      "platform": "x86_64-linux",
+      "selected_by": [
+        {
+          "name": "programmer",
+          "version": "2.22.0+st.1"
+        }
+      ]
+    },
+    {
+      "name": "programmer",
+      "version": "2.22.0+st.1",
       "platform": "x86_64-windows",
       "selected_by": [
         {
           "name": "programmer",
-          "version": "2.21.0"
+          "version": "2.22.0+st.1"
         }
       ]
     },
     {
       "name": "st-arm-clangd",
-      "version": "19.1.2+st.3",
+      "version": "21.1.0+st.2",
       "platform": "darwin",
       "selected_by": [
         {
           "name": "st-arm-clangd",
-          "version": "19.1.2+st.3"
+          "version": "21.1.0+st.2"
         }
       ]
     },
     {
       "name": "st-arm-clangd",
-      "version": "19.1.2+st.3",
+      "version": "21.1.0+st.2",
       "platform": "x86_64-linux",
       "selected_by": [
         {
           "name": "st-arm-clangd",
-          "version": "19.1.2+st.3"
+          "version": "21.1.0+st.2"
         }
       ]
     },
     {
       "name": "st-arm-clangd",
-      "version": "19.1.2+st.3",
+      "version": "21.1.0+st.2",
       "platform": "x86_64-windows",
       "selected_by": [
         {
           "name": "st-arm-clangd",
-          "version": "19.1.2+st.3"
+          "version": "21.1.0+st.2"
         }
       ]
     },
     {
       "name": "stlink-gdbserver",
-      "version": "7.12.0+st.2",
+      "version": "7.13.0+st.3",
+      "platform": "aarch64-darwin",
+      "selected_by": [
+        {
+          "name": "stlink-gdbserver",
+          "version": "7.13.0+st.3"
+        }
+      ]
+    },
+    {
+      "name": "stlink-gdbserver",
+      "version": "7.13.0+st.3",
       "platform": "darwin",
       "selected_by": [
         {
           "name": "stlink-gdbserver",
-          "version": "7.12.0+st.2"
+          "version": "7.13.0+st.3"
         }
       ]
     },
     {
       "name": "stlink-gdbserver",
-      "version": "7.12.0+st.2",
+      "version": "7.13.0+st.3",
       "platform": "x86_64-linux",
       "selected_by": [
         {
           "name": "stlink-gdbserver",
-          "version": "7.12.0+st.2"
+          "version": "7.13.0+st.3"
         }
       ]
     },
     {
       "name": "stlink-gdbserver",
-      "version": "7.12.0+st.2",
+      "version": "7.13.0+st.3",
       "platform": "x86_64-windows",
       "selected_by": [
         {
           "name": "stlink-gdbserver",
-          "version": "7.12.0+st.2"
+          "version": "7.13.0+st.3"
         }
       ]
     }
