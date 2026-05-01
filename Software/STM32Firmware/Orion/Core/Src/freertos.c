@@ -27,7 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "pca9685.h"
 #include "i2c.h"
-#include "ServoConfig.h"
+#include "LegMotion.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,9 +61,7 @@ const osThreadAttr_t defaultTask_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-static long map(long x, long in_min, long in_max, long out_min, long out_max);
-static int angleToPulse(int ang);
-static void centerAllServos();
+
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -134,14 +132,21 @@ void StartDefaultTask(void *argument)
   // }
 
   // Center all 12 servos
-  centerAllServos();
+  // centerAllServos();
+
+  LegIK_HardwareInit(); // Init the IK leg structs 
+  // standingPose(); // Drive to neutral pose
+  osDelay(2000);
 
   for(;;)
   {
     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    // PCA9685_WriteMicroseconds(0, 1648);
+    
+    // sineStepGait calculates and steps all legs
+    sineStepGait();
 
-    osDelay(1000);
+    // Since the gait commands themselves have interpolation delays,
+    // we do not need a big delay here
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -149,38 +154,4 @@ void StartDefaultTask(void *argument)
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
-// Interpolation function to map angles to pulse widths
-static long map(long x, long in_min, long in_max, long out_min, long out_max) {
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-// Helper function to map angles to PWM pulses
-static int angleToPulse(int ang) {
-  int pulse = map(ang, 0, 270, SERVO_MIN, SERVO_MAX);
-  return pulse;
-}
-
-// Function to drive all servos to their configured centers
-static void centerAllServos() {
-  // Front Left Leg
-  PCA9685_WriteMicroseconds(CH_FL_HIP, angleToPulse(FL_SERVO_CENTER_HIP));
-  PCA9685_WriteMicroseconds(CH_FL_FEMUR, angleToPulse(FL_SERVO_CENTER_FEMUR));
-  PCA9685_WriteMicroseconds(CH_FL_TIBIA, angleToPulse(FL_SERVO_CENTER_TIBIA));
-
-  // Front Right Leg
-  PCA9685_WriteMicroseconds(CH_FR_HIP, angleToPulse(FR_SERVO_CENTER_HIP));
-  PCA9685_WriteMicroseconds(CH_FR_FEMUR, angleToPulse(FR_SERVO_CENTER_FEMUR));
-  PCA9685_WriteMicroseconds(CH_FR_TIBIA, angleToPulse(FR_SERVO_CENTER_TIBIA));
-
-  // Back Left Leg
-  PCA9685_WriteMicroseconds(CH_BL_HIP, angleToPulse(BL_SERVO_CENTER_HIP));
-  PCA9685_WriteMicroseconds(CH_BL_FEMUR, angleToPulse(BL_SERVO_CENTER_FEMUR));
-  PCA9685_WriteMicroseconds(CH_BL_TIBIA, angleToPulse(BL_SERVO_CENTER_TIBIA));
-
-  // Back Right Leg
-  PCA9685_WriteMicroseconds(CH_BR_HIP, angleToPulse(BR_SERVO_CENTER_HIP));
-  PCA9685_WriteMicroseconds(CH_BR_FEMUR, angleToPulse(BR_SERVO_CENTER_FEMUR));
-  PCA9685_WriteMicroseconds(CH_BR_TIBIA, angleToPulse(BR_SERVO_CENTER_TIBIA));
-}
 /* USER CODE END Application */
-
