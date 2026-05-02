@@ -127,6 +127,17 @@ uint16_t PCA9685_GetPWM(uint8_t num, bool off) {
 }
 
 uint8_t PCA9685_SetPWM(uint8_t num, uint16_t on, uint16_t off) {
+    // Cache last values to prevent redundant I2C writes which can cause servo jitter/tearing
+    static uint16_t last_on[16] = {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF};
+    static uint16_t last_off[16] = {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF};
+    if (num < 16) {
+        if (last_on[num] == on && last_off[num] == off) {
+            return 0; // Skip redundant I2C transmission to prevent tearing
+        }
+        last_on[num] = on;
+        last_off[num] = off;
+    }
+
     uint8_t buffer[4];
     buffer[0] = on;
     buffer[1] = on >> 8;
@@ -165,15 +176,20 @@ void PCA9685_WriteMicroseconds(uint8_t num, uint16_t Microseconds) {
     double pulse = Microseconds;
     double pulselength = 1000000;
 
-    uint16_t prescale = PCA9685_ReadPrescale();
+    // Calculate the pulse length in microseconds for one bit
+    // and cache it for later use
+    static uint16_t prescale = 0;
+    if (prescale == 0) {
+        prescale = PCA9685_ReadPrescale() + 1;
+    }
 
-    prescale += 1;
     pulselength *= prescale;
     pulselength /= _oscillator_freq;
 
     pulse /= pulselength;
 
-    PCA9685_SetPWM(num, 0, pulse);
+    // Add 0.5 for accurate rounding
+    PCA9685_SetPWM(num, 0, (uint16_t)(pulse + 0.5));
 }
 
 uint32_t PCA9685_GetOscillatorFrequency(void) {

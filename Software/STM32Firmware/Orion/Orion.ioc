@@ -2,8 +2,9 @@
 CAD.formats=
 CAD.pinconfig=
 CAD.provider=
-FREERTOS.IPParameters=Tasks01
+FREERTOS.IPParameters=Tasks01,configENABLE_FPU
 FREERTOS.Tasks01=defaultTask,24,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL
+FREERTOS.configENABLE_FPU=1
 File.Version=6
 GPIO.groupedBy=Group By Peripherals
 I2C1.I2C_Mode=I2C_Fast

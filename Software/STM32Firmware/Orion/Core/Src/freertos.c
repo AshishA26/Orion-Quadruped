@@ -28,6 +28,7 @@
 #include "pca9685.h"
 #include "i2c.h"
 #include "LegMotion.h"
+#include "BodyIK.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -134,17 +135,37 @@ void StartDefaultTask(void *argument)
   // Center all 12 servos
   // centerAllServos();
 
+  // Variables for body control
+  float pitch = 0.0f;
+  float roll = 0.0f;
+  float yaw = 0.0f;
+  float z_translation = 0.0f;
+
   LegIK_HardwareInit(); // Init the IK leg structs 
-  standingPose(); // Drive to neutral pose
+  // standingPose(); // Drive to neutral pose
   osDelay(2000);
 
   for(;;)
   {
     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    
-    // sineStepGait calculates and steps all legs
-    sineStepGait();
+    float time = (float)HAL_GetTick() / 1000.0f;
 
+    // Example: Slowly pitch the front of the body up and down using a sine wave
+    pitch = sinf(time * 5.0f) * 0.2f; 
+    z_translation = -sinf(time * 5.0f) * 20.0f;
+    updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 0.0f, 0.0f, 0.0f);
+
+    // Example: Yaw the body left and right
+    // yaw = sinf(time * 5.0f) * 0.3f;
+    // Example: Roll the body left and right
+    // roll = sinf(time * 5.0f) * 0.2f;
+    
+    // updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 248.5f/2.0f, -165.2f/2.0f, 0.0f);
+
+    osDelay(20);
+
+    // sineStepGait calculates and steps all legs
+    // sineStepGait();
     // Since the gait commands themselves have interpolation delays,
     // we do not need a big delay here
   }
@@ -155,3 +176,4 @@ void StartDefaultTask(void *argument)
 /* USER CODE BEGIN Application */
 
 /* USER CODE END Application */
+
