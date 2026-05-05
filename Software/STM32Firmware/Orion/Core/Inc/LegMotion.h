@@ -6,6 +6,7 @@
 #include <math.h>
 #include "pca9685.h"
 #include "cmsis_os.h"
+#include "BodyIK.h"
 
 extern LegIK_t legFrontLeft;
 extern LegIK_t legFrontRight;
@@ -23,6 +24,7 @@ void heelingPose(void);
 void unisonGait(void);
 void stepGait(void);
 void sineStepGait(void);
+void waveFrontRightLeg(void);
 void LegIK_HardwareInit(void);
 void centerAllServos(void);
 

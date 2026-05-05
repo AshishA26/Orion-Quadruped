@@ -148,12 +148,16 @@ void StartDefaultTask(void *argument)
   for(;;)
   {
     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    float time = (float)HAL_GetTick() / 1000.0f;
+    // float time = (float)HAL_GetTick() / 1000.0f;
 
-    // Example: Slowly pitch the front of the body up and down using a sine wave
-    pitch = sinf(time * 5.0f) * 0.2f; 
-    z_translation = -sinf(time * 5.0f) * 20.0f;
-    updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 0.0f, 0.0f, 0.0f);
+    // // Example: Slowly pitch the front of the body up and down using a sine wave
+    // pitch = sinf(time * 5.0f) * 0.2f; 
+    // z_translation = -sinf(time * 5.0f) * 20.0f;
+    // updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 0.0f, 0.0f, 0.0f);
+
+    // Call our new wave function
+    waveFrontRightLeg();
+    osDelay(2000); // Wait 2 seconds before weaving again
 
     // Example: Yaw the body left and right
     // yaw = sinf(time * 5.0f) * 0.3f;
