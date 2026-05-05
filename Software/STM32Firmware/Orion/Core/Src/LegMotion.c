@@ -214,29 +214,30 @@ void sineStepGait(void) {
 }
 
 void waveFrontRightLeg(void) {
-  float back_x = 0;
   float front_x = 0;
-  float current_z = 160;
+  float current_z = currentZ;
   float y = currentY;
 
-  // Shift weight slowly: angle back and left like a heeling pose
+  // Make both back legs to crouch down, with the back-left going down the most.
   for (int i = 0; i <= 20; i++) {
-    float ratio = i / 20.0f;
-    float shiftX = -40.0f * ratio; // backwards
-    float shiftY = 30.0f * ratio;  // leftwards
-    float shiftZ = 20.0f * ratio;  // drop slightly
-    float pitch = -0.15f * ratio;  // pitch up (angle back)
-    float roll = 0.1f * ratio;     // roll left
+    float ratio = i / 20.0f; // Ratio used for interpolation (0.0 to 1.0)
+    float shiftZ = 25.0f * ratio;  // Drop the whole body down by 25mm
+    float shiftX = -40.0f * ratio; // Shift center of mass backwards
+    float shiftY = 20.0f * ratio;  // Shift center of mass leftwards
+    
+    float pitch = 0.20f * ratio;   // Pitch frontside upwards
+    float roll = 0.15f * ratio;    // Roll rightside upwards
+    
     updateBodyPosture(shiftX, shiftY, shiftZ, roll, pitch, 0.0f, 0.0f, 0.0f, 0.0f);
     osDelay(20);
   }
 
-  // Lift the front right leg and bring it "down and out" ("come at me bro")
-  const float LIFT_Z = 80; // Leg is elevated more than the wave 
+  // Lift the front right leg and bring it out
+  const float LIFT_Z = 80;
   const float STRETCH_X = 60; // Reach forward
   const float STRETCH_Y = y + 60; // Reach outwards
   
-  // Smoothly move front right leg to the posed position
+  // Move front right leg to the "out" position
   for (int i = 0; i <= 20; i++) {
     float ratio = i / 20.0f;
     float current_leg_z = current_z - (ratio * (current_z - LIFT_Z));
@@ -247,22 +248,20 @@ void waveFrontRightLeg(void) {
     osDelay(20);
   }
   
-  // Wiggle the tibia back and forth!
+  // Wiggle the tibia back and forth
   float base_tibia = LegIK_GetTibiaServoAngle(&legFrontRight);
   for (int w = 0; w < 4; w++) {
-    // Kick out
     for(int i = 0; i <= 15; i++) {
         setServoAngle(CH_FR_TIBIA, base_tibia - 20.0f * (i/15.0f));
         osDelay(10);
     }
-    // Pull in
     for(int i = 15; i >= 0; i--) {
         setServoAngle(CH_FR_TIBIA, base_tibia - 20.0f * (i/15.0f));
         osDelay(10);
     }
   }
   
-  // Bring it back from the pose
+  // Bring it back from the "out" position
   for (int i = 20; i >= 0; i--) {
     float ratio = i / 20.0f;
     float current_leg_z = current_z - (ratio * (current_z - LIFT_Z));
@@ -276,11 +275,11 @@ void waveFrontRightLeg(void) {
   // Restore weight distribution
   for (int i = 20; i >= 0; i--) {
     float ratio = i / 20.0f;
+    float shiftZ = 25.0f * ratio;
     float shiftX = -40.0f * ratio; 
-    float shiftY = 30.0f * ratio;  
-    float shiftZ = 20.0f * ratio;
-    float pitch = -0.15f * ratio;
-    float roll = 0.1f * ratio;
+    float shiftY = 20.0f * ratio;
+    float pitch = 0.20f * ratio;
+    float roll = 0.15f * ratio;
     updateBodyPosture(shiftX, shiftY, shiftZ, roll, pitch, 0.0f, 0.0f, 0.0f, 0.0f);
     osDelay(20);
   }

@@ -136,10 +136,10 @@ void StartDefaultTask(void *argument)
   // centerAllServos();
 
   // Variables for body control
-  float pitch = 0.0f;
-  float roll = 0.0f;
-  float yaw = 0.0f;
-  float z_translation = 0.0f;
+  // float pitch = 0.0f;
+  // float roll = 0.0f;
+  // float yaw = 0.0f;
+  // float z_translation = 0.0f;
 
   LegIK_HardwareInit(); // Init the IK leg structs 
   // standingPose(); // Drive to neutral pose
@@ -154,19 +154,17 @@ void StartDefaultTask(void *argument)
     // pitch = sinf(time * 5.0f) * 0.2f; 
     // z_translation = -sinf(time * 5.0f) * 20.0f;
     // updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 0.0f, 0.0f, 0.0f);
-
-    // Call our new wave function
-    waveFrontRightLeg();
-    osDelay(2000); // Wait 2 seconds before weaving again
-
+    // heelingPose();
     // Example: Yaw the body left and right
     // yaw = sinf(time * 5.0f) * 0.3f;
     // Example: Roll the body left and right
     // roll = sinf(time * 5.0f) * 0.2f;
     
     // updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 248.5f/2.0f, -165.2f/2.0f, 0.0f);
+    // osDelay(20);
 
-    osDelay(20);
+    waveFrontRightLeg();
+    osDelay(2000);
 
     // sineStepGait calculates and steps all legs
     // sineStepGait();
