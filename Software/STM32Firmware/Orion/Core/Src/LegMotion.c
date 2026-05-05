@@ -219,31 +219,22 @@ void waveFrontRightLeg(void) {
   float current_z = 160;
   float y = currentY;
 
-  // We want to shift the body back and to the left to balance on the back-left leg.
-  // We can do this by moving the feet relative to the body using updateBodyPosture, 
-  // or by manually offsetting the stance feet.
-  // Let's use updateBodyPosture to shift the center of mass backwards and leftwards.
-  // Shift X backwards (positive X means body moves back if robot coordinate system assumes +X forward... actually translation in updateBodyPosture:
-  // "Subtract translation here to shift the robot's body in global space". So a negative transX moves body backwards, positive transY moves body left)
-  
-  // Shift weight slowly
+  // Shift weight slowly: angle back and left like a heeling pose
   for (int i = 0; i <= 20; i++) {
-    float shiftX = -2.0f * i; // up to -40mm backwards
-    float shiftY = 2.0f * i;  // up to 40mm leftwards
-    updateBodyPosture(shiftX, shiftY, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    float ratio = i / 20.0f;
+    float shiftX = -40.0f * ratio; // backwards
+    float shiftY = 30.0f * ratio;  // leftwards
+    float shiftZ = 20.0f * ratio;  // drop slightly
+    float pitch = -0.15f * ratio;  // pitch up (angle back)
+    float roll = 0.1f * ratio;     // roll left
+    updateBodyPosture(shiftX, shiftY, shiftZ, roll, pitch, 0.0f, 0.0f, 0.0f, 0.0f);
     osDelay(20);
   }
 
   // Lift the front right leg and bring it "down and out" ("come at me bro")
-  // Since updateBodyPosture updates all 4 legs, we can manually override the front right leg 
-  // after shifting the body weight using the normal stance center.
-  // In the shifted state, the legFrontRight would normally support the body if on ground.
-  // Let's lift it manually using updateLeg directly.
-  
-  // Wave parameters
-  const float LIFT_Z = 60; // Lift leg (shorter Z distance downwards from base)
+  const float LIFT_Z = 80; // Leg is elevated more than the wave 
   const float STRETCH_X = 60; // Reach forward
-  const float STRETCH_Y = y + 80; // Reach outwards
+  const float STRETCH_Y = y + 60; // Reach outwards
   
   // Smoothly move front right leg to the posed position
   for (int i = 0; i <= 20; i++) {
@@ -256,7 +247,20 @@ void waveFrontRightLeg(void) {
     osDelay(20);
   }
   
-  osDelay(1500); // Hold the pose
+  // Wiggle the tibia back and forth!
+  float base_tibia = LegIK_GetTibiaServoAngle(&legFrontRight);
+  for (int w = 0; w < 4; w++) {
+    // Kick out
+    for(int i = 0; i <= 15; i++) {
+        setServoAngle(CH_FR_TIBIA, base_tibia - 20.0f * (i/15.0f));
+        osDelay(10);
+    }
+    // Pull in
+    for(int i = 15; i >= 0; i--) {
+        setServoAngle(CH_FR_TIBIA, base_tibia - 20.0f * (i/15.0f));
+        osDelay(10);
+    }
+  }
   
   // Bring it back from the pose
   for (int i = 20; i >= 0; i--) {
@@ -271,9 +275,13 @@ void waveFrontRightLeg(void) {
   
   // Restore weight distribution
   for (int i = 20; i >= 0; i--) {
-    float shiftX = -2.0f * i; 
-    float shiftY = 2.0f * i;  
-    updateBodyPosture(shiftX, shiftY, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    float ratio = i / 20.0f;
+    float shiftX = -40.0f * ratio; 
+    float shiftY = 30.0f * ratio;  
+    float shiftZ = 20.0f * ratio;
+    float pitch = -0.15f * ratio;
+    float roll = 0.1f * ratio;
+    updateBodyPosture(shiftX, shiftY, shiftZ, roll, pitch, 0.0f, 0.0f, 0.0f, 0.0f);
     osDelay(20);
   }
 }
