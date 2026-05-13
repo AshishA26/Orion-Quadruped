@@ -29,6 +29,7 @@
 #include "i2c.h"
 #include "LegMotion.h"
 #include "BodyIK.h"
+#include "imu.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -127,6 +128,9 @@ void StartDefaultTask(void *argument)
   PCA9685_SetOscillatorFrequency(27000000);
   PCA9685_SetPWMFreq(50.0f);
 
+  IMU_Init(&hi2c3, &huart2);
+  IMU_OrientationTypeDef imu_orientation; 
+
   // OPTIONAL: Explicitly turn off ALL 16 channels at startup so they don't hold old positions
   // for (uint8_t i = 0; i < 16; i++) {
   //     PCA9685_SetPWM(i, 0, 4096); // 4096 turns the pin fully OFF
@@ -148,8 +152,9 @@ void StartDefaultTask(void *argument)
   for(;;)
   {
     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    // float time = (float)HAL_GetTick() / 1000.0f;
 
+    // ********* Body Update Tests ***********
+    // float time = (float)HAL_GetTick() / 1000.0f;
     // // Example: Slowly pitch the front of the body up and down using a sine wave
     // pitch = sinf(time * 5.0f) * 0.2f; 
     // z_translation = -sinf(time * 5.0f) * 20.0f;
@@ -159,17 +164,21 @@ void StartDefaultTask(void *argument)
     // yaw = sinf(time * 5.0f) * 0.3f;
     // Example: Roll the body left and right
     // roll = sinf(time * 5.0f) * 0.2f;
-    
     // updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 248.5f/2.0f, -165.2f/2.0f, 0.0f);
     // osDelay(20);
-
-    waveFrontRightLeg();
+    // waveFrontRightLeg();
     osDelay(2000);
 
-    // sineStepGait calculates and steps all legs
+    // *********** STEPPING TEST ***********
     // sineStepGait();
     // Since the gait commands themselves have interpolation delays,
     // we do not need a big delay here
+
+    // *********** IMU Test **********
+    IMU_ReadOrientation(&hi2c3, &imu_orientation);
+    char msg[64];
+    int n = snprintf(msg, sizeof(msg), "Orientation is Y: %d, P: %d, R: %d\r\n", (int)imu_orientation.yaw, (int)imu_orientation.pitch, (int)imu_orientation.roll);
+    HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
   }
   /* USER CODE END StartDefaultTask */
 }

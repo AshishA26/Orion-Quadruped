@@ -49,6 +49,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/LegIK.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/LegMotion.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/BodyIK.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/imu.c
 )
 
 # Add include paths
