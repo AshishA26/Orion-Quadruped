@@ -12,6 +12,8 @@
 #define CHIP_ID_REG 0x00
 #define BNO055_ID 0xA0
 #define EUL_Heading_LSB 0x1A
+#define OPERATION_MODE_REG_ADDR 0x3D
+#define IMU_MODE 0x08
 #define AXIS_MAP_CONFIG_ADDR 0x41
 #define AXIS_MAP_SIGN_ADDR 0x42
 

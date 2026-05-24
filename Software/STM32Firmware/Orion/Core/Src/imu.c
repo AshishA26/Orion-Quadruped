@@ -46,13 +46,13 @@ void IMU_Init(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart) {
         100
     );
 
-    // Write a register command to switch IMU into IMU mode (fusion mode with accelerometer + gyroscope, no magnetometer)
-    // OPR_MODE register is 0x3D. IMU Mode is 0x08.
-    uint8_t mode = 0x08; 
+    // Write a register command to switch IMU into IMU mode 
+    // (fusion mode with accelerometer + gyroscope, no magnetometer)
+    uint8_t mode = IMU_MODE; 
     HAL_I2C_Mem_Write(
         hi2c, 
         (BNO055_ADDR << 1), 
-        0x3D, 
+        OPERATION_MODE_REG_ADDR, 
         I2C_MEMADD_SIZE_8BIT, 
         &mode, 
         1, 
