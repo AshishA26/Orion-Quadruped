@@ -5,25 +5,46 @@ void IMU_Init(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart) {
     uint8_t chipId;
     HAL_StatusTypeDef ret;
 
-    // TODO: Axis Remapping (map axis of dog to axis of IMU)
-
+    // Test connection
     ret = HAL_I2C_Mem_Read(
         hi2c, 
         (BNO055_ADDR << 1), 
         CHIP_ID_REG, 
         I2C_MEMADD_SIZE_8BIT, 
-        &chipId, 
+        &chipId, // Chip id is returned from the read function
         1, 
         100
     );
-
-    if (ret == HAL_OK && chipId == BNO055_ID) {
-        if (huart) {
-            char msg[64];
-            int n = snprintf(msg, sizeof(msg), "Sensor found \r\n");
-            HAL_UART_Transmit(huart, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
-        }
+    if (ret != HAL_OK || chipId != BNO055_ID) {
+        return; // IMU not found or wrong chip ID
     }
+    if (huart) {
+        char msg[64];
+        int n = snprintf(msg, sizeof(msg), "Sensor found \r\n");
+        HAL_UART_Transmit(huart, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
+    }
+    
+    // Axis Remapping (map axis of dog to axis of IMU)
+    uint8_t axis_remap_config = AXIS_REMAP_CONFIG;
+    uint8_t axis_remap_sign = AXIS_REMAP_SIGN;
+    HAL_I2C_Mem_Write(
+        hi2c, 
+        (BNO055_ADDR << 1), 
+        AXIS_MAP_CONFIG_ADDR, 
+        I2C_MEMADD_SIZE_8BIT, 
+        &axis_remap_config, 
+        1, 
+        100
+    );
+    HAL_I2C_Mem_Write(
+        hi2c, 
+        (BNO055_ADDR << 1), 
+        AXIS_MAP_SIGN_ADDR, 
+        I2C_MEMADD_SIZE_8BIT, 
+        &axis_remap_sign, 
+        1, 
+        100
+    );
 
     // Write a register command to switch IMU into IMU mode (fusion mode with accelerometer + gyroscope, no magnetometer)
     // OPR_MODE register is 0x3D. IMU Mode is 0x08.
@@ -31,7 +52,8 @@ void IMU_Init(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart) {
     HAL_I2C_Mem_Write(
         hi2c, 
         (BNO055_ADDR << 1), 
-        0x3D, I2C_MEMADD_SIZE_8BIT, 
+        0x3D, 
+        I2C_MEMADD_SIZE_8BIT, 
         &mode, 
         1, 
         100

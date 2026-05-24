@@ -167,7 +167,7 @@ void StartDefaultTask(void *argument)
     // updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 248.5f/2.0f, -165.2f/2.0f, 0.0f);
     // osDelay(20);
     // waveFrontRightLeg();
-    osDelay(2000);
+    // osDelay(1000);
 
     // *********** STEPPING TEST ***********
     // sineStepGait();

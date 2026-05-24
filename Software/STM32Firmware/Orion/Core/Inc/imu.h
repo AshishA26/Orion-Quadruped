@@ -12,6 +12,12 @@
 #define CHIP_ID_REG 0x00
 #define BNO055_ID 0xA0
 #define EUL_Heading_LSB 0x1A
+#define AXIS_MAP_CONFIG_ADDR 0x41
+#define AXIS_MAP_SIGN_ADDR 0x42
+
+// P3 settings in BNO055 datasheet
+#define AXIS_REMAP_CONFIG 0x21
+#define AXIS_REMAP_SIGN 0x02
 
 typedef struct {
     double yaw;
