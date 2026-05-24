@@ -166,8 +166,8 @@ void StartDefaultTask(void *argument)
     // roll = sinf(time * 5.0f) * 0.2f;
     // updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 248.5f/2.0f, -165.2f/2.0f, 0.0f);
     // osDelay(20);
-    // waveFrontRightLeg();
-    // osDelay(1000);
+    waveFrontRightLeg();
+    osDelay(1000);
 
     // *********** STEPPING TEST ***********
     // sineStepGait();
@@ -175,10 +175,10 @@ void StartDefaultTask(void *argument)
     // we do not need a big delay here
 
     // *********** IMU Test **********
-    IMU_ReadOrientation(&hi2c3, &imu_orientation);
-    char msg[64];
-    int n = snprintf(msg, sizeof(msg), "Orientation is Y: %d, P: %d, R: %d\r\n", (int)imu_orientation.yaw, (int)imu_orientation.pitch, (int)imu_orientation.roll);
-    HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
+    // IMU_ReadOrientation(&hi2c3, &imu_orientation);
+    // char msg[64];
+    // int n = snprintf(msg, sizeof(msg), "Orientation is Y: %d, P: %d, R: %d\r\n", (int)imu_orientation.yaw, (int)imu_orientation.pitch, (int)imu_orientation.roll);
+    // HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
   }
   /* USER CODE END StartDefaultTask */
 }

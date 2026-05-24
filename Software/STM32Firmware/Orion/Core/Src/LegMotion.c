@@ -252,11 +252,11 @@ void waveFrontRightLeg(void) {
   float base_tibia = LegIK_GetTibiaServoAngle(&legFrontRight);
   for (int w = 0; w < 4; w++) {
     for(int i = 0; i <= 15; i++) {
-        setServoAngle(CH_FR_TIBIA, base_tibia - 20.0f * (i/15.0f));
+        setServoAngle(CH_FR_TIBIA, base_tibia - 45.0f * (i/15.0f));
         osDelay(10);
     }
     for(int i = 15; i >= 0; i--) {
-        setServoAngle(CH_FR_TIBIA, base_tibia - 20.0f * (i/15.0f));
+        setServoAngle(CH_FR_TIBIA, base_tibia - 45.0f * (i/15.0f));
         osDelay(10);
     }
   }
