@@ -9,7 +9,7 @@ class STM32Bridge(Node):
         super().__init__('stm32_bridge_node')
         
         # Configure Serial Port based on your schematic (Jetson Pins 8/10)
-        serial_port = '/dev/ttyTHS0'  
+        serial_port = '/dev/ttyTHS1'  
         baud_rate = 115200
         
         try:
