@@ -62,7 +62,7 @@ class STM32Bridge(Node):
 
         # Send over UART
         self.serial_conn.write(full_packet)
-        self.get_logger().debug(f"Sent: X:{lin_x:.2f}, Y:{lin_y:.2f}, Z:{ang_z:.2f}")
+        self.get_logger().info(f"Sent: X:{lin_x:.2f}, Y:{lin_y:.2f}, Z:{ang_z:.2f}")
 
 def main(args=None):
     rclpy.init(args=args)
