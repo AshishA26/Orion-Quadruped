@@ -55,6 +55,7 @@ extern UART_HandleTypeDef huart2; // HUART1 is used for Jetson, so use HUART2 fo
 extern UART_HandleTypeDef huart1; // The UART connected to the Jetson
 
 // Struct matching the Jetson twist packet (1 byte type + 12 bytes floats)
+// Packed to ensure no padding bytes are added by the compiler, which would break parsing
 struct __attribute__((packed)) CmdVelPayload {
     uint8_t cmd_type;
     float lin_x;
@@ -62,19 +63,21 @@ struct __attribute__((packed)) CmdVelPayload {
     float ang_z;
 };
 
+#define CMD_TYPE_VEL 0x01
+
 // DMA Buffer and tracking
-#define DMA_RX_BUFFER_SIZE 64
-uint8_t dma_rx_buffer[DMA_RX_BUFFER_SIZE];
+#define DMA_RX_BUFFER_SIZE 64 // Larger than the expected command size to ensure no bytes are missed
+uint8_t dma_rx_buffer[DMA_RX_BUFFER_SIZE]; // Circular Queue for DMA reception of UART data
 uint16_t old_pos = 0;
 
 // Parser state machine variables
-uint8_t payload_buffer[13];
+uint8_t payload_buffer[13]; // Queue to hold incoming payload bytes
 uint8_t payload_index = 0;
 int parser_state = 0;
 
 // Parsed command storage
-struct CmdVelPayload last_cmd;
-volatile int new_cmd_ready = 0;
+struct CmdVelPayload last_cmd; // Struct to hold the payload data cleanly
+volatile int new_cmd_ready = 0; // Flag to indicate a new command is ready
 
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
@@ -209,21 +212,32 @@ void StartDefaultTask(void *argument)
     // HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
 
     // *********** UART Command Parsing Test **********
-    // 1. Check where the DMA currently is writing.
-    // __HAL_DMA_GET_COUNTER returns the number of bytes REMAINING in the buffer
+    // Check where the DMA currently is writing.
+    // __HAL_DMA_GET_COUNTER returns the number of bytes REMAINING in the buffer before 
+    // it wraps around, so subtract from total size to get the current position.
     uint16_t current_pos = DMA_RX_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(huart1.hdmarx);
 
-    // 2. Process all new bytes that have arrived since we last checked
+    // current_pos is the REAR of the queue where new bytes are being written, 
+    // old_pos is the FRONT of the queue where we are reading from.
+
+    // Process all new bytes that have arrived since we last checked
+    // (i.e. until our REAR catches up to the FRONT)
     while (old_pos != current_pos) {
         uint8_t rx_byte = dma_rx_buffer[old_pos];
 
-        // 3. State machine to find headers, read payload, and check checksum
+        // State machine to find headers, read payload, and check checksum
         switch(parser_state) {
-            case 0: // Looking for Header 1 (0x55)
+            
+            // Looking for Header 1 (0x55)
+            // If 1st header byte was found, set state to 1 to look for 2nd header byte
+            case 0:
                 if (rx_byte == 0x55) parser_state = 1;
                 break;
-                
-            case 1: // Looking for Header 2 (0xAA)
+            
+            // Looking for Header 2 (0xAA). 
+            // If found, set state to 2 to start reading payload bytes
+            // If not found, look for header 1 again
+            case 1: 
                 if (rx_byte == 0xAA) {
                     parser_state = 2;
                     payload_index = 0;
@@ -232,29 +246,34 @@ void StartDefaultTask(void *argument)
                 }
                 break;
                 
-            case 2: // Reading Payload (13 bytes)
+            // Reading Payload (13 bytes)
+            // Once payload is full, verify checksum (state 3)
+            case 2:
                 payload_buffer[payload_index++] = rx_byte;
                 if (payload_index >= 13) {
-                    parser_state = 3; // Payload full, verify checksum
+                    parser_state = 3;
                 }
                 break;
-                
-            case 3: // Verify Checksum
-                {
-                    uint8_t received_checksum = rx_byte;
-                    uint8_t calculated_checksum = 0;
-                    
-                    for (int i = 0; i < 13; i++) {
-                        calculated_checksum ^= payload_buffer[i];
-                    }
-                    if (calculated_checksum == received_checksum) {
-                        // Safely copy bytes directly into the struct to avoid alignment HardFaults
-                        memcpy(&last_cmd, payload_buffer, sizeof(struct CmdVelPayload));
-                        new_cmd_ready = 1; // Flag that data is ready to use
-                    }
-                    
-                    parser_state = 0; // Reset state machine for next packet
+            
+            // - Verify Checksum
+            // - Safely copy bytes from payload_buffer directly into the last_cmd struct to 
+            //   avoid alignment HardFaults.
+            //   Payload_buffer is just a byte array, no gaurantee of correct alignment for
+            //   struct access, so use memcpy which can handle unaligned access.
+            // - Set a flag to indicate data is ready for use
+            // - Reset state machine for next packet
+            case 3: 
+                uint8_t received_checksum = rx_byte;
+                uint8_t calculated_checksum = 0;   
+                for (int i = 0; i < 13; i++) {
+                    calculated_checksum ^= payload_buffer[i];
                 }
+                if (calculated_checksum == received_checksum) {
+
+                    memcpy(&last_cmd, payload_buffer, sizeof(struct CmdVelPayload));
+                    new_cmd_ready = 1;
+                }
+                parser_state = 0;
                 break;
         }
 
@@ -262,7 +281,7 @@ void StartDefaultTask(void *argument)
         old_pos = (old_pos + 1) % DMA_RX_BUFFER_SIZE;
     }
 
-    // 4. Do something with the command if a new one was decoded
+    // Do something with the command if a new one was decoded
     if (new_cmd_ready) {
         char msg[256];
         int n = snprintf(msg, sizeof(msg), "Cmd: X:%d, Y:%d, Z:%d\r\n", 
@@ -271,7 +290,7 @@ void StartDefaultTask(void *argument)
         new_cmd_ready = 0; // Clear the flag
     }
 
-    // 5. Let FreeRTOS give CPU time to other tasks
+    // Let FreeRTOS give CPU time to other tasks
     osDelay(5); 
   }
   /* USER CODE END StartDefaultTask */
