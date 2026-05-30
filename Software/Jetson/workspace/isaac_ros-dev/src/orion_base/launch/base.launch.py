@@ -56,8 +56,8 @@ def generate_launch_description():
             'axis_angular.yaw': 2, # Right stick LEFT/RIGHT
             
             # Max speeds
-            'scale_linear.x': 0.5,  # Max 0.5 m/s forward
-            'scale_linear.y': 0.5,  # Max 0.5 m/s strafe
+            'scale_linear.x': 1.0,  # Max 1.0 m/s forward
+            'scale_linear.y': 1.0,  # Max 1.0 m/s strafe
             'scale_angular.yaw': 1.0, # Max 1.0 rad/s turn
             
             # Require holding the L1 button as a "Deadman Switch" for safety
