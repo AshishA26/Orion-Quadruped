@@ -9,7 +9,7 @@ def generate_launch_description():
     # Launch Argument
     use_joystick_arg = DeclareLaunchArgument(
         'use_joystick',
-        default_value='false',
+        default_value='true',
         description='Set to "true" to use PS5 controller, "false" for keyboard'
     )
     use_joystick = LaunchConfiguration('use_joystick')
@@ -55,7 +55,7 @@ def generate_launch_description():
             # Axis mapping (Standard for PS5)
             'axis_linear.x': 1,    # Left stick UP/DOWN
             'axis_linear.y': 0,    # Left stick LEFT/RIGHT
-            'axis_angular.yaw': 3, # Right stick LEFT/RIGHT
+            'axis_angular.yaw': 2, # Right stick LEFT/RIGHT
             
             # Max speeds (Tune these based on how fast your dog can physically step)
             'scale_linear.x': 0.5,  # Max 0.5 m/s forward
