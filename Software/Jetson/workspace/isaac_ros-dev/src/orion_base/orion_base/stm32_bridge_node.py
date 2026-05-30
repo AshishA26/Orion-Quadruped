@@ -48,6 +48,7 @@ class STM32Bridge(Node):
         cmd_type = 0x01
 
         # Pack data using struct: 'B' = unsigned char (1 byte), 'f' = float (4 bytes)
+        # Total payload is 13 bytes (1 + 4 + 4 + 4).
         # The `<` indicates Little-Endian byte order (standard for STM32/ARM)
         payload = struct.pack('<Bfff', cmd_type, lin_x, lin_y, ang_z)
         
