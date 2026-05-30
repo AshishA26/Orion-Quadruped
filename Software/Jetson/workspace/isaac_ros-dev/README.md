@@ -4,6 +4,7 @@
 sudo usermod -a -G dialout $USER
 sudo chmod 666 /dev/ttyUSB0
 sudo chmod 666 /dev/ttyTHS1
+sudo chmod 666 /dev/input/js0
 cd ${ISAAC_ROS_WS}/src/isaac_ros_common && ./scripts/run_dev.sh
 ./install_deps.sh
 colcon build --symlink-install
