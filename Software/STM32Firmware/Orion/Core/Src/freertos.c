@@ -52,6 +52,30 @@
 extern I2C_HandleTypeDef hi2c1;   // PCA driver is on I2C1
 extern I2C_HandleTypeDef hi2c3;   // I2C3 is used for IMU and voltage monitors
 extern UART_HandleTypeDef huart2; // HUART1 is used for Jetson, so use HUART2 for debug prints
+extern UART_HandleTypeDef huart1; // The UART connected to the Jetson
+
+// Struct matching the Jetson twist packet (1 byte type + 12 bytes floats)
+struct __attribute__((packed)) CmdVelPayload {
+    uint8_t cmd_type;
+    float lin_x;
+    float lin_y;
+    float ang_z;
+};
+
+// DMA Buffer and tracking
+#define DMA_RX_BUFFER_SIZE 64
+uint8_t dma_rx_buffer[DMA_RX_BUFFER_SIZE];
+uint16_t old_pos = 0;
+
+// Parser state machine variables
+uint8_t payload_buffer[13];
+uint8_t payload_index = 0;
+int parser_state = 0;
+
+// Parsed command storage
+struct CmdVelPayload last_cmd;
+volatile int new_cmd_ready = 0;
+
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -147,6 +171,10 @@ void StartDefaultTask(void *argument)
 
   LegIK_HardwareInit(); // Init the IK leg structs 
   // standingPose(); // Drive to neutral pose
+
+  // Start continuous DMA reception on USART1 in the background
+  HAL_UART_Receive_DMA(&huart1, dma_rx_buffer, DMA_RX_BUFFER_SIZE);
+
   osDelay(2000);
 
   for(;;)
@@ -166,8 +194,8 @@ void StartDefaultTask(void *argument)
     // roll = sinf(time * 5.0f) * 0.2f;
     // updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 248.5f/2.0f, -165.2f/2.0f, 0.0f);
     // osDelay(20);
-    waveFrontRightLeg();
-    osDelay(1000);
+    // waveFrontRightLeg();
+    // osDelay(1000);
 
     // *********** STEPPING TEST ***********
     // sineStepGait();
@@ -179,6 +207,72 @@ void StartDefaultTask(void *argument)
     // char msg[64];
     // int n = snprintf(msg, sizeof(msg), "Orientation is Y: %d, P: %d, R: %d\r\n", (int)imu_orientation.yaw, (int)imu_orientation.pitch, (int)imu_orientation.roll);
     // HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
+
+    // *********** UART Command Parsing Test **********
+    // 1. Check where the DMA currently is writing.
+    // __HAL_DMA_GET_COUNTER returns the number of bytes REMAINING in the buffer
+    uint16_t current_pos = DMA_RX_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(huart1.hdmarx);
+
+    // 2. Process all new bytes that have arrived since we last checked
+    while (old_pos != current_pos) {
+        uint8_t rx_byte = dma_rx_buffer[old_pos];
+
+        // 3. State machine to find headers, read payload, and check checksum
+        switch(parser_state) {
+            case 0: // Looking for Header 1 (0x55)
+                if (rx_byte == 0x55) parser_state = 1;
+                break;
+                
+            case 1: // Looking for Header 2 (0xAA)
+                if (rx_byte == 0xAA) {
+                    parser_state = 2;
+                    payload_index = 0;
+                } else if (rx_byte != 0x55) {
+                    parser_state = 0;
+                }
+                break;
+                
+            case 2: // Reading Payload (13 bytes)
+                payload_buffer[payload_index++] = rx_byte;
+                if (payload_index >= 13) {
+                    parser_state = 3; // Payload full, verify checksum
+                }
+                break;
+                
+            case 3: // Verify Checksum
+                {
+                    uint8_t received_checksum = rx_byte;
+                    uint8_t calculated_checksum = 0;
+                    
+                    for (int i = 0; i < 13; i++) {
+                        calculated_checksum ^= payload_buffer[i];
+                    }
+                    if (calculated_checksum == received_checksum) {
+                        // Safely copy bytes directly into the struct to avoid alignment HardFaults
+                        memcpy(&last_cmd, payload_buffer, sizeof(struct CmdVelPayload));
+                        new_cmd_ready = 1; // Flag that data is ready to use
+                    }
+                    
+                    parser_state = 0; // Reset state machine for next packet
+                }
+                break;
+        }
+
+        // Advance our read pointer, wrapping around if needed
+        old_pos = (old_pos + 1) % DMA_RX_BUFFER_SIZE;
+    }
+
+    // 4. Do something with the command if a new one was decoded
+    if (new_cmd_ready) {
+        char msg[256];
+        int n = snprintf(msg, sizeof(msg), "Cmd: X:%d, Y:%d, Z:%d\r\n", 
+                (int)(last_cmd.lin_x*100), (int)(last_cmd.lin_y*100), (int)(last_cmd.ang_z*100));
+        HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
+        new_cmd_ready = 0; // Clear the flag
+    }
+
+    // 5. Let FreeRTOS give CPU time to other tasks
+    osDelay(5); 
   }
   /* USER CODE END StartDefaultTask */
 }
