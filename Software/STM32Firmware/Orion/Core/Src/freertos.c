@@ -79,7 +79,8 @@ int parser_state = 0;
 
 // Parsed command storage
 struct CmdVelPayload last_cmd; // Struct to hold the payload data cleanly
-volatile int new_cmd_ready = 0; // Flag to indicate a new command is ready
+volatile int new_cmd_ready = 0; // Flag to indicate a new command is ready // Not used right now
+uint32_t last_cmd_timestamp_ms = 0; // Extra safety to prevent stale commands
 
 /* USER CODE END Variables */
 /* Definitions for controlTask */
@@ -224,6 +225,14 @@ void StartControlTask(void *argument)
     osMutexAcquire(cmdMutexHandle, osWaitForever);
     active_cmd = last_cmd;
     osMutexRelease(cmdMutexHandle);
+
+    // If more than 500 milliseconds have passed since the last valid command,
+    // stop the robot for safety
+    if ((HAL_GetTick() - last_cmd_timestamp_ms) > 500) {
+        active_cmd.lin_x = 0.0f;
+        active_cmd.lin_y = 0.0f;
+        active_cmd.ang_z = 0.0f;
+    }
 
     char msg[256];
     int n = snprintf(msg, sizeof(msg), "Cmd: X:%d, Y:%d, Z:%d\r\n", 
@@ -371,6 +380,7 @@ void StartCommTask(void *argument)
                     osMutexAcquire(cmdMutexHandle, osWaitForever);
                     memcpy(&last_cmd, payload_buffer, sizeof(struct CmdVelPayload));
                     new_cmd_ready = 1;
+                    last_cmd_timestamp_ms = HAL_GetTick();
                     osMutexRelease(cmdMutexHandle);
                 }
                 parser_state = 0;

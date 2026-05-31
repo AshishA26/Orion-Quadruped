@@ -1,0 +1,1 @@
+It should be noted that FreeRTOS does automatic priority inheritence, to avoid priority inversion.
