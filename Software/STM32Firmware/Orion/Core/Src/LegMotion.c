@@ -311,14 +311,18 @@ void centerAllServos() {
   PCA9685_WriteMicroseconds(CH_BR_TIBIA, angleToPulse(BR_SERVO_CENTER_TIBIA));
 }
 
+// Function to execute a joystick-based gait, computes a single frame of leg positions based
+// on the current joystick command and global phase clock, then updates leg positions accordingly.
 void executeJoystickGait(float vel_x, float vel_y, float ang_z) {
     const float MAX_STRIDE_X = 60.0f; // Max mm forward/backward
     const float MAX_STRIDE_Y = 30.0f; // Max mm strafing side-to-side
     const float STEP_HEIGHT = 45.0f;  // Height of foot lift during swing
-    const float BASE_Z = 160.0f;      // Default standing height
-    
-    // 1. Check if joystick commands are effectively zero (deadband)
-    // We must include ang_z in the magnitude calculation so the phase clock runs when only turning!
+    const float BASE_Z = 150.0f;      // Default standing height
+    const float MAX_TURN_STRIDE = 40.0f; // Max mm of forward/backward travel used for turning
+    const float STANCE_DEPTH = 15.0f; // mm to squat down during the power stroke
+
+    // Check if joystick commands are effectively zero (deadband).
+    // Include ang_z in the magnitude calculation so the phase clock also runs when only turning
     float speed_magnitude = sqrtf(vel_x*vel_x + vel_y*vel_y + ang_z*ang_z);
     
     if (speed_magnitude < 0.05f) {
@@ -356,7 +360,6 @@ void executeJoystickGait(float vel_x, float vel_y, float ang_z) {
     // Turning (Yaw) calculation
     // A positive ang_z means turning left (counter-clockwise).
     // The amount each foot needs to travel forward/backward to cause a turn depends on which side it's on.
-    const float MAX_TURN_STRIDE = 40.0f; // Max mm of forward/backward travel used for turning
     float turn_stride = MAX_TURN_STRIDE * ang_z;
 
     for (int i = 0; i < 4; i++) {
@@ -397,8 +400,9 @@ void executeJoystickGait(float vel_x, float vel_y, float ang_z) {
             foot_x = (combined_stride_x * 0.5f) - (combined_stride_x * stance_progress);
             foot_y = (stride_y * 0.5f) - (stride_y * stance_progress);
             
-            // Z remains flat on the floor
-            foot_z = BASE_Z;
+            // Z dips down slightly into a squat based on STANCE_DEPTH
+            foot_z = BASE_Z + (sinf(stance_progress * 3.14159f) * STANCE_DEPTH); // Sine arc for stance phase
+            // foot_z = BASE_Z; // Flat Z for stance phase
         }
 
         // Update inverse kinematics
