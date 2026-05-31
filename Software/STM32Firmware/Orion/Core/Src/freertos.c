@@ -234,19 +234,16 @@ void StartControlTask(void *argument)
         active_cmd.ang_z = 0.0f;
     }
 
+    executeJoystickGait(active_cmd.lin_x, active_cmd.lin_y, active_cmd.ang_z);
+
     char msg[256];
     int n = snprintf(msg, sizeof(msg), "Cmd: X:%d, Y:%d, Z:%d\r\n", 
             (int)(last_cmd.lin_x*100), (int)(last_cmd.lin_y*100), (int)(last_cmd.ang_z*100));
     HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
 
-    char msg2[64];
-    int n2 = snprintf(msg2, sizeof(msg2), "Orientation is Y: %d, P: %d, R: %d\r\n", (int)current_imu_orientation.yaw, (int)current_imu_orientation.pitch, (int)current_imu_orientation.roll);
-    HAL_UART_Transmit(&huart2, (uint8_t*)msg2, (uint16_t)n2, PCA9685_I2C_TIMEOUT_MS);
-
-    // 2. Map coordinates (Replace these with your actual Gait Engine calls later)
-    // float step_x = MAX_STRIDE_X * active_cmd.lin_x;
-    // float step_y = MAX_STRIDE_Y * active_cmd.lin_y;
-    // float step_yaw = MAX_YAW_RATE * active_cmd.ang_z;
+    // char msg2[64];
+    // int n2 = snprintf(msg2, sizeof(msg2), "Orientation is Y: %d, P: %d, R: %d\r\n", (int)current_imu_orientation.yaw, (int)current_imu_orientation.pitch, (int)current_imu_orientation.roll);
+    // HAL_UART_Transmit(&huart2, (uint8_t*)msg2, (uint16_t)n2, PCA9685_I2C_TIMEOUT_MS);
 
     // ********* Body Update Tests ***********
     // float time = (float)HAL_GetTick() / 1000.0f;

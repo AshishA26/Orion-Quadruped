@@ -10,6 +10,9 @@ float currentX = 0;
 float currentY = 39.3f; // L1, mm
 float currentZ = 160.0f; // Height of Dog, mm
 
+// Global phase clock for continuous gaits (0.0 to 1.0)
+static float gait_phase = 0.0f;
+
 static long map(long x, long in_min, long in_max, long out_min, long out_max);
 static int angleToPulse(int ang);
 static void setServoAngle(int channel, float angle);
@@ -306,4 +309,85 @@ void centerAllServos() {
   PCA9685_WriteMicroseconds(CH_BR_HIP, angleToPulse(BR_SERVO_CENTER_HIP));
   PCA9685_WriteMicroseconds(CH_BR_FEMUR, angleToPulse(BR_SERVO_CENTER_FEMUR));
   PCA9685_WriteMicroseconds(CH_BR_TIBIA, angleToPulse(BR_SERVO_CENTER_TIBIA));
+}
+
+void executeJoystickGait(float vel_x, float vel_y, float ang_z) {
+    const float MAX_STRIDE_X = 60.0f; // Max mm forward/backward
+    const float MAX_STRIDE_Y = 30.0f; // Max mm strafing side-to-side
+    const float STEP_HEIGHT = 45.0f;  // Height of foot lift during swing
+    const float BASE_Z = 160.0f;      // Default standing height
+    
+    // Check if joystick commands are effectively zero (deadband)
+    float speed_magnitude = sqrtf(vel_x*vel_x + vel_y*vel_y);
+    if (speed_magnitude < 0.05f && fabsf(ang_z) < 0.05f) {
+        // Robot is stationary. Reset phase and stand still.
+        gait_phase = 0.0f;
+        standingPose();
+        return;
+    }
+
+    // Increment global phase clock.
+    // If speed is at max magnitude (1.0), it adds 0.04 per frame.
+    // At 50Hz control loop (20ms), 0.04 * 50 = 2.0 cycles per second (Trot Gait)
+    gait_phase += 0.04f * speed_magnitude;
+    if (gait_phase >= 1.0f) gait_phase -= 1.0f;
+
+    // Define the phase offsets for a Trot Gait (diagonal pairs move together)
+    // Pair 1: Front Right & Back Left
+    // Pair 2: Front Left & Back Right (offset by exactly half a cycle)
+    float phase_FR = gait_phase;
+    float phase_BL = gait_phase;
+    
+    float phase_FL = gait_phase + 0.5f;
+    if (phase_FL >= 1.0f) phase_FL -= 1.0f;
+    
+    float phase_BR = phase_FL;
+
+    // Helper arrays to process all 4 legs in one loop
+    LegIK_t* legs[4] = {&legFrontRight, &legBackLeft, &legFrontLeft, &legBackRight};
+    float phases[4]  = {phase_FR, phase_BL, phase_FL, phase_BR};
+    
+    // Dynamic strides based on joystick inputs
+    float stride_x = MAX_STRIDE_X * vel_x;
+    float stride_y = MAX_STRIDE_Y * vel_y;
+    // float turning_bias = ang_z * ... (Turning omitted for simplicity in this basic translation gait)
+
+    for (int i = 0; i < 4; i++) {
+        float p = phases[i];
+        float foot_x = 0;
+        float foot_y = 0;
+        float foot_z = BASE_Z;
+
+        // Swing Phase (lifting and moving forward)
+        // Happens during the first half of the phase clock (0.0 to 0.5)
+        if (p < 0.5f) {
+            float swing_progress = p / 0.5f; // Scale 0 to 0.5 up to 0 to 1.0
+            
+            // Linear travel from back to front
+            // Start at -0.5*stride, end at +0.5*stride
+            foot_x = - (stride_x * 0.5f) + (stride_x * swing_progress);
+            foot_y = - (stride_y * 0.5f) + (stride_y * swing_progress);
+            
+            // Sine arc for height
+            foot_z = BASE_Z - (sinf(swing_progress * 3.14159f) * STEP_HEIGHT);
+        }
+        // Stance Phase (foot on ground, pushing backward)
+        // Happens during second half (0.5 to 1.0)
+        else {
+            float stance_progress = (p - 0.5f) / 0.5f; // Scale 0.5 to 1.0 up to 0 to 1.0
+            
+            // Linear travel from front back to back
+            // Start at +0.5*stride, end at -0.5*stride
+            foot_x = (stride_x * 0.5f) - (stride_x * stance_progress);
+            foot_y = (stride_y * 0.5f) - (stride_y * stance_progress);
+            
+            // Z remains flat on the floor
+            foot_z = BASE_Z;
+        }
+
+        // Update inverse kinematics
+        // Note: The y-axis in LegIK operates on global absolute width (currentY), 
+        // so we add the physical leg width to the calculated strafe delta.
+        updateLeg(legs[i], foot_x, currentY + (legs[i]->IS_LEFT_LEG ? foot_y : -foot_y), foot_z);
+    }
 }
