@@ -317,9 +317,11 @@ void executeJoystickGait(float vel_x, float vel_y, float ang_z) {
     const float STEP_HEIGHT = 45.0f;  // Height of foot lift during swing
     const float BASE_Z = 160.0f;      // Default standing height
     
-    // Check if joystick commands are effectively zero (deadband)
-    float speed_magnitude = sqrtf(vel_x*vel_x + vel_y*vel_y);
-    if (speed_magnitude < 0.05f && fabsf(ang_z) < 0.05f) {
+    // 1. Check if joystick commands are effectively zero (deadband)
+    // We must include ang_z in the magnitude calculation so the phase clock runs when only turning!
+    float speed_magnitude = sqrtf(vel_x*vel_x + vel_y*vel_y + ang_z*ang_z);
+    
+    if (speed_magnitude < 0.05f) {
         // Robot is stationary. Reset phase and stand still.
         gait_phase = 0.0f;
         standingPose();
@@ -350,13 +352,27 @@ void executeJoystickGait(float vel_x, float vel_y, float ang_z) {
     // Dynamic strides based on joystick inputs
     float stride_x = MAX_STRIDE_X * vel_x;
     float stride_y = MAX_STRIDE_Y * vel_y;
-    // float turning_bias = ang_z * ... (Turning omitted for simplicity in this basic translation gait)
+    
+    // Turning (Yaw) calculation
+    // A positive ang_z means turning left (counter-clockwise).
+    // The amount each foot needs to travel forward/backward to cause a turn depends on which side it's on.
+    const float MAX_TURN_STRIDE = 40.0f; // Max mm of forward/backward travel used for turning
+    float turn_stride = MAX_TURN_STRIDE * ang_z;
 
     for (int i = 0; i < 4; i++) {
         float p = phases[i];
         float foot_x = 0;
         float foot_y = 0;
         float foot_z = BASE_Z;
+        
+        // Combine translational stride with rotational stride.
+        // If turning left (turn_stride > 0): right legs must step forward (+), left legs must step backward (-)
+        float combined_stride_x = stride_x;
+        if (legs[i]->IS_LEFT_LEG) {
+            combined_stride_x -= turn_stride;
+        } else {
+            combined_stride_x += turn_stride;
+        }
 
         // Swing Phase (lifting and moving forward)
         // Happens during the first half of the phase clock (0.0 to 0.5)
@@ -365,7 +381,7 @@ void executeJoystickGait(float vel_x, float vel_y, float ang_z) {
             
             // Linear travel from back to front
             // Start at -0.5*stride, end at +0.5*stride
-            foot_x = - (stride_x * 0.5f) + (stride_x * swing_progress);
+            foot_x = - (combined_stride_x * 0.5f) + (combined_stride_x * swing_progress);
             foot_y = - (stride_y * 0.5f) + (stride_y * swing_progress);
             
             // Sine arc for height
@@ -378,7 +394,7 @@ void executeJoystickGait(float vel_x, float vel_y, float ang_z) {
             
             // Linear travel from front back to back
             // Start at +0.5*stride, end at -0.5*stride
-            foot_x = (stride_x * 0.5f) - (stride_x * stance_progress);
+            foot_x = (combined_stride_x * 0.5f) - (combined_stride_x * stance_progress);
             foot_y = (stride_y * 0.5f) - (stride_y * stance_progress);
             
             // Z remains flat on the floor
