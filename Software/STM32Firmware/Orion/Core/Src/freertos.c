@@ -52,13 +52,67 @@
 extern I2C_HandleTypeDef hi2c1;   // PCA driver is on I2C1
 extern I2C_HandleTypeDef hi2c3;   // I2C3 is used for IMU and voltage monitors
 extern UART_HandleTypeDef huart2; // HUART1 is used for Jetson, so use HUART2 for debug prints
+extern UART_HandleTypeDef huart1; // The UART connected to the Jetson
+
+IMU_OrientationTypeDef current_imu_orientation; // Global variable to hold the latest IMU orientation
+
+// Struct matching the Jetson twist packet (1 byte type + 12 bytes floats)
+// Packed to ensure no padding bytes are added by the compiler, which would break parsing
+struct __attribute__((packed)) CmdVelPayload {
+    uint8_t cmd_type;
+    float lin_x;
+    float lin_y;
+    float ang_z;
+};
+
+#define CMD_TYPE_VEL 0x01
+
+// DMA Buffer and tracking
+#define DMA_RX_BUFFER_SIZE 64 // Larger than the expected command size to ensure no bytes are missed
+uint8_t dma_rx_buffer[DMA_RX_BUFFER_SIZE]; // Circular Queue for DMA reception of UART data
+uint16_t old_pos = 0;
+
+// Parser state machine variables
+uint8_t payload_buffer[13]; // Queue to hold incoming payload bytes
+uint8_t payload_index = 0;
+int parser_state = 0;
+
+// Parsed command storage
+struct CmdVelPayload last_cmd; // Struct to hold the payload data cleanly
+volatile int new_cmd_ready = 0; // Flag to indicate a new command is ready // Not used right now
+uint32_t last_cmd_timestamp_ms = 0; // Extra safety to prevent stale commands
+
 /* USER CODE END Variables */
-/* Definitions for defaultTask */
-osThreadId_t defaultTaskHandle;
-const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
+/* Definitions for controlTask */
+osThreadId_t controlTaskHandle;
+const osThreadAttr_t controlTask_attributes = {
+  .name = "controlTask",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityRealtime,
+};
+/* Definitions for imuTask */
+osThreadId_t imuTaskHandle;
+const osThreadAttr_t imuTask_attributes = {
+  .name = "imuTask",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
+/* Definitions for commTask */
+osThreadId_t commTaskHandle;
+const osThreadAttr_t commTask_attributes = {
+  .name = "commTask",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for cmdMutex */
+osMutexId_t cmdMutexHandle;
+const osMutexAttr_t cmdMutex_attributes = {
+  .name = "cmdMutex"
+};
+/* Definitions for imuMutex */
+osMutexId_t imuMutexHandle;
+const osMutexAttr_t imuMutex_attributes = {
+  .name = "imuMutex"
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -66,7 +120,9 @@ const osThreadAttr_t defaultTask_attributes = {
 
 /* USER CODE END FunctionPrototypes */
 
-void StartDefaultTask(void *argument);
+void StartControlTask(void *argument);
+void StartIMUTask(void *argument);
+void StartCommTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -79,6 +135,12 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
+  /* Create the mutex(es) */
+  /* creation of cmdMutex */
+  cmdMutexHandle = osMutexNew(&cmdMutex_attributes);
+
+  /* creation of imuMutex */
+  imuMutexHandle = osMutexNew(&imuMutex_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -97,8 +159,14 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  /* creation of controlTask */
+  controlTaskHandle = osThreadNew(StartControlTask, NULL, &controlTask_attributes);
+
+  /* creation of imuTask */
+  imuTaskHandle = osThreadNew(StartIMUTask, NULL, &imuTask_attributes);
+
+  /* creation of commTask */
+  commTaskHandle = osThreadNew(StartCommTask, NULL, &commTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -110,17 +178,16 @@ void MX_FREERTOS_Init(void) {
 
 }
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_StartControlTask */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the controlTask thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
+/* USER CODE END Header_StartControlTask */
+void StartControlTask(void *argument)
 {
-  /* USER CODE BEGIN StartDefaultTask */
-  /* Infinite loop */
+  /* USER CODE BEGIN StartControlTask */
   osDelay(2000); // wait peripherals up
   I2C_Scan(&hi2c1, &huart2);
   I2C_Scan(&hi2c3, &huart2);
@@ -128,8 +195,8 @@ void StartDefaultTask(void *argument)
   PCA9685_SetOscillatorFrequency(27000000);
   PCA9685_SetPWMFreq(50.0f);
 
-  IMU_Init(&hi2c3, &huart2);
-  IMU_OrientationTypeDef imu_orientation; 
+  LegIK_HardwareInit(); // Init the IK leg structs 
+  struct CmdVelPayload active_cmd = {0}; // Struct to hold the currently active command
 
   // OPTIONAL: Explicitly turn off ALL 16 channels at startup so they don't hold old positions
   // for (uint8_t i = 0; i < 16; i++) {
@@ -145,13 +212,38 @@ void StartDefaultTask(void *argument)
   // float yaw = 0.0f;
   // float z_translation = 0.0f;
 
-  LegIK_HardwareInit(); // Init the IK leg structs 
   // standingPose(); // Drive to neutral pose
+
   osDelay(2000);
 
+  /* Infinite loop */
   for(;;)
   {
     HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+
+    // Safely copy the latest command from the commTask
+    osMutexAcquire(cmdMutexHandle, osWaitForever);
+    active_cmd = last_cmd;
+    osMutexRelease(cmdMutexHandle);
+
+    // If more than 500 milliseconds have passed since the last valid command,
+    // stop the robot for safety
+    if ((HAL_GetTick() - last_cmd_timestamp_ms) > 500) {
+        active_cmd.lin_x = 0.0f;
+        active_cmd.lin_y = 0.0f;
+        active_cmd.ang_z = 0.0f;
+    }
+
+    executeJoystickGait(active_cmd.lin_x, active_cmd.lin_y, active_cmd.ang_z);
+
+    // char msg[256];
+    // int n = snprintf(msg, sizeof(msg), "Cmd: X:%d, Y:%d, Z:%d\r\n", 
+    //         (int)(last_cmd.lin_x*100), (int)(last_cmd.lin_y*100), (int)(last_cmd.ang_z*100));
+    // HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
+
+    // char msg2[64];
+    // int n2 = snprintf(msg2, sizeof(msg2), "Orientation is Y: %d, P: %d, R: %d\r\n", (int)current_imu_orientation.yaw, (int)current_imu_orientation.pitch, (int)current_imu_orientation.roll);
+    // HAL_UART_Transmit(&huart2, (uint8_t*)msg2, (uint16_t)n2, PCA9685_I2C_TIMEOUT_MS);
 
     // ********* Body Update Tests ***********
     // float time = (float)HAL_GetTick() / 1000.0f;
@@ -166,21 +258,140 @@ void StartDefaultTask(void *argument)
     // roll = sinf(time * 5.0f) * 0.2f;
     // updateBodyPosture(0.0f, 0.0f, z_translation, roll, pitch, yaw, 248.5f/2.0f, -165.2f/2.0f, 0.0f);
     // osDelay(20);
-    waveFrontRightLeg();
-    osDelay(1000);
+    // waveFrontRightLeg();
+    // osDelay(1000);
 
     // *********** STEPPING TEST ***********
     // sineStepGait();
     // Since the gait commands themselves have interpolation delays,
     // we do not need a big delay here
 
-    // *********** IMU Test **********
-    // IMU_ReadOrientation(&hi2c3, &imu_orientation);
-    // char msg[64];
-    // int n = snprintf(msg, sizeof(msg), "Orientation is Y: %d, P: %d, R: %d\r\n", (int)imu_orientation.yaw, (int)imu_orientation.pitch, (int)imu_orientation.roll);
-    // HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
+    osDelay(20); //50Hz control loop update rate
   }
-  /* USER CODE END StartDefaultTask */
+  /* USER CODE END StartControlTask */
+}
+
+/* USER CODE BEGIN Header_StartIMUTask */
+/**
+* @brief Function implementing the imuTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartIMUTask */
+void StartIMUTask(void *argument)
+{
+  /* USER CODE BEGIN StartIMUTask */
+
+  osDelay(2000);
+  IMU_Init(&hi2c3, &huart2);
+  IMU_OrientationTypeDef imu_orientation; 
+
+  /* Infinite loop */
+  for(;;)
+  {
+    IMU_ReadOrientation(&hi2c3, &imu_orientation);
+
+    osMutexAcquire(imuMutexHandle, osWaitForever);
+    current_imu_orientation = imu_orientation;
+    osMutexRelease(imuMutexHandle);
+    
+    osDelay(10); // 100Hz read rate
+  }
+  /* USER CODE END StartIMUTask */
+}
+
+/* USER CODE BEGIN Header_StartCommTask */
+/**
+* @brief Function implementing the commTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartCommTask */
+void StartCommTask(void *argument)
+{
+  /* USER CODE BEGIN StartCommTask */
+
+  // Start continuous DMA reception on USART1 in the background
+  HAL_UART_Receive_DMA(&huart1, dma_rx_buffer, DMA_RX_BUFFER_SIZE);
+
+  /* Infinite loop */
+  for(;;)
+  {
+    // Check where the DMA currently is writing.
+    // __HAL_DMA_GET_COUNTER returns the number of bytes REMAINING in the buffer before 
+    // it wraps around, so subtract from total size to get the current position.
+    uint16_t current_pos = DMA_RX_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(huart1.hdmarx);
+
+    // current_pos is the REAR of the queue where new bytes are being written, 
+    // old_pos is the FRONT of the queue where we are reading from.
+
+    // Process all new bytes that have arrived since we last checked
+    // (i.e. until our REAR catches up to the FRONT)
+    while (old_pos != current_pos) {
+        uint8_t rx_byte = dma_rx_buffer[old_pos];
+
+        // State machine to find headers, read payload, and check checksum
+        switch(parser_state) {
+            
+            // Looking for Header 1 (0x55)
+            // If 1st header byte was found, set state to 1 to look for 2nd header byte
+            case 0:
+                if (rx_byte == 0x55) parser_state = 1;
+                break;
+            
+            // Looking for Header 2 (0xAA). 
+            // If found, set state to 2 to start reading payload bytes
+            // If not found, look for header 1 again
+            case 1: 
+                if (rx_byte == 0xAA) {
+                    parser_state = 2;
+                    payload_index = 0;
+                } else if (rx_byte != 0x55) {
+                    parser_state = 0;
+                }
+                break;
+                
+            // Reading Payload (13 bytes)
+            // Once payload is full, verify checksum (state 3)
+            case 2:
+                payload_buffer[payload_index++] = rx_byte;
+                if (payload_index >= 13) {
+                    parser_state = 3;
+                }
+                break;
+            
+            // - Verify Checksum
+            // - Safely copy bytes from payload_buffer directly into the last_cmd struct to 
+            //   avoid alignment HardFaults. Use mutex to prevent race conditions.
+            //   Payload_buffer is just a byte array, no gaurantee of correct alignment for
+            //   struct access, so use memcpy which can handle unaligned access.
+            // - Set a flag to indicate data is ready for use
+            // - Reset state machine for next packet
+            case 3: 
+                uint8_t received_checksum = rx_byte;
+                uint8_t calculated_checksum = 0;   
+                for (int i = 0; i < 13; i++) {
+                    calculated_checksum ^= payload_buffer[i];
+                }
+                if (calculated_checksum == received_checksum) {
+                    osMutexAcquire(cmdMutexHandle, osWaitForever);
+                    memcpy(&last_cmd, payload_buffer, sizeof(struct CmdVelPayload));
+                    new_cmd_ready = 1;
+                    last_cmd_timestamp_ms = HAL_GetTick();
+                    osMutexRelease(cmdMutexHandle);
+                }
+                parser_state = 0;
+                break;
+        }
+
+        // Advance our read pointer, wrapping around if needed
+        old_pos = (old_pos + 1) % DMA_RX_BUFFER_SIZE;
+    }
+
+    // Let FreeRTOS give CPU time to other tasks
+    osDelay(10); // 100Hz command processing rate
+  }
+  /* USER CODE END StartCommTask */
 }
 
 /* Private application code --------------------------------------------------*/

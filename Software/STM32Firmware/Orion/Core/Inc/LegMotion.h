@@ -27,5 +27,6 @@ void sineStepGait(void);
 void waveFrontRightLeg(void);
 void LegIK_HardwareInit(void);
 void centerAllServos(void);
+void executeJoystickGait(float vel_x, float vel_y, float ang_z);
 
 #endif // LEGMOTION_H
