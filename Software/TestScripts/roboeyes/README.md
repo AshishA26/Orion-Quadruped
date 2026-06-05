@@ -30,3 +30,9 @@ The original Roboeyes library has the following functionality:
     - `bash ~/Downloads/Miniconda3-latest-Linux-aarch64.sh`
     - `conda config --set auto_activate_base false`
     - `conda env create --file=environment.yaml`
+
+To run:
+```
+conda activate orion_eyes
+python roboeyes_desktop,py
+```
