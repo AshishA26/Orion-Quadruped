@@ -32,7 +32,7 @@ The original Roboeyes library has the following functionality:
     - `conda env create --file=environment.yaml`
 
 To run:
-```
+```bash
 conda activate orion_eyes
 python roboeyes_desktop,py
 ```
