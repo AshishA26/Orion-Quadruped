@@ -56,16 +56,29 @@ extern UART_HandleTypeDef huart1; // The UART connected to the Jetson
 
 IMU_OrientationTypeDef current_imu_orientation; // Global variable to hold the latest IMU orientation
 
-// Struct matching the Jetson twist packet (1 byte type + 12 bytes floats)
+// Struct matching the Jetson packet (1 byte type + 36 bytes floats)
 // Packed to ensure no padding bytes are added by the compiler, which would break parsing
-struct __attribute__((packed)) CmdVelPayload {
+struct __attribute__((packed)) CmdPayload {
     uint8_t cmd_type;
     float lin_x;
     float lin_y;
     float ang_z;
+    float roll;
+    float pitch;
+    float yaw;
+    float z_pos;
+    float x_pos;
+    float y_pos;
+    float pivot_x;
+    float pivot_y;
 };
 
-#define CMD_TYPE_VEL 0x01
+#define CMD_NORMAL 0x01
+#define CMD_RESET 0x02
+#define CMD_WAVE 0x03
+#define CMD_HEEL 0x04
+#define CMD_DANCE 0x05
+#define CMD_EXTRAS 0x06
 
 // DMA Buffer and tracking
 #define DMA_RX_BUFFER_SIZE 64 // Larger than the expected command size to ensure no bytes are missed
@@ -73,12 +86,13 @@ uint8_t dma_rx_buffer[DMA_RX_BUFFER_SIZE]; // Circular Queue for DMA reception o
 uint16_t old_pos = 0;
 
 // Parser state machine variables
-uint8_t payload_buffer[13]; // Queue to hold incoming payload bytes
+#define PAYLOAD_SIZE 45
+uint8_t payload_buffer[PAYLOAD_SIZE]; // Queue to hold incoming payload bytes
 uint8_t payload_index = 0;
 int parser_state = 0;
 
 // Parsed command storage
-struct CmdVelPayload last_cmd; // Struct to hold the payload data cleanly
+struct CmdPayload last_cmd; // Struct to hold the payload data cleanly
 volatile int new_cmd_ready = 0; // Flag to indicate a new command is ready // Not used right now
 uint32_t last_cmd_timestamp_ms = 0; // Extra safety to prevent stale commands
 
@@ -196,7 +210,7 @@ void StartControlTask(void *argument)
   PCA9685_SetPWMFreq(50.0f);
 
   LegIK_HardwareInit(); // Init the IK leg structs 
-  struct CmdVelPayload active_cmd = {0}; // Struct to hold the currently active command
+  struct CmdPayload active_cmd = {0}; // Struct to hold the currently active command
 
   // OPTIONAL: Explicitly turn off ALL 16 channels at startup so they don't hold old positions
   // for (uint8_t i = 0; i < 16; i++) {
@@ -232,14 +246,17 @@ void StartControlTask(void *argument)
         active_cmd.lin_x = 0.0f;
         active_cmd.lin_y = 0.0f;
         active_cmd.ang_z = 0.0f;
+        active_cmd.roll = 0.0f;
+        active_cmd.pitch = 0.0f;
+        active_cmd.yaw = 0.0f;
     }
 
     executeJoystickGait(active_cmd.lin_x, active_cmd.lin_y, active_cmd.ang_z);
 
-    // char msg[256];
-    // int n = snprintf(msg, sizeof(msg), "Cmd: X:%d, Y:%d, Z:%d\r\n", 
-    //         (int)(last_cmd.lin_x*100), (int)(last_cmd.lin_y*100), (int)(last_cmd.ang_z*100));
-    // HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
+    char msg[256];
+    int n = snprintf(msg, sizeof(msg), "Cmd: X:%d, Y:%d, Z:%d\r\n", 
+            (int)(active_cmd.lin_x*100), (int)(active_cmd.lin_y*100), (int)(active_cmd.ang_z*100));
+    HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
 
     // char msg2[64];
     // int n2 = snprintf(msg2, sizeof(msg2), "Orientation is Y: %d, P: %d, R: %d\r\n", (int)current_imu_orientation.yaw, (int)current_imu_orientation.pitch, (int)current_imu_orientation.roll);
@@ -351,16 +368,16 @@ void StartCommTask(void *argument)
                 }
                 break;
                 
-            // Reading Payload (13 bytes)
+            // Reading Payload (PAYLOAD_SIZE bytes)
             // Once payload is full, verify checksum (state 3)
             case 2:
                 payload_buffer[payload_index++] = rx_byte;
-                if (payload_index >= 13) {
+                if (payload_index >= PAYLOAD_SIZE) {
                     parser_state = 3;
                 }
                 break;
             
-            // - Verify Checksum
+            // - Verify Checksum (parity)
             // - Safely copy bytes from payload_buffer directly into the last_cmd struct to 
             //   avoid alignment HardFaults. Use mutex to prevent race conditions.
             //   Payload_buffer is just a byte array, no gaurantee of correct alignment for
@@ -370,12 +387,12 @@ void StartCommTask(void *argument)
             case 3: 
                 uint8_t received_checksum = rx_byte;
                 uint8_t calculated_checksum = 0;   
-                for (int i = 0; i < 13; i++) {
+                for (int i = 0; i < PAYLOAD_SIZE; i++) {
                     calculated_checksum ^= payload_buffer[i];
                 }
                 if (calculated_checksum == received_checksum) {
                     osMutexAcquire(cmdMutexHandle, osWaitForever);
-                    memcpy(&last_cmd, payload_buffer, sizeof(struct CmdVelPayload));
+                    memcpy(&last_cmd, payload_buffer, sizeof(struct CmdPayload));
                     new_cmd_ready = 1;
                     last_cmd_timestamp_ms = HAL_GetTick();
                     osMutexRelease(cmdMutexHandle);
