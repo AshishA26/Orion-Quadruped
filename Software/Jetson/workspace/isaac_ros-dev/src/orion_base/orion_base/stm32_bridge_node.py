@@ -215,11 +215,11 @@ class STM32Bridge(Node):
 
         # Send over UART
         self.serial_conn.write(full_packet)
-        self.get_logger().info(f"Sent: X:{lin_x:.2f}, Y:{lin_y:.2f}, Z:{ang_z:.2f} \
-            Roll:{math.degrees(self.roll):.1f}, Pitch:{math.degrees(self.pitch):.1f}, Yaw:{math.degrees(self.yaw):.1f}, \
-            Z Pos:{self.z_offset:.1f}, X Pos:{x_offset:.1f}, Y Pos:{y_offset:.1f}, \
-            CmdType:{self.cmd_type}, \
-            PivotX:{self.pivot_x:.1f}, PivotY:{self.pivot_y:.1f}")
+        # self.get_logger().info(f"Sent: X:{lin_x:.2f}, Y:{lin_y:.2f}, Z:{ang_z:.2f} \
+        #     Roll:{math.degrees(self.roll):.1f}, Pitch:{math.degrees(self.pitch):.1f}, Yaw:{math.degrees(self.yaw):.1f}, \
+        #     Z Pos:{self.z_offset:.1f}, X Pos:{x_offset:.1f}, Y Pos:{y_offset:.1f}, \
+        #     CmdType:{self.cmd_type}, \
+        #     PivotX:{self.pivot_x:.1f}, PivotY:{self.pivot_y:.1f}")
 
 def main(args=None):
     rclpy.init(args=args)
