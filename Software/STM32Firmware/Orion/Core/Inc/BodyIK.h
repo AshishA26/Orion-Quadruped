@@ -10,5 +10,8 @@
 #define BODY_WIDTH_MM  165.2f  // Distance between left and right hip axes
 
 void updateBodyPosture(float transX, float transY, float transZ, float roll, float pitch, float yaw, float pivotX, float pivotY, float pivotZ);
+void updateBodyPostureWithFeet(float footPositions[4][3], 
+                               float transX, float transY, float transZ, 
+                               float roll, float pitch, float yaw);
 
 #endif // __BODY_IK_H

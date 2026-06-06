@@ -66,9 +66,9 @@ struct __attribute__((packed)) CmdPayload {
     float roll;
     float pitch;
     float yaw;
-    float z_pos;
-    float x_pos;
-    float y_pos;
+    float z_offset;
+    float x_offset;
+    float y_offset;
     float pivot_x;
     float pivot_y;
 };
@@ -211,6 +211,7 @@ void StartControlTask(void *argument)
 
   LegIK_HardwareInit(); // Init the IK leg structs 
   struct CmdPayload active_cmd = {0}; // Struct to hold the currently active command
+  static uint8_t prev_cmd_type = CMD_RESET;
 
   // OPTIONAL: Explicitly turn off ALL 16 channels at startup so they don't hold old positions
   // for (uint8_t i = 0; i < 16; i++) {
@@ -243,20 +244,83 @@ void StartControlTask(void *argument)
     // If more than 500 milliseconds have passed since the last valid command,
     // stop the robot for safety
     if ((HAL_GetTick() - last_cmd_timestamp_ms) > 500) {
+        active_cmd.cmd_type = CMD_RESET;
         active_cmd.lin_x = 0.0f;
         active_cmd.lin_y = 0.0f;
         active_cmd.ang_z = 0.0f;
         active_cmd.roll = 0.0f;
         active_cmd.pitch = 0.0f;
         active_cmd.yaw = 0.0f;
+        active_cmd.z_offset = 0.0f;
     }
 
-    executeJoystickGait(active_cmd.lin_x, active_cmd.lin_y, active_cmd.ang_z);
+    // Process Kinematics and Motion state machine based on cmd_type
+    switch(active_cmd.cmd_type) 
+    {
+        case CMD_NORMAL:
+            {
+                float target_feet[4][3];
 
-    char msg[256];
-    int n = snprintf(msg, sizeof(msg), "Cmd: X:%d, Y:%d, Z:%d\r\n", 
-            (int)(active_cmd.lin_x*100), (int)(active_cmd.lin_y*100), (int)(active_cmd.ang_z*100));
-    HAL_UART_Transmit(&huart2, (uint8_t*)msg, (uint16_t)n, PCA9685_I2C_TIMEOUT_MS);
+                // Step A: Calculate raw gait foot trajectory paths relative to default stance
+                calculateTrotGaitPositions(active_cmd.lin_x, active_cmd.lin_y, active_cmd.ang_z, target_feet);
+
+                // Step B: Relative Height Conversion. 
+                // Jetson sends + to lift body up. Inverse IK matrix requires -transZ to pull body up.
+                float transZ = -active_cmd.z_offset; 
+
+                // Step C: Stream footprints through orientation matrix to apply Roll/Pitch/Yaw
+                updateBodyPostureWithFeet(target_feet, 0.0f, 0.0f, transZ,
+                                          active_cmd.roll, active_cmd.pitch, active_cmd.yaw);
+            }
+            break;
+
+        case CMD_EXTRAS:
+            {
+                // In extras mode, handle relative height translation identically 
+                float transZ = -active_cmd.z_offset;
+                updateBodyPosture(active_cmd.x_offset, active_cmd.y_offset, transZ,
+                                  active_cmd.roll, active_cmd.pitch, active_cmd.yaw,
+                                  active_cmd.pivot_x, active_cmd.pivot_y, 0.0f);
+            }
+            break;
+
+        case CMD_WAVE:
+            // TODO: Ensure waving is compatible with rtos tasks
+            // Guard to ensure the blocking animation only plays once per button press
+            // if (prev_cmd_type != CMD_WAVE) {
+            //     waveFrontRightLeg();
+            // }
+            break;
+
+        case CMD_HEEL:
+            heelingPose();
+            break;
+
+        case CMD_DANCE:
+            // TODO: Implement dance
+            break;
+
+        case CMD_RESET:
+        default:
+            standingPose(); // Safely return to flat, neutral stance
+            break;
+    }
+
+    // Update previous command tracker for the next loop iteration
+    prev_cmd_type = active_cmd.cmd_type;
+
+    // Clean, structured Debug Print to UART2
+    // char debug_msg[128];
+    // int n = snprintf(debug_msg, sizeof(debug_msg), 
+    //                  "Mode: 0x%02X | X: %d | Y: %d | Yaw: %d | Z_Offset: %dmm\r\n", 
+    //                  active_cmd.cmd_type, 
+    //                  (int)(active_cmd.lin_x * 100), 
+    //                  (int)(active_cmd.lin_y * 100), 
+    //                  (int)(active_cmd.yaw * 100),
+    //                  (int)(active_cmd.z_offset));
+    // HAL_UART_Transmit(&huart2, (uint8_t*)debug_msg, (uint16_t)n, 10);
+
+    osDelay(20); // Steady 50Hz control loop cycle execution
 
     // char msg2[64];
     // int n2 = snprintf(msg2, sizeof(msg2), "Orientation is Y: %d, P: %d, R: %d\r\n", (int)current_imu_orientation.yaw, (int)current_imu_orientation.pitch, (int)current_imu_orientation.roll);
@@ -282,8 +346,6 @@ void StartControlTask(void *argument)
     // sineStepGait();
     // Since the gait commands themselves have interpolation delays,
     // we do not need a big delay here
-
-    osDelay(20); //50Hz control loop update rate
   }
   /* USER CODE END StartControlTask */
 }
