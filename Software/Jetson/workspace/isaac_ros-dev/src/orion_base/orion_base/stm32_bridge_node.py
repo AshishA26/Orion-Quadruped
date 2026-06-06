@@ -13,18 +13,19 @@ CMD_HEEL = 0x04
 CMD_DANCE = 0x05
 CMD_EXTRAS = 0x06
 
-# Joystick axis and button mapping (PS5 controller)
-LS_HORZ = 0 # Strafe left/right
-LS_VERT = 1 # Forward/backward
+# --- Joystick axis and button mapping (PS5 controller) ---
+# All settings are in CMD_NORMAL, unless otherwise specified
+LS_HORZ = 0 # Strafe left/right if CMD_NORMAL, shift y pos if CMD_EXTRAS
+LS_VERT = 1 # Move forward/backward if CMD_NORMAL, shift x pos if CMD_EXTRAS
 RS_HORZ = 2 # Turn left/right
 RS_VERT = 5
 DPAD_VERT = 7 # Pitch if CMD_NORMAL, move pivot point forward/backward if CMD_EXTRAS
 DPAD_HORZ = 6 # Roll if CMD_NORMAL, move pivot point left/right if CMD_EXTRAS
-BTN_SQUARE = 0 # Yaw left
+BTN_SQUARE = 0 # Yaw left if CMD_NORMAL, reset pivot point in CMD_EXTRAS
 BTN_CROSS = 1 # Heigh (z pos) decrease
 BTN_CIRCLE = 2 # Yaw right
 BTN_TRIANGLE = 3 # Height (z pos) increase
-BTN_L1 = 4 # Deadman switch - required for any movement
+BTN_L1 = 4 # Deadman switch
 BTN_R1 = 5 # Reset, sets CMD_RESET
 BTN_L2 = 3
 BTN_R2 = 4 # Boost mode (axis 4)
@@ -115,6 +116,7 @@ class STM32Bridge(Node):
         y_pos = 0.0
 
         # --- Commands ---
+        # No deadman switch required
         if msg.buttons[BTN_R1] == 1:
             self.cmd_type = CMD_RESET
         elif msg.buttons[BTN_TOUCHPAD] == 1: # Normal mode 
