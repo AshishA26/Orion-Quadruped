@@ -23,9 +23,9 @@ BTN_CROSS = 1 # Height decrease
 BTN_CIRCLE = 2 # Yaw right
 BTN_TRIANGLE = 3 # Height increase
 BTN_L1 = 4 # Deadman switch
-BTN_R1 = 5 # Reset
-BTN_L2 = 6
-BTN_R2 = 7 # Boost mode
+BTN_R1 = 5 # Reset (when holding L1 or touchpad)
+BTN_L2 = 3
+BTN_R2 = 4 # Boost mode (axis 4, or button 7 when fully pressed)
 BTN_SHARE = 8 # Heel
 BTN_OPTIONS = 9 # Wave
 BTN_L3 = 10
@@ -44,10 +44,10 @@ class STM32Bridge(Node):
         self.declare_parameter('max_yaw', math.radians(30)) # +/- 30 degrees
         self.declare_parameter('max_z', 200.0) # Maximum height in mm
         self.declare_parameter('min_z', 80.0) # Minimum height in mm
-        self.declare_parameter('boost_multiplier', 1.5) # Multiplier for boost mode
-        self.declare_parameter('tilt_step', 0.05) # Step size for tilt control
-        self.declare_parameter('height_step', 5.0) # Step size for height control
-        self.declare_parameter('pivot_step', 5.0) # Step size for pivot point adjustment in mm
+        self.declare_parameter('boost', 0.5) # Extra speed for boost mode
+        self.declare_parameter('tilt_step', 0.01) # Step size for tilt control
+        self.declare_parameter('height_step', 1.0) # Step size for height control
+        self.declare_parameter('pivot_step', 1.0) # Step size for pivot point adjustment in mm
 
         # Retrieve parameter values
         self.MAX_SPEED = self.get_parameter('max_speed').value
@@ -56,7 +56,7 @@ class STM32Bridge(Node):
         self.MAX_YAW = self.get_parameter('max_yaw').value
         self.MAX_Z = self.get_parameter('max_z').value
         self.MIN_Z = self.get_parameter('min_z').value
-        self.BOOST_MULTIPLIER = self.get_parameter('boost_multiplier').value
+        self.BOOST = self.get_parameter('boost').value
         self.TILT_STEP = self.get_parameter('tilt_step').value
         self.HEIGHT_STEP = self.get_parameter('height_step').value
         self.PIVOT_STEP = self.get_parameter('pivot_step').value
@@ -125,7 +125,7 @@ class STM32Bridge(Node):
             # -- Boost Mode ---
             # Get the speed multiplier value from R2
             r2_val = (-msg.axes[BTN_R2] + 1.0) / 2.0 # Normalize from [-1,1] to [0,1]
-            speed_multiplier = self.MAX_SPEED * (r2_val * self.BOOST_MULTIPLIER)
+            speed_multiplier = self.MAX_SPEED + (r2_val * self.BOOST)
 
             # --- Walking Commands ---
             lin_x = msg.axes[LS_VERT] * speed_multiplier
