@@ -15,16 +15,16 @@ CMD_EXTRAS = 0x06
 
 # --- Joystick axis and button mapping (PS5 controller) ---
 # All settings are in CMD_NORMAL, unless otherwise specified
-LS_HORZ = 0 # Strafe left/right if CMD_NORMAL, shift y pos if CMD_EXTRAS
-LS_VERT = 1 # Move forward/backward if CMD_NORMAL, shift x pos if CMD_EXTRAS
+LS_HORZ = 0 # Strafe left/right if CMD_NORMAL, change y offset if CMD_EXTRAS
+LS_VERT = 1 # Move forward/backward if CMD_NORMAL, change x offset if CMD_EXTRAS
 RS_HORZ = 2 # Turn left/right
 RS_VERT = 5
 DPAD_VERT = 7 # Pitch if CMD_NORMAL, move pivot point forward/backward if CMD_EXTRAS
 DPAD_HORZ = 6 # Roll if CMD_NORMAL, move pivot point left/right if CMD_EXTRAS
 BTN_SQUARE = 0 # Yaw left if CMD_NORMAL, reset pivot point in CMD_EXTRAS
-BTN_CROSS = 1 # Heigh (z pos) decrease
+BTN_CROSS = 1 # Heigh (z offset) decrease
 BTN_CIRCLE = 2 # Yaw right
-BTN_TRIANGLE = 3 # Height (z pos) increase
+BTN_TRIANGLE = 3 # Height (z offset) increase
 BTN_L1 = 4 # Deadman switch
 BTN_R1 = 5 # Reset, sets CMD_RESET
 BTN_L2 = 3
@@ -45,12 +45,11 @@ class STM32Bridge(Node):
         self.declare_parameter('max_roll', math.radians(20)) # +/- 20 degrees
         self.declare_parameter('max_pitch', math.radians(25)) # +/- 25 degrees
         self.declare_parameter('max_yaw', math.radians(30)) # +/- 30 degrees
-        self.declare_parameter('max_z', 200.0) # Maximum height in mm
-        self.declare_parameter('min_z', 80.0) # Minimum height in mm
+        self.declare_parameter('max_z_offset', 60.0) # Maximum translation up/down in mm
         self.declare_parameter('boost', 0.5) # Extra speed for boost mode
         self.declare_parameter('tilt_step', 0.01) # Step size for tilt control
-        self.declare_parameter('z_pos_step', 1.0) # Step size for height control
-        self.declare_parameter('xy_pos_multiplier', 10) # Multiplier for xy position control (originally [-1,1])
+        self.declare_parameter('z_offset_step', 1.0) # Step size for z position control
+        self.declare_parameter('xy_offset_multiplier', 10) # Multiplier for xy position control (max xy originally [-1,1])
         self.declare_parameter('pivot_step', 1.0) # Step size for pivot point adjustment in mm
 
         # Retrieve parameter values
@@ -58,12 +57,11 @@ class STM32Bridge(Node):
         self.MAX_ROLL = self.get_parameter('max_roll').value
         self.MAX_PITCH = self.get_parameter('max_pitch').value
         self.MAX_YAW = self.get_parameter('max_yaw').value
-        self.MAX_Z = self.get_parameter('max_z').value
-        self.MIN_Z = self.get_parameter('min_z').value
+        self.MAX_Z_OFFSET = self.get_parameter('max_z_offset').value
         self.BOOST = self.get_parameter('boost').value
         self.TILT_STEP = self.get_parameter('tilt_step').value
-        self.Z_POS_STEP = self.get_parameter('z_pos_step').value
-        self.XY_POS_MULTIPLIER = self.get_parameter('xy_pos_multiplier').value
+        self.Z_OFFSET_STEP = self.get_parameter('z_offset_step').value
+        self.XY_OFFSET_MULTIPLIER = self.get_parameter('xy_offset_multiplier').value
         self.PIVOT_STEP = self.get_parameter('pivot_step').value
 
         # Configure Serial Port (UART)
@@ -89,7 +87,7 @@ class STM32Bridge(Node):
         self.yaw = 0.0
         self.pitch = 0.0
         self.roll = 0.0
-        self.z_pos = 150.0 # Default height (not storing xy_pos for now)
+        self.z_offset = 0.0 # (note: not storing xy offset for now)
 
         # Internally store the pivot point (no pivot_z control for now)
         self.pivot_x = 0.0
@@ -112,8 +110,8 @@ class STM32Bridge(Node):
         lin_x = 0.0
         lin_y = 0.0
         ang_z = 0.0
-        x_pos = 0.0
-        y_pos = 0.0
+        x_offset = 0.0
+        y_offset = 0.0
 
         # --- Commands ---
         # No deadman switch required
@@ -139,7 +137,7 @@ class STM32Bridge(Node):
                 self.roll = 0.0
                 self.pitch = 0.0
                 self.yaw = 0.0
-                self.z_pos = 150.0
+                self.z_offset = 0.0
 
             # Normal
             elif self.cmd_type == CMD_NORMAL:
@@ -154,28 +152,28 @@ class STM32Bridge(Node):
                 ang_z = msg.axes[RS_HORZ] * speed_multiplier
 
                 # --- Posture Commands ---
-                if msg.axes[DPAD_HORZ] > 0.5: self.roll += self.TILT_STEP       # Dpad Left
-                elif msg.axes[DPAD_HORZ] < -0.5: self.roll -= self.TILT_STEP      # Dpad Right
-                if msg.axes[DPAD_VERT] > 0.5: self.pitch += self.TILT_STEP      # Dpad Up
-                elif msg.axes[DPAD_VERT] < -0.5: self.pitch -= self.TILT_STEP     # Dpad Down
-                if msg.buttons[BTN_SQUARE] == 1: self.yaw += self.TILT_STEP  # Square
-                if msg.buttons[BTN_CIRCLE] == 1: self.yaw -= self.TILT_STEP  # Circle
-                if msg.buttons[BTN_TRIANGLE] == 1: self.z_pos += self.Z_POS_STEP # Triangle
-                if msg.buttons[BTN_CROSS] == 1: self.z_pos -= self.Z_POS_STEP # Cross
+                if msg.axes[DPAD_HORZ] > 0.5: self.roll += self.TILT_STEP
+                elif msg.axes[DPAD_HORZ] < -0.5: self.roll -= self.TILT_STEP
+                if msg.axes[DPAD_VERT] > 0.5: self.pitch += self.TILT_STEP
+                elif msg.axes[DPAD_VERT] < -0.5: self.pitch -= self.TILT_STEP
+                if msg.buttons[BTN_SQUARE] == 1: self.yaw += self.TILT_STEP
+                if msg.buttons[BTN_CIRCLE] == 1: self.yaw -= self.TILT_STEP
+                if msg.buttons[BTN_TRIANGLE] == 1: self.z_offset += self.Z_OFFSET_STEP
+                if msg.buttons[BTN_CROSS] == 1: self.z_offset -= self.Z_OFFSET_STEP
 
                 # --- Clamp values to max limits ---
                 self.roll = max(-self.MAX_ROLL, min(self.MAX_ROLL, self.roll))
                 self.pitch = max(-self.MAX_PITCH, min(self.MAX_PITCH, self.pitch))
                 self.yaw = max(-self.MAX_YAW, min(self.MAX_YAW, self.yaw))
-                self.z_pos = max(self.MIN_Z, min(self.MAX_Z, self.z_pos))
+                self.z_offset = max(-self.MAX_Z_OFFSET, min(self.MAX_Z_OFFSET, self.z_offset))
 
             # Extras
             elif self.cmd_type == CMD_EXTRAS:
-                # --- XY Position Control ---
-                # It is important to note that unlike z_pos, x and y pos are not persistant
+                # --- XY Position/Offset Control ---
+                # It is important to note that unlike z_offset, x and y offset are not persistant
                 # (will reset if joystick goes back to center)
-                x_pos = msg.axes[LS_VERT]*self.XY_POS_MULTIPLIER
-                y_pos = msg.axes[LS_HORZ]*self.XY_POS_MULTIPLIER
+                x_offset = msg.axes[LS_VERT]*self.XY_OFFSET_MULTIPLIER
+                y_offset = msg.axes[LS_HORZ]*self.XY_OFFSET_MULTIPLIER
 
                 # --- Pivot Point Control ---
                 if msg.axes[DPAD_HORZ] > 0.5:  self.pivot_y += self.PIVOT_STEP   # Dpad Left
@@ -193,7 +191,7 @@ class STM32Bridge(Node):
         # The `<` indicates Little-Endian byte order (standard for STM32/ARM)
         payload = struct.pack('<B11f', self.cmd_type, lin_x, lin_y, ang_z, 
                                 self.roll, self.pitch, self.yaw, 
-                                self.z_pos, x_pos, y_pos, 
+                                self.z_offset, x_offset, y_offset, 
                                 self.pivot_x, self.pivot_y)
 
         # Calculate checksum (parity) on the payload (Type + Floats)
@@ -219,7 +217,7 @@ class STM32Bridge(Node):
         self.serial_conn.write(full_packet)
         self.get_logger().info(f"Sent: X:{lin_x:.2f}, Y:{lin_y:.2f}, Z:{ang_z:.2f} \
             Roll:{math.degrees(self.roll):.1f}, Pitch:{math.degrees(self.pitch):.1f}, Yaw:{math.degrees(self.yaw):.1f}, \
-            Z Pos:{self.z_pos:.1f}, X Pos:{x_pos:.1f}, Y Pos:{y_pos:.1f}, \
+            Z Pos:{self.z_offset:.1f}, X Pos:{x_offset:.1f}, Y Pos:{y_offset:.1f}, \
             CmdType:{self.cmd_type}, \
             PivotX:{self.pivot_x:.1f}, PivotY:{self.pivot_y:.1f}")
 
