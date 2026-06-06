@@ -84,7 +84,7 @@ class STM32Bridge(Node):
         self.yaw = 0.0
         self.pitch = 0.0
         self.roll = 0.0
-        self.z_height = 160.0 # Default height
+        self.z_height = 150.0 # Default height
 
         # Internally store the pivot point (no pivot_z control for now)
         self.pivot_x = 0.0
@@ -118,7 +118,7 @@ class STM32Bridge(Node):
                 self.roll = 0.0
                 self.pitch = 0.0
                 self.yaw = 0.0
-                self.z_height = 160.0
+                self.z_height = 150.0
             elif msg.buttons[BTN_OPTIONS] == 1: # Wave
                 self.cmd_type = CMD_WAVE
             elif msg.buttons[BTN_SHARE] == 1: # Heel
