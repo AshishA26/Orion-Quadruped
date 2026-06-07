@@ -7,6 +7,7 @@
 #include "pca9685.h"
 #include "cmsis_os.h"
 #include "BodyIK.h"
+#include <stdbool.h>
 
 extern LegIK_t legFrontLeft;
 extern LegIK_t legFrontRight;
@@ -29,5 +30,6 @@ void LegIK_HardwareInit(void);
 void centerAllServos(void);
 void executeJoystickGait(float vel_x, float vel_y, float ang_z);
 void calculateTrotGaitPositions(float vel_x, float vel_y, float ang_z, float outputFeet[4][3]);
+void calculateWavePositions(float outputFeet[4][3], bool reset_animation);
 
 #endif // LEGMOTION_H

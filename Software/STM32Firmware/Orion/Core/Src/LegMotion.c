@@ -311,7 +311,7 @@ void centerAllServos() {
   PCA9685_WriteMicroseconds(CH_BR_TIBIA, angleToPulse(BR_SERVO_CENTER_TIBIA));
 }
 
-// ------------------- RTOS COMPATIBLE FUNCTIONS ------------------------
+// ------------------- RTOS COMPATIBLE MOVEMENT FUNCTIONS ------------------------
 
 // Function to execute a joystick-based gait, computes a single frame of leg positions based
 // on the current joystick command and global phase clock, then updates leg positions accordingly.
@@ -480,5 +480,65 @@ void calculateTrotGaitPositions(float vel_x, float vel_y, float ang_z, float out
         outputFeet[i][1] = is_left ? (L1_HIP + foot_y) : (-L1_HIP + foot_y);
         // Base height is baked in here, BodyIK will handle height shifting
         outputFeet[i][2] = BASE_Z + foot_z; 
+    }
+}
+
+
+/**
+ * Generates local foot coordinates for a waving animation on the Front Right leg.
+ * Uses a time accumulator to prevent blocking the RTOS task.
+ */
+void calculateWavePositions(float outputFeet[4][3], bool reset_animation) 
+{
+    static float wave_time = 0.0f;
+    const float BASE_Z = 160.0f;
+    const float LIFT_Z = 70.0f;  // How high the foot lifts (closer to body)
+    const float REACH_X = 60.0f; // How far forward the foot reaches
+    const float SWING_Y = 50.0f; // How far left/right the wave sweeps
+
+    // If we just entered wave mode, reset the timer to start from the beginning
+    if (reset_animation) {
+        wave_time = 0.0f;
+    }
+
+    // Default planted positions for all 4 legs
+    for (int i = 0; i < 4; i++) {
+        outputFeet[i][0] = 0.0f; 
+        outputFeet[i][1] = (i == 0 || i == 2) ? L1_HIP : -L1_HIP; 
+        outputFeet[i][2] = BASE_Z;
+    }
+
+    // Advance time by 20ms (assuming a 50Hz control loop)
+    wave_time += 0.02f;
+
+    // --- State Machine ---
+    if (wave_time < 0.5f) {
+        // Phase 1: Lift Leg (0.0s to 0.5s)
+        float progress = wave_time / 0.5f;
+        float smooth = sinf(progress * 1.5708f); // Quarter sine curve for easing
+        
+        outputFeet[1][0] = smooth * REACH_X;       
+        outputFeet[1][2] = BASE_Z - (smooth * (BASE_Z - LIFT_Z)); 
+
+    } else if (wave_time < 2.5f) {
+        // Phase 2: Wave back and forth (0.5s to 2.5s)
+        float wave_phase = (wave_time - 0.5f) * 3.14159f * 3.0f; // Speed multiplier
+        
+        outputFeet[1][0] = REACH_X;
+        outputFeet[1][2] = LIFT_Z;
+        // Swing the Y-axis left and right
+        outputFeet[1][1] = -L1_HIP + (sinf(wave_phase) * SWING_Y); 
+
+    } else if (wave_time < 3.0f) {
+        // Phase 3: Lower Leg (2.5s to 3.0s)
+        float progress = (wave_time - 2.5f) / 0.5f;
+        float smooth = sinf(progress * 1.5708f);
+        
+        outputFeet[1][0] = REACH_X - (smooth * REACH_X);
+        outputFeet[1][2] = LIFT_Z + (smooth * (BASE_Z - LIFT_Z));
+
+    } else {
+        // Phase 4: Finished. Reset timer so it loops
+        wave_time = 0.0f;
     }
 }

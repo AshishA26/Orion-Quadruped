@@ -261,14 +261,15 @@ void StartControlTask(void *argument)
             {
                 float target_feet[4][3];
 
-                // Step A: Calculate raw gait foot trajectory paths relative to default stance
+                // Calculate raw gait foot trajectory paths relative to default stance
                 calculateTrotGaitPositions(active_cmd.lin_x, active_cmd.lin_y, active_cmd.ang_z, target_feet);
 
-                // Step B: Relative Height Conversion. 
+                // Relative Height Conversion. 
                 // Jetson sends + to lift body up. Inverse IK matrix requires -transZ to pull body up.
                 float transZ = -active_cmd.z_offset; 
 
-                // Step C: Stream footprints through orientation matrix to apply Roll/Pitch/Yaw
+                // Stream footprints through orientation matrix to apply Roll/Pitch/Yaw
+                // TODO: Does not include pivot yet
                 updateBodyPostureWithFeet(target_feet, 0.0f, 0.0f, transZ,
                                           active_cmd.roll, active_cmd.pitch, active_cmd.yaw);
             }
@@ -285,11 +286,18 @@ void StartControlTask(void *argument)
             break;
 
         case CMD_WAVE:
-            // TODO: Ensure waving is compatible with rtos tasks
-            // Guard to ensure the blocking animation only plays once per button press
-            // if (prev_cmd_type != CMD_WAVE) {
-            //     waveFrontRightLeg();
-            // }
+            {
+                // TODO: TO FIX. DOES NOT HEEL BACK BEFORE WAVING.
+                // float target_feet[4][3];
+                
+                // // Tell the function to restart the animation if we JUST switched to wave mode
+                // bool just_started = (prev_cmd_type != CMD_WAVE);
+                // calculateWavePositions(target_feet, just_started);
+
+                // float transZ = -active_cmd.z_offset; 
+                // updateBodyPostureWithFeet(target_feet, 0.0f, 0.0f, transZ,
+                //                           active_cmd.roll, active_cmd.pitch, active_cmd.yaw);
+            }
             break;
 
         case CMD_HEEL:
