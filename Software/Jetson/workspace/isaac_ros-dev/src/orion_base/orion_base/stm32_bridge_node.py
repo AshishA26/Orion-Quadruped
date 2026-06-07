@@ -49,7 +49,7 @@ class STM32Bridge(Node):
         self.declare_parameter('boost', 0.5) # Extra speed for boost mode
         self.declare_parameter('tilt_step', 0.01) # Step size for tilt control
         self.declare_parameter('z_offset_step', 1.0) # Step size for z position control
-        self.declare_parameter('xy_offset_multiplier', 10) # Multiplier for xy position control (max xy originally [-1,1])
+        self.declare_parameter('xy_offset_multiplier', 40) # Multiplier for xy position control (max xy originally [-1,1])
         self.declare_parameter('pivot_step', 1.0) # Step size for pivot point adjustment in mm
 
         # Retrieve parameter values
@@ -176,6 +176,7 @@ class STM32Bridge(Node):
                 y_offset = msg.axes[LS_HORZ]*self.XY_OFFSET_MULTIPLIER
 
                 # --- Pivot Point Control ---
+                # TODO: Most likely change this to be just the 9 main points on the dog
                 if msg.axes[DPAD_HORZ] > 0.5:  self.pivot_y += self.PIVOT_STEP   # Dpad Left
                 elif msg.axes[DPAD_HORZ] < -0.5: self.pivot_y -= self.PIVOT_STEP   # Dpad Right
                 if msg.axes[DPAD_VERT] > 0.5:  self.pivot_x += self.PIVOT_STEP   # Dpad Up
