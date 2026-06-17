@@ -69,18 +69,27 @@ bool LegIK_Calculate(LegIK_t *leg, float x, float y, float z)
     // --- Leg Plane (Femur & Tibia) ---
     // D is now the desired vertical distance in the leg-plane
     float G = sqrtf((D * D) + (x * x));
-    if (G > (L2_FEMUR + L3_TIBIA)) {
-        return false; // Target out of reach
+    // Clamp out-of-reach coordinates instead of failing
+    float max_reach = L2_FEMUR + L3_TIBIA - 0.1f; // 0.1mm epsilon for float safety
+    if (G > max_reach) {
+        float scale = max_reach / G;
+        x *= scale;
+        D *= scale;
+        G = max_reach;
     }
 
     // Solve Theta 3 (Tibia/Knee)
     float numerator = (G * G) - (L2_FEMUR * L2_FEMUR) - (L3_TIBIA * L3_TIBIA);
     float denominator = -2.0f * L2_FEMUR * L3_TIBIA;
-    float theta3_rad = acosf(numerator / denominator);
+    float cos_angle3 = numerator / denominator;
+    cos_angle3 = fmaxf(-1.0f, fminf(1.0f, cos_angle3)); // Clamp between -1.0 and 1.0
+    float theta3_rad = acosf(cos_angle3);
 
     // Solve Theta 2 (Femur) 
     float alpha_femur = atan2f(x, D);
-    float beta_femur = asinf((L3_TIBIA * sinf(theta3_rad)) / G);
+    float sin_angle2 = (L3_TIBIA * sinf(theta3_rad)) / G;
+    sin_angle2 = fmaxf(-1.0f, fminf(1.0f, sin_angle2)); // Clamp between -1.0 and 1.0
+    float beta_femur = asinf(sin_angle2);
     float theta2_rad = toRadians(90.0f) - (beta_femur - alpha_femur); // TODO: will this reference to 90 deg cause issues if moving femur above horizontal?
     
     // Accounting for Tibia servo offset and femur coupling
