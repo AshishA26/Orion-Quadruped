@@ -533,7 +533,6 @@ void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY
         *roll = 0.15f;
         float progress = (wave_time - 0.4f) / 0.4f;
         float smooth = sinf(progress * 1.5708f); // Quarter sine curve for easing
-        
         outputFeet[1][0] = smooth * REACH_X;       
         outputFeet[1][1] = -L1_HIP - (smooth * REACH_Y);
         outputFeet[1][2] = BASE_Z - (smooth * (BASE_Z - LIFT_Z)); 
@@ -547,15 +546,12 @@ void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY
         *shiftZ = 25.0f;
         *pitch = 0.20f;
         *roll = 0.15f;
-        
         // 3 cycles over 1.2 seconds
         float wave_phase = (wave_time - 0.8f) * (2.0f * 3.14159265f * 3.0f / 1.2f);
-        
         // Keep leg target reached out and stationary
         outputFeet[1][0] = REACH_X;
         outputFeet[1][1] = -L1_HIP - REACH_Y;
         outputFeet[1][2] = LIFT_Z;
-        
         // Wiggle with full +40.0f offset from the very first frame
         float base_tibia = LegIK_GetTibiaServoAngle(&legFrontRight);
         *tibiaAngle = (base_tibia + 40.0f) - 22.5f * (1.0f - cosf(wave_phase));
@@ -568,7 +564,6 @@ void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY
         *roll = 0.15f;
         float progress = (wave_time - 2.0f) / 0.4f;
         float smooth = sinf(progress * 1.5708f);
-        
         outputFeet[1][0] = REACH_X - (smooth * REACH_X);
         outputFeet[1][1] = -L1_HIP - REACH_Y + (smooth * REACH_Y);
         outputFeet[1][2] = LIFT_Z + (smooth * (BASE_Z - LIFT_Z));
