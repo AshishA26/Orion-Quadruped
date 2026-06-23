@@ -34,5 +34,5 @@ The original Roboeyes library has the following functionality:
 To run:
 ```bash
 conda activate orion_eyes
-python roboeyes_desktop,py
+python roboeyes_desktop.py
 ```

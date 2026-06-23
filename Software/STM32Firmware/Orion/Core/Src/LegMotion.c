@@ -15,7 +15,6 @@ static float gait_phase = 0.0f;
 
 static long map(long x, long in_min, long in_max, long out_min, long out_max);
 static int angleToPulse(int ang);
-static void setServoAngle(int channel, float angle);
 
 // Interpolation function to map angles to pulse widths
 static long map(long x, long in_min, long in_max, long out_min, long out_max) {
@@ -36,7 +35,7 @@ void LegIK_HardwareInit(void) {
     LegIK_Init(&legBackRight, BR_SERVO_CENTER_HIP, BR_SERVO_CENTER_FEMUR, BR_SERVO_CENTER_TIBIA, CH_BR_HIP, CH_BR_FEMUR, CH_BR_TIBIA, false, false);
 }
 
-static void setServoAngle(int channel, float angle) {
+void setServoAngle(int channel, float angle) {
   // Constraint for safety
   if (angle < 0.0f) angle = 0.0f;
   if (angle > 270.0f) angle = 270.0f;
@@ -311,6 +310,8 @@ void centerAllServos() {
   PCA9685_WriteMicroseconds(CH_BR_TIBIA, angleToPulse(BR_SERVO_CENTER_TIBIA));
 }
 
+// ------------------- RTOS COMPATIBLE MOVEMENT FUNCTIONS ------------------------
+
 // Function to execute a joystick-based gait, computes a single frame of leg positions based
 // on the current joystick command and global phase clock, then updates leg positions accordingly.
 void executeJoystickGait(float vel_x, float vel_y, float ang_z) {
@@ -409,5 +410,191 @@ void executeJoystickGait(float vel_x, float vel_y, float ang_z) {
         // Note: The y-axis in LegIK operates on global absolute width (currentY), 
         // so we add the physical leg width to the calculated strafe delta.
         updateLeg(legs[i], foot_x, currentY + (legs[i]->IS_LEFT_LEG ? foot_y : -foot_y), foot_z);
+    }
+}
+
+/**
+ * Calculates local foot coordinates across a trot gait cycle based on joystick velocity.
+ * Outputs the results into the provided outputFeet array.
+ */
+void calculateTrotGaitPositions(float vel_x, float vel_y, float ang_z, float outputFeet[4][3]) 
+{
+    static float gait_phase = 0.0f;
+    const float MAX_STRIDE_X = 60.0f;
+    const float MAX_STRIDE_Y = 30.0f;
+    const float STEP_HEIGHT = 45.0f;
+    const float MAX_TURN_STRIDE = 40.0f;
+    const float STANCE_DEPTH = 15.0f;
+    const float BASE_Z = 150.0f; // Default standing height
+
+    float speed = sqrtf(vel_x*vel_x + vel_y*vel_y + ang_z*ang_z);
+
+    // Default neutral stance if the joystick is centered
+    if (speed < 0.05f) {
+        gait_phase = 0.0f;
+        for (int i = 0; i < 4; i++) {
+            outputFeet[i][0] = 0.0f; 
+            // 0=FL, 1=FR, 2=BL, 3=BR (Match Hip L1 offset directions)
+            outputFeet[i][1] = (i == 0 || i == 2) ? L1_HIP : -L1_HIP; 
+            outputFeet[i][2] = BASE_Z;
+        }
+        return;
+    }
+
+    gait_phase += 0.04f * speed;
+    if (gait_phase >= 1.0f) gait_phase -= 1.0f;
+
+    float phases[4] = {
+        fmodf(gait_phase + 0.5f, 1.0f), // FL
+        gait_phase,                     // FR
+        gait_phase,                     // BL
+        fmodf(gait_phase + 0.5f, 1.0f)  // BR
+    };
+
+    float stride_x = MAX_STRIDE_X * vel_x;
+    float stride_y = MAX_STRIDE_Y * vel_y;
+    float turn_stride = MAX_TURN_STRIDE * ang_z;
+
+    for (int i = 0; i < 4; i++) {
+        float p = phases[i];
+        float foot_x = 0, foot_y = 0, foot_z = 0;
+        
+        bool is_left = (i == 0 || i == 2);
+        float combined_stride_x = stride_x + (is_left ? -turn_stride : turn_stride);
+
+        if (p < 0.5f) { // Swing
+            float progress = p / 0.5f;
+            foot_x = -(combined_stride_x * 0.5f) + (combined_stride_x * progress);
+            foot_y = -(stride_y * 0.5f) + (stride_y * progress);
+            foot_z = -(sinf(progress * 3.14159f) * STEP_HEIGHT);
+        } else { // Stance
+            float progress = (p - 0.5f) / 0.5f;
+            foot_x = (combined_stride_x * 0.5f) - (combined_stride_x * progress);
+            foot_y = (stride_y * 0.5f) - (stride_y * progress);
+            foot_z = +(sinf(progress * 3.14159f) * STANCE_DEPTH);
+        }
+
+        outputFeet[i][0] = foot_x;
+        // Both left and right legs add foot_y so they strafe in the same global direction
+        outputFeet[i][1] = is_left ? (L1_HIP + foot_y) : (-L1_HIP + foot_y);
+        // Base height is baked in here, BodyIK will handle height shifting
+        outputFeet[i][2] = BASE_Z + foot_z; 
+    }
+}
+
+
+/**
+ * Generates local foot coordinates and body posture offsets for a waving animation on the Front Right leg.
+ * Uses a time accumulator to prevent blocking the RTOS task.
+ */
+void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY, float *shiftZ, 
+                            float *roll, float *pitch, float *tibiaAngle, bool reset_animation) 
+{
+    static float wave_time = 0.0f;
+    const float BASE_Z = 180.0f;
+    const float LIFT_Z = 100.0f;
+    const float REACH_X = 60.0f;  // Reach forward
+    const float REACH_Y = 60.0f;  // Reach outward (Y-axis offset)
+    // If we just entered wave mode, reset the timer to start from the beginning
+    if (reset_animation) {
+        wave_time = 0.0f;
+    }
+    // Default planted positions for all 4 legs
+    for (int i = 0; i < 4; i++) {
+        outputFeet[i][0] = 0.0f; 
+        outputFeet[i][1] = (i == 0 || i == 2) ? L1_HIP : -L1_HIP; 
+        outputFeet[i][2] = BASE_Z;
+    }
+
+    // Default to no tibia override (-1.0f tells the caller to use IK angle)
+    *tibiaAngle = -1.0f;
+
+    // Advance time by 20ms (assuming a 50Hz control loop)
+    wave_time += 0.02f;
+
+    // --- State Machine ---
+    if (wave_time < 0.4f) {
+        // Phase 1: Shift body weight backwards/leftwards/crouching (0.0s to 0.4s)
+        float ratio = wave_time / 0.4f;
+        *shiftX = -40.0f * ratio;
+        *shiftY = 20.0f * ratio;
+        *shiftZ = 25.0f * ratio;
+        *pitch = 0.20f * ratio;
+        *roll = 0.15f * ratio;
+        outputFeet[1][0] = 0.0f;
+        outputFeet[1][1] = -L1_HIP;
+        outputFeet[1][2] = BASE_Z;
+} else if (wave_time < 0.8f) {
+        // Phase 2: Lift Leg and Ramp Tibia Offset Up (0.4s to 0.8s)
+        *shiftX = -40.0f;
+        *shiftY = 20.0f;
+        *shiftZ = 25.0f;
+        *pitch = 0.20f;
+        *roll = 0.15f;
+        float progress = (wave_time - 0.4f) / 0.4f;
+        float smooth = sinf(progress * 1.5708f); // Quarter sine curve for easing
+        outputFeet[1][0] = smooth * REACH_X;       
+        outputFeet[1][1] = -L1_HIP - (smooth * REACH_Y);
+        outputFeet[1][2] = BASE_Z - (smooth * (BASE_Z - LIFT_Z)); 
+        // Ramp the tibia offset up from 0 to +40 degrees as the leg lifts
+        float base_tibia = LegIK_GetTibiaServoAngle(&legFrontRight);
+        *tibiaAngle = base_tibia + (40.0f * progress);
+    } else if (wave_time < 2.0f) {
+        // Phase 3: Wave back and forth at full amplitude (0.8s to 2.0s)
+        *shiftX = -40.0f;
+        *shiftY = 20.0f;
+        *shiftZ = 25.0f;
+        *pitch = 0.20f;
+        *roll = 0.15f;
+        // 3 cycles over 1.2 seconds
+        float wave_phase = (wave_time - 0.8f) * (2.0f * 3.14159265f * 3.0f / 1.2f);
+        // Keep leg target reached out and stationary
+        outputFeet[1][0] = REACH_X;
+        outputFeet[1][1] = -L1_HIP - REACH_Y;
+        outputFeet[1][2] = LIFT_Z;
+        // Wiggle with full +40.0f offset from the very first frame
+        float base_tibia = LegIK_GetTibiaServoAngle(&legFrontRight);
+        *tibiaAngle = (base_tibia + 40.0f) - 22.5f * (1.0f - cosf(wave_phase));
+    } else if (wave_time < 2.4f) {
+        // Phase 4: Lower Leg and Ramp Tibia Offset Down (2.0s to 2.4s)
+        *shiftX = -40.0f;
+        *shiftY = 20.0f;
+        *shiftZ = 25.0f;
+        *pitch = 0.20f;
+        *roll = 0.15f;
+        float progress = (wave_time - 2.0f) / 0.4f;
+        float smooth = sinf(progress * 1.5708f);
+        outputFeet[1][0] = REACH_X - (smooth * REACH_X);
+        outputFeet[1][1] = -L1_HIP - REACH_Y + (smooth * REACH_Y);
+        outputFeet[1][2] = LIFT_Z + (smooth * (BASE_Z - LIFT_Z));
+        // Ramp the tibia offset back down to 0 as the leg lowers
+        float base_tibia = LegIK_GetTibiaServoAngle(&legFrontRight);
+        *tibiaAngle = base_tibia + (40.0f * (1.0f - progress));
+    } else if (wave_time < 2.8f) {
+        // Phase 5: Restore weight distribution (2.4s to 2.8s)
+        float progress = (wave_time - 2.4f) / 0.4f;
+        *shiftX = -40.0f * (1.0f - progress);
+        *shiftY = 20.0f * (1.0f - progress);
+        *shiftZ = 25.0f * (1.0f - progress);
+        *pitch = 0.20f * (1.0f - progress);
+        *roll = 0.15f * (1.0f - progress);
+        outputFeet[1][0] = 0.0f;
+        outputFeet[1][1] = -L1_HIP;
+        outputFeet[1][2] = BASE_Z;
+    } else if (wave_time < 3.8f) {
+        // Phase 6: Idle in neutral stance (2.8s to 3.8s)
+        *shiftX = 0.0f;
+        *shiftY = 0.0f;
+        *shiftZ = 0.0f;
+        *pitch = 0.0f;
+        *roll = 0.0f;
+    } else {
+        // Phase 7: Finished. Reset timer so it loops
+        wave_time = 0.0f;
+        *shiftX = 0.0f;
+        *shiftY = 0.0f;
+        *shiftZ = 0.0f;
+        *pitch = 0.0f;
+        *roll = 0.0f;
     }
 }
