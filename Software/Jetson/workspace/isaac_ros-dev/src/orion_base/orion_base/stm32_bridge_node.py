@@ -22,7 +22,7 @@ RS_VERT = 5
 DPAD_VERT = 7 # Pitch if CMD_NORMAL, move pivot point forward/backward if CMD_EXTRAS
 DPAD_HORZ = 6 # Roll if CMD_NORMAL, move pivot point left/right if CMD_EXTRAS
 BTN_SQUARE = 0 # Yaw left if CMD_NORMAL, reset pivot point in CMD_EXTRAS
-BTN_CROSS = 1 # Heigh (z offset) decrease
+BTN_CROSS = 1 # Height (z offset) decrease
 BTN_CIRCLE = 2 # Yaw right
 BTN_TRIANGLE = 3 # Height (z offset) increase
 BTN_L1 = 4 # Deadman switch
@@ -117,6 +117,11 @@ class STM32Bridge(Node):
         # No deadman switch required
         if msg.buttons[BTN_R1] == 1:
             self.cmd_type = CMD_RESET
+            # Resetting position should not require deadman swtich
+            self.roll = 0.0
+            self.pitch = 0.0
+            self.yaw = 0.0
+            self.z_offset = 0.0
         elif msg.buttons[BTN_TOUCHPAD] == 1: # Normal mode 
             self.cmd_type = CMD_NORMAL
         elif msg.buttons[BTN_R3] == 1:
@@ -132,15 +137,8 @@ class STM32Bridge(Node):
         # Require holding L1 button before accepting any movement or tilt commands
         if msg.buttons[BTN_L1] == 1:
 
-            # Reset
-            if self.cmd_type == CMD_RESET:
-                self.roll = 0.0
-                self.pitch = 0.0
-                self.yaw = 0.0
-                self.z_offset = 0.0
-
             # Normal
-            elif self.cmd_type == CMD_NORMAL:
+            if self.cmd_type == CMD_NORMAL:
                 # --- Boost Mode ---
                 # Get the speed multiplier value from R2
                 r2_val = (-msg.axes[BTN_R2] + 1.0) / 2.0 # Normalize from [-1,1] to [0,1]
@@ -154,8 +152,8 @@ class STM32Bridge(Node):
                 # --- Posture Commands ---
                 if msg.axes[DPAD_HORZ] > 0.5: self.roll += self.TILT_STEP
                 elif msg.axes[DPAD_HORZ] < -0.5: self.roll -= self.TILT_STEP
-                if msg.axes[DPAD_VERT] > 0.5: self.pitch += self.TILT_STEP
-                elif msg.axes[DPAD_VERT] < -0.5: self.pitch -= self.TILT_STEP
+                if msg.axes[DPAD_VERT] > 0.5: self.pitch -= self.TILT_STEP
+                elif msg.axes[DPAD_VERT] < -0.5: self.pitch += self.TILT_STEP
                 if msg.buttons[BTN_SQUARE] == 1: self.yaw += self.TILT_STEP
                 if msg.buttons[BTN_CIRCLE] == 1: self.yaw -= self.TILT_STEP
                 if msg.buttons[BTN_TRIANGLE] == 1: self.z_offset += self.Z_OFFSET_STEP
