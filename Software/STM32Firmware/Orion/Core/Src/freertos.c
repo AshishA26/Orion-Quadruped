@@ -287,16 +287,20 @@ void StartControlTask(void *argument)
 
         case CMD_WAVE:
             {
-                // TODO: TO FIX. DOES NOT HEEL BACK BEFORE WAVING.
-                // float target_feet[4][3];
+                float target_feet[4][3];
                 
-                // // Tell the function to restart the animation if we JUST switched to wave mode
-                // bool just_started = (prev_cmd_type != CMD_WAVE);
-                // calculateWavePositions(target_feet, just_started);
-
-                // float transZ = -active_cmd.z_offset; 
-                // updateBodyPostureWithFeet(target_feet, 0.0f, 0.0f, transZ,
-                //                           active_cmd.roll, active_cmd.pitch, active_cmd.yaw);
+                // Tell the function to restart the animation if we JUST switched to wave mode
+                bool just_started = (prev_cmd_type != CMD_WAVE);
+                
+                float shiftX = 0.0f;
+                float shiftY = 0.0f;
+                float shiftZ = 0.0f;
+                float roll = 0.0f;
+                float pitch = 0.0f;
+                calculateWavePositions(target_feet, &shiftX, &shiftY, &shiftZ, &roll, &pitch, just_started);
+                float transZ = -active_cmd.z_offset; 
+                updateBodyPostureWithFeet(target_feet, shiftX, shiftY, transZ + shiftZ,
+                                          active_cmd.roll + roll, active_cmd.pitch + pitch, active_cmd.yaw);
             }
             break;
 

@@ -30,6 +30,6 @@ void LegIK_HardwareInit(void);
 void centerAllServos(void);
 void executeJoystickGait(float vel_x, float vel_y, float ang_z);
 void calculateTrotGaitPositions(float vel_x, float vel_y, float ang_z, float outputFeet[4][3]);
-void calculateWavePositions(float outputFeet[4][3], bool reset_animation);
+void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY, float *shiftZ, float *roll, float *pitch, bool reset_animation);
 
 #endif // LEGMOTION_H
