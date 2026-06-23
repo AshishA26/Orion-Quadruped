@@ -15,7 +15,6 @@ static float gait_phase = 0.0f;
 
 static long map(long x, long in_min, long in_max, long out_min, long out_max);
 static int angleToPulse(int ang);
-static void setServoAngle(int channel, float angle);
 
 // Interpolation function to map angles to pulse widths
 static long map(long x, long in_min, long in_max, long out_min, long out_max) {
@@ -36,7 +35,7 @@ void LegIK_HardwareInit(void) {
     LegIK_Init(&legBackRight, BR_SERVO_CENTER_HIP, BR_SERVO_CENTER_FEMUR, BR_SERVO_CENTER_TIBIA, CH_BR_HIP, CH_BR_FEMUR, CH_BR_TIBIA, false, false);
 }
 
-static void setServoAngle(int channel, float angle) {
+void setServoAngle(int channel, float angle) {
   // Constraint for safety
   if (angle < 0.0f) angle = 0.0f;
   if (angle > 270.0f) angle = 270.0f;
@@ -488,7 +487,8 @@ void calculateTrotGaitPositions(float vel_x, float vel_y, float ang_z, float out
  * Generates local foot coordinates and body posture offsets for a waving animation on the Front Right leg.
  * Uses a time accumulator to prevent blocking the RTOS task.
  */
-void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY, float *shiftZ, float *roll, float *pitch, bool reset_animation) 
+void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY, float *shiftZ, 
+                            float *roll, float *pitch, float *tibiaAngle, bool reset_animation) 
 {
     static float wave_time = 0.0f;
     const float BASE_Z = 180.0f;
@@ -505,8 +505,13 @@ void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY
         outputFeet[i][1] = (i == 0 || i == 2) ? L1_HIP : -L1_HIP; 
         outputFeet[i][2] = BASE_Z;
     }
+
+    // Default to no tibia override (-1.0f tells the caller to use IK angle)
+    *tibiaAngle = -1.0f;
+
     // Advance time by 20ms (assuming a 50Hz control loop)
     wave_time += 0.02f;
+
     // --- State Machine ---
     if (wave_time < 0.4f) {
         // Phase 1: Shift body weight backwards/leftwards/crouching (0.0s to 0.4s)
@@ -519,8 +524,8 @@ void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY
         outputFeet[1][0] = 0.0f;
         outputFeet[1][1] = -L1_HIP;
         outputFeet[1][2] = BASE_Z;
-    } else if (wave_time < 0.8f) {
-        // Phase 2: Lift Leg (0.4s to 0.8s)
+} else if (wave_time < 0.8f) {
+        // Phase 2: Lift Leg and Ramp Tibia Offset Up (0.4s to 0.8s)
         *shiftX = -40.0f;
         *shiftY = 20.0f;
         *shiftZ = 25.0f;
@@ -532,22 +537,30 @@ void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY
         outputFeet[1][0] = smooth * REACH_X;       
         outputFeet[1][1] = -L1_HIP - (smooth * REACH_Y);
         outputFeet[1][2] = BASE_Z - (smooth * (BASE_Z - LIFT_Z)); 
+        // Ramp the tibia offset up from 0 to +40 degrees as the leg lifts
+        float base_tibia = LegIK_GetTibiaServoAngle(&legFrontRight);
+        *tibiaAngle = base_tibia + (40.0f * progress);
     } else if (wave_time < 2.0f) {
-        // Phase 3: Wave back and forth (0.8s to 2.0s) - 4 cycles of wiggling
+        // Phase 3: Wave back and forth at full amplitude (0.8s to 2.0s)
         *shiftX = -40.0f;
         *shiftY = 20.0f;
         *shiftZ = 25.0f;
         *pitch = 0.20f;
         *roll = 0.15f;
-        // 4 cycles over 1.2 seconds
-        float wave_phase = (wave_time - 0.8f) * (2.0f * 3.14159265f * 4.0f / 1.2f);
         
-        // Wiggle the tibia (simulated by pulling the foot up/backwards in X and Z)
-        outputFeet[1][0] = REACH_X - 15.0f * (1.0f - cosf(wave_phase));
-        outputFeet[1][1] = -L1_HIP - REACH_Y; // Keep reached out
-        outputFeet[1][2] = LIFT_Z - 20.0f * (1.0f - cosf(wave_phase)); 
+        // 3 cycles over 1.2 seconds
+        float wave_phase = (wave_time - 0.8f) * (2.0f * 3.14159265f * 3.0f / 1.2f);
+        
+        // Keep leg target reached out and stationary
+        outputFeet[1][0] = REACH_X;
+        outputFeet[1][1] = -L1_HIP - REACH_Y;
+        outputFeet[1][2] = LIFT_Z;
+        
+        // Wiggle with full +40.0f offset from the very first frame
+        float base_tibia = LegIK_GetTibiaServoAngle(&legFrontRight);
+        *tibiaAngle = (base_tibia + 40.0f) - 22.5f * (1.0f - cosf(wave_phase));
     } else if (wave_time < 2.4f) {
-        // Phase 4: Lower Leg (2.0s to 2.4s)
+        // Phase 4: Lower Leg and Ramp Tibia Offset Down (2.0s to 2.4s)
         *shiftX = -40.0f;
         *shiftY = 20.0f;
         *shiftZ = 25.0f;
@@ -559,6 +572,9 @@ void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY
         outputFeet[1][0] = REACH_X - (smooth * REACH_X);
         outputFeet[1][1] = -L1_HIP - REACH_Y + (smooth * REACH_Y);
         outputFeet[1][2] = LIFT_Z + (smooth * (BASE_Z - LIFT_Z));
+        // Ramp the tibia offset back down to 0 as the leg lowers
+        float base_tibia = LegIK_GetTibiaServoAngle(&legFrontRight);
+        *tibiaAngle = base_tibia + (40.0f * (1.0f - progress));
     } else if (wave_time < 2.8f) {
         // Phase 5: Restore weight distribution (2.4s to 2.8s)
         float progress = (wave_time - 2.4f) / 0.4f;

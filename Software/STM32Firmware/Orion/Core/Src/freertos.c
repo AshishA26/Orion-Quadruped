@@ -297,11 +297,17 @@ void StartControlTask(void *argument)
                 float shiftZ = 0.0f;
                 float roll = 0.0f;
                 float pitch = 0.0f;
-                calculateWavePositions(target_feet, &shiftX, &shiftY, &shiftZ, &roll, &pitch, just_started);
-                float transZ = -active_cmd.z_offset; 
+                float tibia_angle = -1.0f;
+                calculateWavePositions(target_feet, &shiftX, &shiftY, &shiftZ, &roll, &pitch, &tibia_angle, just_started);
+                float transZ = 0.0f; // -active_cmd.z_offset // Ignore initial Z offset for wave
                 updateBodyPostureWithFeet(target_feet, shiftX, shiftY, transZ + shiftZ,
                                           active_cmd.roll + roll, active_cmd.pitch + pitch, active_cmd.yaw,
                                           0.0f, 0.0f, 0.0f);
+
+                // If Phase 3 is active, override the Tibia servo angle with the waving angle
+                if (tibia_angle >= 0.0f) {
+                    setServoAngle(CH_FR_TIBIA, tibia_angle);
+                }
             }
             break;
 
