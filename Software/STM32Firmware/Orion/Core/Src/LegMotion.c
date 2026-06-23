@@ -570,8 +570,15 @@ void calculateWavePositions(float outputFeet[4][3], float *shiftX, float *shiftY
         outputFeet[1][0] = 0.0f;
         outputFeet[1][1] = -L1_HIP;
         outputFeet[1][2] = BASE_Z;
+    } else if (wave_time < 3.8f) {
+        // Phase 6: Idle in neutral stance (2.8s to 3.8s)
+        *shiftX = 0.0f;
+        *shiftY = 0.0f;
+        *shiftZ = 0.0f;
+        *pitch = 0.0f;
+        *roll = 0.0f;
     } else {
-        // Phase 6: Finished. Reset timer so it loops
+        // Phase 7: Finished. Reset timer so it loops
         wave_time = 0.0f;
         *shiftX = 0.0f;
         *shiftY = 0.0f;

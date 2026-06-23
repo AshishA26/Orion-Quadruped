@@ -85,7 +85,8 @@ void updateBodyPosture(float transX, float transY, float transZ, float roll, flo
  */
 void updateBodyPostureWithFeet(float footPositions[4][3], 
                                float transX, float transY, float transZ, 
-                               float roll, float pitch, float yaw) 
+                               float roll, float pitch, float yaw,
+                               float pivotX, float pivotY, float pivotZ) 
 {
     // Precompute Rotation Matrix Elements (R^-1)
     float cr = cosf(roll);  float sr = sinf(roll);
@@ -110,9 +111,9 @@ void updateBodyPostureWithFeet(float footPositions[4][3],
         float footRelZ = footPositions[i][2];
 
         // Create vector from CoM (J0) to the foot, applying global body translation translations
-        float vecX = comOriginX + footRelX - transX;
-        float vecY = comOriginY + footRelY - transY;
-        float vecZ = comOriginZ + footRelZ - transZ;
+        float vecX = comOriginX + footRelX - pivotX - transX;
+        float vecY = comOriginY + footRelY - pivotY - transY;
+        float vecZ = comOriginZ + footRelZ - pivotZ - transZ;
 
         // Apply inverse body rotation matrix
         float XYZ_0_X = ix * vecX + jx * vecY + kx * vecZ;
@@ -120,9 +121,9 @@ void updateBodyPostureWithFeet(float footPositions[4][3],
         float XYZ_0_Z = iz * vecX + jz * vecY + kz * vecZ;
 
         // Shift back to individual Leg Origins (J1)
-        float XYZ_1_X = XYZ_0_X - comOriginX;
-        float XYZ_1_Y = XYZ_0_Y - comOriginY;
-        float XYZ_1_Z = XYZ_0_Z - comOriginZ;
+        float XYZ_1_X = XYZ_0_X - comOriginX + pivotX;
+        float XYZ_1_Y = XYZ_0_Y - comOriginY + pivotY;
+        float XYZ_1_Z = XYZ_0_Z - comOriginZ + pivotZ;
 
         // Standardize Y direction for Left vs Right legs before running Leg IK
         float finalY = legs[i]->IS_LEFT_LEG ? XYZ_1_Y : -XYZ_1_Y;

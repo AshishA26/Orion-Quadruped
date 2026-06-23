@@ -269,9 +269,9 @@ void StartControlTask(void *argument)
                 float transZ = -active_cmd.z_offset; 
 
                 // Stream footprints through orientation matrix to apply Roll/Pitch/Yaw
-                // TODO: Does not include pivot yet
                 updateBodyPostureWithFeet(target_feet, 0.0f, 0.0f, transZ,
-                                          active_cmd.roll, active_cmd.pitch, active_cmd.yaw);
+                                          active_cmd.roll, active_cmd.pitch, active_cmd.yaw,
+                                          active_cmd.pivot_x, active_cmd.pivot_y, 0.0f);
             }
             break;
 
@@ -300,7 +300,8 @@ void StartControlTask(void *argument)
                 calculateWavePositions(target_feet, &shiftX, &shiftY, &shiftZ, &roll, &pitch, just_started);
                 float transZ = -active_cmd.z_offset; 
                 updateBodyPostureWithFeet(target_feet, shiftX, shiftY, transZ + shiftZ,
-                                          active_cmd.roll + roll, active_cmd.pitch + pitch, active_cmd.yaw);
+                                          active_cmd.roll + roll, active_cmd.pitch + pitch, active_cmd.yaw,
+                                          0.0f, 0.0f, 0.0f);
             }
             break;
 
