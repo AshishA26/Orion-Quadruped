@@ -4,6 +4,7 @@ from rclpy.node import Node
 from sensor_msgs.msg import Joy
 import serial
 import struct
+from typing import Tuple
 
 # Command types
 CMD_NORMAL = 0x01
@@ -12,6 +13,7 @@ CMD_WAVE = 0x03
 CMD_HEEL = 0x04
 CMD_DANCE = 0x05
 CMD_EXTRAS = 0x06
+CMD_EYES = 0x07
 
 # --- Joystick axis and button mapping (PS5 controller) ---
 # All settings are in CMD_NORMAL, unless otherwise specified
@@ -27,7 +29,7 @@ BTN_CIRCLE = 2 # Yaw right
 BTN_TRIANGLE = 3 # Height (z offset) increase
 BTN_L1 = 4 # Deadman switch
 BTN_R1 = 5 # Reset, sets CMD_RESET
-BTN_L2 = 3
+BTN_L2 = 3 # Sets CMD_EYES
 BTN_R2 = 4 # Boost mode (axis 4)
 BTN_SHARE = 8 # Sets CMD_HEEL
 BTN_OPTIONS = 9 # Sets CMD_WAVE
@@ -103,6 +105,63 @@ class STM32Bridge(Node):
             checksum ^= byte
         return checksum
 
+    def operation_reset(self):
+        self.roll = 0.0
+        self.pitch = 0.0
+        self.yaw = 0.0
+        self.z_offset = 0.0
+
+    def operation_normal(self, msg) -> Tuple[float, float, float]:
+        # --- Boost Mode ---
+        # Get the speed multiplier value from R2
+        r2_val = (-msg.axes[BTN_R2] + 1.0) / 2.0 # Normalize from [-1,1] to [0,1]
+        speed_multiplier = self.MAX_SPEED + (r2_val * self.BOOST)
+
+        # --- Walking Commands ---
+        lin_x = msg.axes[LS_VERT] * speed_multiplier
+        lin_y = msg.axes[LS_HORZ] * speed_multiplier
+        ang_z = msg.axes[RS_HORZ] * speed_multiplier
+
+        # --- Posture Commands ---
+        if msg.axes[DPAD_HORZ] > 0.5: self.roll += self.TILT_STEP
+        elif msg.axes[DPAD_HORZ] < -0.5: self.roll -= self.TILT_STEP
+        if msg.axes[DPAD_VERT] > 0.5: self.pitch -= self.TILT_STEP
+        elif msg.axes[DPAD_VERT] < -0.5: self.pitch += self.TILT_STEP
+        if msg.buttons[BTN_SQUARE] == 1: self.yaw += self.TILT_STEP
+        if msg.buttons[BTN_CIRCLE] == 1: self.yaw -= self.TILT_STEP
+        if msg.buttons[BTN_TRIANGLE] == 1: self.z_offset += self.Z_OFFSET_STEP
+        if msg.buttons[BTN_CROSS] == 1: self.z_offset -= self.Z_OFFSET_STEP
+
+        # --- Clamp values to max limits ---
+        self.roll = max(-self.MAX_ROLL, min(self.MAX_ROLL, self.roll))
+        self.pitch = max(-self.MAX_PITCH, min(self.MAX_PITCH, self.pitch))
+        self.yaw = max(-self.MAX_YAW, min(self.MAX_YAW, self.yaw))
+        self.z_offset = max(-self.MAX_Z_OFFSET, min(self.MAX_Z_OFFSET, self.z_offset))
+
+        return (lin_x, lin_y, ang_z)
+
+    def operation_extras(self, msg) -> Tuple[float, float]:
+        # --- XY Position/Offset Control ---
+        # It is important to note that unlike z_offset, x and y offset are not persistant
+        # (will reset if joystick goes back to center)
+        x_offset = msg.axes[LS_VERT]*self.XY_OFFSET_MULTIPLIER
+        y_offset = msg.axes[LS_HORZ]*self.XY_OFFSET_MULTIPLIER
+
+        # --- Pivot Point Control ---
+        # TODO: Most likely change this to be just the 9 main points on the dog
+        if msg.axes[DPAD_HORZ] > 0.5:  self.pivot_y += self.PIVOT_STEP
+        elif msg.axes[DPAD_HORZ] < -0.5: self.pivot_y -= self.PIVOT_STEP
+        if msg.axes[DPAD_VERT] > 0.5:  self.pivot_x += self.PIVOT_STEP
+        elif msg.axes[DPAD_VERT] < -0.5: self.pivot_x -= self.PIVOT_STEP
+        if msg.buttons[BTN_SQUARE] == 1: # Reset pivot point with R1
+            self.pivot_x = 0.0
+            self.pivot_y = 0.0
+        
+        return (x_offset, y_offset)
+
+    def operation_eyes(self, msg):
+        pass
+
     def joy_callback(self, msg):
         if not self.serial_conn or not self.serial_conn.is_open:
             return
@@ -117,71 +176,28 @@ class STM32Bridge(Node):
         # No deadman switch required
         if msg.buttons[BTN_R1] == 1:
             self.cmd_type = CMD_RESET
-            # Resetting position should not require deadman swtich
-            self.roll = 0.0
-            self.pitch = 0.0
-            self.yaw = 0.0
-            self.z_offset = 0.0
-        elif msg.buttons[BTN_TOUCHPAD] == 1: # Normal mode 
+            self.operation_reset()
+        elif msg.buttons[BTN_TOUCHPAD] == 1:
             self.cmd_type = CMD_NORMAL
         elif msg.buttons[BTN_R3] == 1:
             self.cmd_type = CMD_EXTRAS
         elif msg.buttons[BTN_L3] == 1:
             self.cmd_type = CMD_DANCE
-        elif msg.buttons[BTN_OPTIONS] == 1: # Wave
+        elif msg.buttons[BTN_OPTIONS] == 1:
             self.cmd_type = CMD_WAVE
-        elif msg.buttons[BTN_SHARE] == 1: # Heel
+        elif msg.buttons[BTN_SHARE] == 1:
             self.cmd_type = CMD_HEEL
-
+        elif msg.axes[BTN_L2] > 0.5: # TODO: Check this value
+            self.cmd_type = CMD_EYES
+            self.operation_eyes(msg)
+            
         # --- Deadman Switch ---
         # Require holding L1 button before accepting any movement or tilt commands
         if msg.buttons[BTN_L1] == 1:
-
-            # Normal
-            if self.cmd_type == CMD_NORMAL:
-                # --- Boost Mode ---
-                # Get the speed multiplier value from R2
-                r2_val = (-msg.axes[BTN_R2] + 1.0) / 2.0 # Normalize from [-1,1] to [0,1]
-                speed_multiplier = self.MAX_SPEED + (r2_val * self.BOOST)
-
-                # --- Walking Commands ---
-                lin_x = msg.axes[LS_VERT] * speed_multiplier
-                lin_y = msg.axes[LS_HORZ] * speed_multiplier
-                ang_z = msg.axes[RS_HORZ] * speed_multiplier
-
-                # --- Posture Commands ---
-                if msg.axes[DPAD_HORZ] > 0.5: self.roll += self.TILT_STEP
-                elif msg.axes[DPAD_HORZ] < -0.5: self.roll -= self.TILT_STEP
-                if msg.axes[DPAD_VERT] > 0.5: self.pitch -= self.TILT_STEP
-                elif msg.axes[DPAD_VERT] < -0.5: self.pitch += self.TILT_STEP
-                if msg.buttons[BTN_SQUARE] == 1: self.yaw += self.TILT_STEP
-                if msg.buttons[BTN_CIRCLE] == 1: self.yaw -= self.TILT_STEP
-                if msg.buttons[BTN_TRIANGLE] == 1: self.z_offset += self.Z_OFFSET_STEP
-                if msg.buttons[BTN_CROSS] == 1: self.z_offset -= self.Z_OFFSET_STEP
-
-                # --- Clamp values to max limits ---
-                self.roll = max(-self.MAX_ROLL, min(self.MAX_ROLL, self.roll))
-                self.pitch = max(-self.MAX_PITCH, min(self.MAX_PITCH, self.pitch))
-                self.yaw = max(-self.MAX_YAW, min(self.MAX_YAW, self.yaw))
-                self.z_offset = max(-self.MAX_Z_OFFSET, min(self.MAX_Z_OFFSET, self.z_offset))
-
-            # Extras
-            elif self.cmd_type == CMD_EXTRAS:
-                # --- XY Position/Offset Control ---
-                # It is important to note that unlike z_offset, x and y offset are not persistant
-                # (will reset if joystick goes back to center)
-                x_offset = msg.axes[LS_VERT]*self.XY_OFFSET_MULTIPLIER
-                y_offset = msg.axes[LS_HORZ]*self.XY_OFFSET_MULTIPLIER
-
-                # --- Pivot Point Control ---
-                # TODO: Most likely change this to be just the 9 main points on the dog
-                if msg.axes[DPAD_HORZ] > 0.5:  self.pivot_y += self.PIVOT_STEP   # Dpad Left
-                elif msg.axes[DPAD_HORZ] < -0.5: self.pivot_y -= self.PIVOT_STEP   # Dpad Right
-                if msg.axes[DPAD_VERT] > 0.5:  self.pivot_x += self.PIVOT_STEP   # Dpad Up
-                elif msg.axes[DPAD_VERT] < -0.5: self.pivot_x -= self.PIVOT_STEP   # Dpad Down
-                if msg.buttons[BTN_SQUARE] == 1: # Reset pivot point with R1
-                    self.pivot_x = 0.0
-                    self.pivot_y = 0.0
+            if self.cmd_type == CMD_NORMAL: # Normal
+                lin_x, lin_y, ang_z = self.operation_normal(msg)
+            elif self.cmd_type == CMD_EXTRAS: # Extras
+                x_offset, y_offset = self.operation_extras(msg)
 
         # --- Pack Data ---
         # '<B9f' = 1 unsigned char (1 byte) + 11 floats (44 bytes) = 45 byte payload
