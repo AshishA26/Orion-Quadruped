@@ -159,9 +159,6 @@ class STM32Bridge(Node):
         
         return (x_offset, y_offset)
 
-    def operation_eyes(self, msg):
-        pass
-
     def joy_callback(self, msg):
         if not self.serial_conn or not self.serial_conn.is_open:
             return
@@ -189,7 +186,8 @@ class STM32Bridge(Node):
             self.cmd_type = CMD_HEEL
         elif msg.axes[BTN_L2] > 0.5: # TODO: Check this value
             self.cmd_type = CMD_EYES
-            self.operation_eyes(msg)
+            # This is just set for sending over to stm32.
+            # roboeyes_node handles the actual logic.
             
         # --- Deadman Switch ---
         # Require holding L1 button before accepting any movement or tilt commands
