@@ -28,7 +28,8 @@ setup(
     entry_points={
         'console_scripts': [
             'stm32_bridge_node = orion_base.stm32_bridge_node:main',
-            'roboeyes_node = orion_base.roboeyes_node:main'
+            'roboeyes_node = orion_base.roboeyes_node:main',
+            'joystick_parser_node = orion_base.joystick_parser_node:main',
         ],
     },
 )

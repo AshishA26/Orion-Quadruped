@@ -13,14 +13,20 @@ class RoboEyesNode(Node):
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
-        self.get_logger().info(f'I heard: {msg}')
+        # self.get_logger().info(f'I heard: {msg}')
+        pass
 
 def main(args=None):
     rclpy.init(args=args)
-    node = RoboEyesNode()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
+    roboeyes_node = RoboEyesNode()
+    
+    try:
+        rclpy.spin(roboeyes_node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        roboeyes_node.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

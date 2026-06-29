@@ -1,3 +1,13 @@
+# --- Constants ---
+uint8 CMD_NORMAL = 1
+uint8 CMD_RESET = 2
+uint8 CMD_WAVE = 3
+uint8 CMD_HEEL = 4
+uint8 CMD_DANCE = 5
+uint8 CMD_EXTRAS = 6
+uint8 CMD_EYES = 7
+
+# --- Fields ---
 uint8 cmd_type
 
 # Walking velocities

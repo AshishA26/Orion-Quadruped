@@ -21,6 +21,13 @@ def generate_launch_description():
         }],
     )
 
+    joystick_parser_node = Node(
+        package="orion_base",
+        executable="joystick_parser_node",
+        name="joystick_parser_node",
+        output="screen"
+    )
+
     # Node to translate Twist messages to STM32 serial commands
     # Reads from /joy
     stm32_bridge_node = Node(
@@ -30,7 +37,16 @@ def generate_launch_description():
         output='screen'
     )
 
+    roboeyes_node = Node(
+        package='orion_base',
+        executable='roboeyes_node',
+        name='roboeyes_node',
+        output='screen'
+    )
+
     return LaunchDescription([
         stm32_bridge_node,
         joy_node,
+        joystick_parser_node,
+        roboeyes_node
     ])
