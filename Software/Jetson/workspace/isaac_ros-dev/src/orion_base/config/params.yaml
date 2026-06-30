@@ -1,0 +1,29 @@
+# orion_base/config/params.yaml
+
+# PS5 controller driver
+joy_node:
+  ros__parameters:
+    device_id: 0            # /dev/input/js0
+    deadzone: 0.05          # Ignore small stick drifts
+    autorepeat_rate: 50.0   # Force 50 msgs/sec even if holding still (matches STM32 Hz)
+
+# Joystick command parser
+joystick_parser_node:
+  ros__parameters:
+    max_speed: 1.0           # Max speed in m/s or rad/s
+    max_roll: 0.349          # ~20 degrees in radians
+    max_pitch: 0.436         # ~25 degrees in radians
+    max_yaw: 0.524           # ~30 degrees in radians
+    max_z_offset: 60.0       # Maximum translation up/down in mm
+    boost: 0.5               # Extra speed when R2 held
+    tilt_step: 0.01          # Step size per tick for roll/pitch/yaw
+    z_offset_step: 1.0       # Step size per tick for z position
+    xy_offset_multiplier: 40 # Multiplier for xy position control
+    pivot_step: 1.0          # Step size for pivot point in mm
+
+# STM32 UART bridge
+stm32_bridge_node:
+  ros__parameters:
+    serial_port: '/dev/ttyTHS1'
+    baud_rate: 115200
+    send_rate_hz: 50.0      # Timer frequency for UART writes

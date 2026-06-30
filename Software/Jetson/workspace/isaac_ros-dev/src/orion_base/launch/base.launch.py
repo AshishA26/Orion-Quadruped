@@ -3,10 +3,12 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch.conditions import IfCondition, UnlessCondition
 from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
+import os
 
 def generate_launch_description():
-    # Current setup for joystick commands to stm32:
-    #   Joystick -> joy_node -> stm32_bridge_node
+    orion_base_dir = get_package_share_directory('orion_base')
+    params_file = os.path.join(orion_base_dir, 'config', 'params.yaml')
 
     # Joystick Node - Node to read the raw PS5 Bluetooth device
     # Publishes to /joy
@@ -14,34 +16,41 @@ def generate_launch_description():
         package='joy',
         executable='joy_node',
         name='joy_node',
-        parameters=[{
-            'device_id': 0,         # /dev/input/js0
-            'deadzone': 0.05,       # Ignore small stick drifts
-            'autorepeat_rate': 50.0 # Force sending 50 messages a second even if holding still (matches stm32 Hz)
-        }],
+        parameters=[params_file],
     )
 
     joystick_parser_node = Node(
         package="orion_base",
         executable="joystick_parser_node",
         name="joystick_parser_node",
-        output="screen"
+        output="screen",
+        parameters=[params_file],
+        remappings=[
+            ('joy', '/joy'),
+            ('joy_motion_cmd', '/joy_motion_cmd'),
+            ('joy_eyes_cmd', '/joy_eyes_cmd'),
+        ]
     )
 
-    # Node to translate Twist messages to STM32 serial commands
-    # Reads from /joy
     stm32_bridge_node = Node(
         package='orion_base',
         executable='stm32_bridge_node',
         name='stm32_bridge_node',
-        output='screen'
+        output='screen',
+        parameters=[params_file],
+        remappings=[
+            ('orion_motion_cmd', '/joy_motion_cmd'),
+        ]
     )
 
     roboeyes_node = Node(
         package='orion_base',
         executable='roboeyes_node',
         name='roboeyes_node',
-        output='screen'
+        output='screen',
+        remappings=[
+            ('joy', '/joy'),
+        ]
     )
 
     return LaunchDescription([

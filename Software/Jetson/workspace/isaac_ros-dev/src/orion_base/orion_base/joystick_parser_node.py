@@ -33,8 +33,8 @@ class JoystickParser(Node):
     def __init__(self):
         super().__init__('joystick_parser_node')
         self.joystick_subscriber = self.create_subscription(Joy, 'joy', self.joy_callback, 10)
-        self.motion_publisher = self.create_publisher(OrionMotionCmd, 'orion_motion_cmd', 10)
-        self.eyes_publisher = self.create_publisher(OrionEyesCmd, 'orion_eyes_cmd', 10)
+        self.motion_publisher = self.create_publisher(OrionMotionCmd, 'joy_motion_cmd', 10)
+        self.eyes_publisher = self.create_publisher(OrionEyesCmd, 'joy_eyes_cmd', 10)
         
         # Parameters
         self.declare_parameter('max_speed', 1.0) # Max speed in m/s or rad/s
@@ -152,12 +152,10 @@ class JoystickParser(Node):
             self.cmd_type = OrionMotionCmd.CMD_WAVE
         elif msg.buttons[BTN_SHARE] == 1:
             self.cmd_type = OrionMotionCmd.CMD_HEEL
-        # elif msg.axes[BTN_L2] > 0.5: # TODO: Check this value
-            # self.cmd_type = OrionMotionCmd.CMD_EYES
-            # self.operation_eyes(msg)
-            # This is just set for sending over to stm32.
-            # roboeyes_node handles the actual logic.
-            
+        elif msg.axes[BTN_L2] < 0:
+            self.cmd_type = OrionMotionCmd.CMD_EYES
+            self.operation_eyes(msg)
+
         # --- Deadman Switch ---
         # Require holding L1 button before accepting any movement or tilt commands
         if msg.buttons[BTN_L1] == 1:

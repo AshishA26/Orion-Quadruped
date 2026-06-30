@@ -9,14 +9,15 @@ from typing import Tuple
 class STM32Bridge(Node):
     def __init__(self):
         super().__init__('stm32_bridge_node')
-        self.latest_msg = OrionMotionCmd()
-        self.latest_msg.cmd_type = OrionMotionCmd.CMD_NORMAL
-
         self.motion_subscriber = self.create_subscription(OrionMotionCmd, 'orion_motion_cmd', self.motion_callback, 10)
 
         # Configure Serial Port (UART)
-        serial_port = '/dev/ttyTHS1'  
-        baud_rate = 115200
+        self.declare_parameter('serial_port', '/dev/ttyTHS1')
+        self.declare_parameter('baud_rate', 115200)
+        self.declare_parameter('send_rate_hz', 50.0)
+        serial_port = self.get_parameter('serial_port').value
+        baud_rate = self.get_parameter('baud_rate').value
+        send_rate = 1.0 / self.get_parameter('send_rate_hz').value
         
         try:
             self.serial_conn = serial.Serial(serial_port, baud_rate, timeout=0.1)
@@ -25,8 +26,11 @@ class STM32Bridge(Node):
             self.get_logger().error(f"Failed to open serial port: {e}")
             self.serial_conn = None
 
-        # Create a timer to write to UART at 50Hz (every 0.02 seconds)
-        self.write_timer = self.create_timer(0.02, self.send_to_stm32)
+        self.latest_msg = OrionMotionCmd()
+        self.latest_msg.cmd_type = OrionMotionCmd.CMD_NORMAL
+
+        # Create a timer to write to UART
+        self.write_timer = self.create_timer(send_rate, self.send_to_stm32)
 
     def calculate_checksum(self, payload_bytes):
         # Simple XOR checksum of the payload
