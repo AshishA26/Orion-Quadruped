@@ -15,7 +15,7 @@ def generate_launch_description():
         executable='cmd_mux_node',
         name='cmd_mux_node',
         output='screen',
-        # parameters=[params_file],
+        parameters=[params_file],
         remappings=[
             ('joy_motion_cmd', '/joy_motion_cmd'),
             ('joy_eyes_cmd', '/joy_eyes_cmd'),
