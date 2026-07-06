@@ -181,7 +181,7 @@ class JoystickParser(Node):
         motion_msg.pivot_y = self.pivot_y
         self.motion_publisher.publish(motion_msg)
 
-        # Create and publish eyes command message
+        # TODO(orion): Create and publish eyes command message
         # eyes_msg = OrionEyesCmd()
         # eyes_msg.mood = self.cmd_type
         # self.eyes_publisher.publish(eyes_msg)

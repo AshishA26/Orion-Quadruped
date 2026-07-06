@@ -8,6 +8,7 @@ def generate_launch_description():
     # Get the package directories
     orion_base_dir = get_package_share_directory('orion_base')
     orion_lidar_dir = get_package_share_directory('orion_lidar')
+    orion_nav_dir = get_package_share_directory('orion_navigation')
 
     # Include Lidar launch
     lidar_launch = IncludeLaunchDescription(
@@ -23,7 +24,15 @@ def generate_launch_description():
         )
     )
 
+    # Include Navigation launch
+    nav_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(orion_nav_dir, 'launch', 'navigation.launch.py')
+        )
+    )
+
     return LaunchDescription([
         # lidar_launch,
-        base_launch
+        base_launch,
+        nav_launch
     ])

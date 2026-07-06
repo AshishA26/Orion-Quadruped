@@ -48,9 +48,10 @@ def generate_launch_description():
         executable='roboeyes_node',
         name='roboeyes_node',
         output='screen',
-        remappings=[
-            ('joy', '/joy'),
-        ]
+        # TODO(orion)
+        # remappings=[
+        #     ('joy', '/joy'),
+        # ]
     )
 
     return LaunchDescription([
