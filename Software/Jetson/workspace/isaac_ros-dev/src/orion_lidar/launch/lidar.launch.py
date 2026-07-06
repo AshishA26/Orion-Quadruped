@@ -7,20 +7,16 @@ from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    
+    orion_lidar_dir = get_package_share_directory('orion_lidar')
+    params_file = os.path.join(orion_lidar_dir, 'config', 'lidar.yaml')
+
     # --- 1. RPLidar Node (A1M8 Driver) ---
     rplidar_node = Node(
         package='sllidar_ros2',
         executable='sllidar_node',
         name='sllidar_node',
         output='screen',
-        parameters=[{
-            'serial_port': '/dev/ttyUSB0',
-            'serial_baudrate': 115200,  # A1M8 specific 
-            'frame_id': 'laser',
-            'inverted': False,
-            'angle_compensate': True,
-        }]
+        parameters=[params_file]
     )
 
     # --- 2. Static TF (base_link -> laser) ---
@@ -40,15 +36,7 @@ def generate_launch_description():
         executable='rf2o_laser_odometry_node',
         name='rf2o_laser_odometry',
         output='screen',
-        parameters=[{
-            'laser_scan_topic': '/scan',
-            'odom_topic': '/odom',
-            'publish_tf': True,
-            'base_frame_id': 'base_link',
-            'odom_frame_id': 'odom',
-            'init_pose_from_topic': '',
-            'freq': 10.0
-        }]
+        parameters=[params_file]
     )
 
     # --- 4. SLAM Toolbox ---
@@ -57,17 +45,7 @@ def generate_launch_description():
         executable='async_slam_toolbox_node',
         name='slam_toolbox',
         output='screen',
-        parameters=[{
-            'use_sim_time': False,
-            'odom_frame': 'odom',
-            'map_frame': 'map',
-            'base_frame': 'base_link',
-            'scan_topic': '/scan',
-            'mode': 'mapping', # defaults to mapping
-            # RF2O specific tuning for SLAM
-            'minimum_travel_distance': 0.1,
-            'transform_timeout': 0.5,
-        }]
+        parameters=[params_file]
     )
 
     rviz_node = Node(

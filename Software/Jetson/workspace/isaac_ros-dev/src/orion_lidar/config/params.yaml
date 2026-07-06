@@ -1,0 +1,32 @@
+# orion_lidar/config/params.yaml
+# All lidar-related node parameters.
+
+sllidar_node:
+  ros__parameters:
+    serial_port: '/dev/ttyUSB0'
+    serial_baudrate: 115200  # A1M8 specific 
+    frame_id: 'laser'
+    inverted: false
+    angle_compensate: true
+
+rf2o_laser_odometry:
+  ros__parameters:
+    laser_scan_topic: '/scan'
+    odom_topic: '/odom'
+    publish_tf: true
+    base_frame_id: 'base_link'
+    odom_frame_id: 'odom'
+    init_pose_from_topic: ''
+    freq: 10.0
+
+slam_toolbox:
+  ros__parameters:
+    use_sim_time: false
+    odom_frame: 'odom'
+    map_frame: 'map'
+    base_frame: 'base_link'
+    scan_topic: '/scan'
+    mode: 'mapping' # defaults to mapping
+    # RF2O specific tuning for SLAM
+    minimum_travel_distance: 0.1
+    transform_timeout: 0.5

@@ -79,6 +79,7 @@ struct __attribute__((packed)) CmdPayload {
 #define CMD_HEEL 0x04
 #define CMD_DANCE 0x05
 #define CMD_EXTRAS 0x06
+#define CMD_EYES 0x07
 
 // DMA Buffer and tracking
 #define DMA_RX_BUFFER_SIZE 64 // Larger than the expected command size to ensure no bytes are missed
@@ -322,6 +323,9 @@ void StartControlTask(void *argument)
         case CMD_RESET:
         default:
             standingPose(); // Safely return to flat, neutral stance
+            break;
+
+        case CMD_EYES:
             break;
     }
 

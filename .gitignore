@@ -26,7 +26,7 @@ fp-info-cache
 *.ses
 
 # Exported BOM files
-*.xml
+*PCBs/**/*.xml
 
 # Various Altium files
 *.PrjPCBStructure
@@ -74,7 +74,7 @@ models/Jetson/**
 *.hex
 
 # Misc
-*.map
+!**/maps/*.map
 *.m
 
 # Eclipse CDT project files

@@ -1,0 +1,29 @@
+# TODO(orion): 
+# orion_bringup/config/params.yaml
+# System-wide overrides. These take precedence over package-level configs
+# when loaded after them in the launch file.
+#
+# Example: slow demo mode
+# joystick_parser_node:
+#   ros__parameters:
+#     max_speed: 0.5
+#     boost: 0.0
+
+#  --- Would need to ---:
+
+# Declare a launch argument in base.launch.py / lidar.launch.py for an optional extra config file
+# Pass it from bringup.launch.py via launch_arguments
+# Example in base.launch.py:
+
+# extra_config = LaunchConfiguration('extra_config', default='')
+
+# Then in each Node, add it as a second params file:
+
+# parameters=[params_file, extra_config],
+
+# And in bringup.launch.py:
+
+# base_launch = IncludeLaunchDescription(
+#     PythonLaunchDescriptionSource(...),
+#     launch_arguments={'extra_config': bringup_config}.items()
+# )
