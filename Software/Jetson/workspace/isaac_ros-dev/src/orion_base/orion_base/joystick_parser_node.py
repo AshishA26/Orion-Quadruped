@@ -71,7 +71,7 @@ class JoystickParser(Node):
         self.pivot_y = 0.0
 
         # Store the command type
-        self.cmd_type = OrionMotionCmd.CMD_NORMAL
+        self.cmd_type = OrionMotionCmd.CMD_RESET
 
     def operation_reset(self):
         self.roll = 0.0

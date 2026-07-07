@@ -25,5 +25,5 @@ joystick_parser_node:
 stm32_bridge_node:
   ros__parameters:
     serial_port: '/dev/ttyTHS1'
-    baud_rate: 115200
+    baud_rate: 460800
     send_rate_hz: 50.0      # Timer frequency for UART writes
