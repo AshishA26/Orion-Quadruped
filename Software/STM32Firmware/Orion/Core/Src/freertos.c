@@ -97,6 +97,9 @@ struct CmdPayload last_cmd; // Struct to hold the payload data cleanly
 volatile int new_cmd_ready = 0; // Flag to indicate a new command is ready // Not used right now
 uint32_t last_cmd_timestamp_ms = 0; // Extra safety to prevent stale commands
 
+// volatile uint32_t checksum_errors = 0;
+// volatile uint32_t uart_errors = 0;
+
 /* USER CODE END Variables */
 /* Definitions for controlTask */
 osThreadId_t controlTaskHandle;
@@ -255,6 +258,23 @@ void StartControlTask(void *argument)
         active_cmd.z_offset = 0.0f;
     }
 
+    // Smooth the target height, tilt, and translation values using an Exponential Moving Average (EMA)
+    static float smooth_z = 0.0f;
+    static float smooth_roll = 0.0f;
+    static float smooth_pitch = 0.0f;
+    static float smooth_yaw = 0.0f;
+    static float smooth_x_offset = 0.0f;
+    static float smooth_y_offset = 0.0f;
+    // Filter coefficient (0.0 < alpha <= 1.0)
+    // 0.15 at 50Hz gives a smooth transition over ~130ms while remaining responsive
+    const float alpha = 0.15f;
+    smooth_z        += alpha * (-active_cmd.z_offset - smooth_z); // Jetson sends + to lift body up. Inverse IK matrix requires -z_offset to pull body up.
+    smooth_roll     += alpha * (active_cmd.roll - smooth_roll);
+    smooth_pitch    += alpha * (active_cmd.pitch - smooth_pitch);
+    smooth_yaw      += alpha * (active_cmd.yaw - smooth_yaw);
+    smooth_x_offset += alpha * (active_cmd.x_offset - smooth_x_offset);
+    smooth_y_offset += alpha * (active_cmd.y_offset - smooth_y_offset);
+
     // Process Kinematics and Motion state machine based on cmd_type
     switch(active_cmd.cmd_type) 
     {
@@ -265,23 +285,27 @@ void StartControlTask(void *argument)
                 // Calculate raw gait foot trajectory paths relative to default stance
                 calculateTrotGaitPositions(active_cmd.lin_x, active_cmd.lin_y, active_cmd.ang_z, target_feet);
 
-                // Relative Height Conversion. 
-                // Jetson sends + to lift body up. Inverse IK matrix requires -transZ to pull body up.
-                float transZ = -active_cmd.z_offset; 
-
-                // Stream footprints through orientation matrix to apply Roll/Pitch/Yaw
-                updateBodyPostureWithFeet(target_feet, 0.0f, 0.0f, transZ,
-                                          active_cmd.roll, active_cmd.pitch, active_cmd.yaw,
+                // Stream footprints through orientation matrix to apply Roll/Pitch/Yaw (using smoothed parameters)
+                updateBodyPostureWithFeet(target_feet, 0.0f, 0.0f, smooth_z,
+                                          smooth_roll, smooth_pitch, smooth_yaw,
                                           active_cmd.pivot_x, active_cmd.pivot_y, 0.0f);
+                // Non-smoothing code:
+                // // Relative Height Conversion. 
+                // // Jetson sends + to lift body up. Inverse IK matrix requires -transZ to pull body up.
+                // float transZ = -active_cmd.z_offset; 
+
+                // // Stream footprints through orientation matrix to apply Roll/Pitch/Yaw
+                // updateBodyPostureWithFeet(target_feet, 0.0f, 0.0f, transZ,
+                //                           active_cmd.roll, active_cmd.pitch, active_cmd.yaw,
+                //                           active_cmd.pivot_x, active_cmd.pivot_y, 0.0f);
             }
             break;
 
         case CMD_EXTRAS:
             {
-                // In extras mode, handle relative height translation identically 
-                float transZ = -active_cmd.z_offset;
-                updateBodyPosture(active_cmd.x_offset, active_cmd.y_offset, transZ,
-                                  active_cmd.roll, active_cmd.pitch, active_cmd.yaw,
+                // In extras mode, handle relative height translation and body shifts (using smoothed parameters)
+                updateBodyPosture(smooth_x_offset, smooth_y_offset, smooth_z,
+                                  smooth_roll, smooth_pitch, smooth_yaw,
                                   active_cmd.pivot_x, active_cmd.pivot_y, 0.0f);
             }
             break;
@@ -342,6 +366,14 @@ void StartControlTask(void *argument)
     //                  (int)(active_cmd.yaw * 100),
     //                  (int)(active_cmd.z_offset));
     // HAL_UART_Transmit(&huart2, (uint8_t*)debug_msg, (uint16_t)n, 10);
+
+    // static uint32_t last_error_print = 0;
+    // if (HAL_GetTick() - last_error_print > 500) {
+    //     last_error_print = HAL_GetTick();
+    //     char err_msg[64];
+    //     int n = snprintf(err_msg, sizeof(err_msg), "CS_Err: %lu | UART_Err: %lu\r\n", checksum_errors, uart_errors);
+    //     HAL_UART_Transmit(&huart2, (uint8_t*)err_msg, (uint16_t)n, 10);
+    // }
 
     osDelay(20); // Steady 50Hz control loop cycle execution
 
@@ -481,6 +513,8 @@ void StartCommTask(void *argument)
                     new_cmd_ready = 1;
                     last_cmd_timestamp_ms = HAL_GetTick();
                     osMutexRelease(cmdMutexHandle);
+                }else{
+                    // checksum_errors++;
                 }
                 parser_state = 0;
                 break;
@@ -498,6 +532,20 @@ void StartCommTask(void *argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
+    if (huart->Instance == USART1) {
+        // uart_errors++;
+        
+        // Clear overrun and noise flags so DMA reception doesn't lock up
+        __HAL_UART_CLEAR_OREFLAG(huart);
+        __HAL_UART_CLEAR_NEFLAG(huart);
+        __HAL_UART_CLEAR_FEFLAG(huart);
+        
+        // Restart circular DMA reception
+        HAL_UART_Receive_DMA(huart, dma_rx_buffer, DMA_RX_BUFFER_SIZE);
+    }
+}
 
 /* USER CODE END Application */
 
