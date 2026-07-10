@@ -27,3 +27,8 @@ stm32_bridge_node:
     serial_port: '/dev/ttyTHS1'
     baud_rate: 460800
     send_rate_hz: 50.0      # Timer frequency for UART writes
+
+# Command Mux
+cmd_mux_node:
+  ros__parameters:
+    send_rate_hz: 50.0

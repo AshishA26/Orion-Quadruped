@@ -53,9 +53,25 @@ def generate_launch_description():
         ]
     )
 
+    cmd_mux_node = Node(
+        package='orion_base',
+        executable='cmd_mux_node',
+        name='cmd_mux_node',
+        output='screen',
+        parameters=[params_file],
+        remappings=[
+            ('joy_motion_cmd', '/joy_motion_cmd'),
+            ('joy_eyes_cmd', '/joy_eyes_cmd'),
+            ('nav_motion_cmd', '/nav_motion_cmd'),
+            ('orion_motion_cmd', '/orion_motion_cmd'),
+            ('orion_eyes_cmd', '/orion_eyes_cmd'),
+        ]
+    )
+
     return LaunchDescription([
         stm32_bridge_node,
         joy_node,
         joystick_parser_node,
-        roboeyes_node
+        roboeyes_node,
+        cmd_mux_node
     ])

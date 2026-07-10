@@ -28,7 +28,6 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'cmd_mux_node = orion_navigation.cmd_mux_node:main',
         ],
     },
 )
