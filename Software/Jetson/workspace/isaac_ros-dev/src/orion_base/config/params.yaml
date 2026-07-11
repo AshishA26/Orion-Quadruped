@@ -43,6 +43,6 @@ roboeyes_node:
     height: 1080
     fullscreen: true
     fps: 60
-    eye_color_r: 255
+    eye_color_r: 0
     eye_color_g: 190
-    eye_color_b: 0
+    eye_color_b: 255

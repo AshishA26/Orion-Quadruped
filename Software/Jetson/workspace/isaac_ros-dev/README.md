@@ -63,3 +63,14 @@ ros2 pkg create --build-type ament_python orion_bringup
 
 
 Note: Ensure that run_robot.sh is an executable using `chmod +x run_robot.sh`
+
+
+
+Note: .bashrc has
+```bash
+export ISAAC_ROS_WS=/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev
+export CONFIG_IMAGE_KEY="ros2_humble.orion"
+export CONFIG_DOCKER_SEARCH_DIRS=(/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev)
+export DISPLAY=:1
+xhost +local:root > /dev/null 2>&1
+```

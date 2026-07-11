@@ -188,7 +188,6 @@ class JoystickParser(Node):
         # No deadman switch required
         if msg.buttons[BTN_R1] == 1:
             self.cmd_type = OrionMotionCmd.CMD_RESET
-            self.operation_reset()
         elif msg.buttons[BTN_TOUCHPAD] == 1:
             self.cmd_type = OrionMotionCmd.CMD_NORMAL
         elif msg.buttons[BTN_R3] == 1:
@@ -201,7 +200,6 @@ class JoystickParser(Node):
             self.cmd_type = OrionMotionCmd.CMD_HEEL
         elif msg.axes[BTN_L2] < 0:
             self.cmd_type = OrionMotionCmd.CMD_EYES
-            self.operation_eyes(msg)
 
         # --- Deadman Switch ---
         # Require holding L1 button before accepting any movement or tilt commands
@@ -211,6 +209,11 @@ class JoystickParser(Node):
             elif self.cmd_type == OrionMotionCmd.CMD_EXTRAS: # Extras
                 x_offset, y_offset = self.operation_extras(msg)
         
+        if self.cmd_type == OrionMotionCmd.CMD_RESET:
+            self.operation_reset()
+        elif self.cmd_type == OrionMotionCmd.CMD_EYES:
+            self.operation_eyes(msg)
+
         # --- Publish Message ---
         # Create and publish motion command message
         motion_msg = OrionMotionCmd()
