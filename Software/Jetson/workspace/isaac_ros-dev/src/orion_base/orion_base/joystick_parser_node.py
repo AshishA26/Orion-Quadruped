@@ -73,6 +73,14 @@ class JoystickParser(Node):
         # Store the command type
         self.cmd_type = OrionMotionCmd.CMD_RESET
 
+        # Eyes state
+        self.eyes_power = True
+        self.eyes_mood = OrionEyesCmd.MOOD_DEFAULT
+        self.eyes_gaze_x = 0.0
+        self.eyes_gaze_y = 0.0
+        self.eyes_locked = False
+        self.prev_mood = OrionEyesCmd.MOOD_DEFAULT
+
     def operation_reset(self):
         self.roll = 0.0
         self.pitch = 0.0
@@ -128,7 +136,46 @@ class JoystickParser(Node):
         return (x_offset, y_offset)
 
     def operation_eyes(self, msg):
-        pass
+        # Gaze control - persistent
+        if (abs(msg.axes[LS_HORZ]) < 0.05) and (abs(msg.axes[LS_VERT]) < 0.05):
+            self.eyes_gaze_x += msg.axes[RS_HORZ] * 0.02
+            self.eyes_gaze_y -= msg.axes[RS_VERT] * 0.02
+            self.eyes_gaze_x = max(-1.0, min(1.0, self.eyes_gaze_x))
+            self.eyes_gaze_y = max(-1.0, min(1.0, self.eyes_gaze_y))
+        else:
+            self.eyes_gaze_x = msg.axes[LS_HORZ]
+            self.eyes_gaze_y = -msg.axes[LS_VERT]
+            self.eyes_gaze_x = max(-1.0, min(1.0, self.eyes_gaze_x))
+            self.eyes_gaze_y = max(-1.0, min(1.0, self.eyes_gaze_y))
+        
+        if msg.axes[DPAD_VERT] > 0.5:
+            self.eyes_mood = OrionEyesCmd.MOOD_DEFAULT
+        elif msg.axes[DPAD_VERT] < -0.5:
+            self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
+        elif msg.axes[DPAD_HORZ] > 0.5:
+            self.eyes_mood = OrionEyesCmd.MOOD_ANGRY
+        elif msg.axes[DPAD_HORZ] < -0.5:
+            self.eyes_mood = OrionEyesCmd.MOOD_TIRED
+        elif msg.axes[DPAD_VERT] > 0.5 and msg.button[BTN_L1] == 1:
+            self.eyes_mood = OrionEyesCmd.MOOD_CURIOUS
+        elif msg.axes[DPAD_VERT] < -0.5 and msg.button[BTN_L1] == 1:
+            self.eyes_mood = OrionEyesCmd.MOOD_SAD
+        elif msg.axes[DPAD_HORZ] > 0.5 and msg.button[BTN_L1] == 1:
+            self.eyes_mood = OrionEyesCmd.MOOD_SCARY
+        elif msg.axes[DPAD_HORZ] < -0.5 and msg.button[BTN_L1] == 1:
+            self.eyes_mood = OrionEyesCmd.MOOD_SLEEPING
+        
+        # Power on/off eyes
+        if msg.buttons[BTN_SQUARE] == 1:
+            self.eyes_power = True
+        elif msg.buttons[BTN_CIRCLE] == 1:
+            self.eyes_power = False
+
+        # Lock/Unlock gaze
+        if msg.buttons[BTN_TRIANGLE] == 1:
+            self.eyes_locked = True
+        elif msg.buttons[BTN_CROSS] == 1:
+            self.eyes_locked = False
 
     def joy_callback(self, msg):
         lin_x = 0.0
@@ -181,10 +228,16 @@ class JoystickParser(Node):
         motion_msg.pivot_y = self.pivot_y
         self.motion_publisher.publish(motion_msg)
 
-        # TODO(orion): Create and publish eyes command message
-        # eyes_msg = OrionEyesCmd()
-        # eyes_msg.mood = self.cmd_type
-        # self.eyes_publisher.publish(eyes_msg)
+        # Create and publish eyes command message
+        eyes_msg = OrionEyesCmd()
+        eyes_msg.mood = self.eyes_mood
+        eyes_msg.gaze_x = self.eyes_gaze_x
+        eyes_msg.gaze_y = self.eyes_gaze_y
+        eyes_msg.power = self.eyes_power
+        eyes_msg.mood_changed = (self.eyes_mood != self.prev_mood)
+        eyes_msg.gaze_locked = self.eyes_locked
+        self.eyes_publisher.publish(eyes_msg)
+        self.prev_mood = self.eyes_mood
 
 def main(args=None):
     rclpy.init(args=args)

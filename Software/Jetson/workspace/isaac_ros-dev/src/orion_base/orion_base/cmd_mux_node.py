@@ -30,7 +30,14 @@ class CmdMux(Node):
         self.orion_eyes_cmd_pub = self.create_publisher(OrionEyesCmd, 'orion_eyes_cmd', 10)            
 
         self.declare_parameter('send_rate_hz', 50.0)
+        self.declare_parameter('max_motion_speed', 1.5)
+        self.declare_parameter('strafe_gaze_weight', 0.7)
+        self.declare_parameter('turn_gaze_weight', 0.3)
+        
         send_rate = 1.0 / self.get_parameter('send_rate_hz').value
+        self.max_motion_speed = self.get_parameter('max_motion_speed').value
+        self.strafe_gaze_weight = self.get_parameter('strafe_gaze_weight').value
+        self.turn_gaze_weight = self.get_parameter('turn_gaze_weight').value
 
         self.latest_joy_motion = OrionMotionCmd()
         self.latest_joy_eyes = OrionEyesCmd()
@@ -43,10 +50,50 @@ class CmdMux(Node):
     def joy_eyes_cmd_callback(self, msg):
         self.latest_joy_eyes = msg
     
+    def eyes_mux(self, joy_eyes, motion) -> OrionEyesCmd:
+        eyes_out = OrionEyesCmd()
+        eyes_out.power = joy_eyes.power
+        eyes_out.mood = joy_eyes.mood
+        eyes_out.mood_changed = joy_eyes.mood_changed
+        eyes_out.gaze_locked = joy_eyes.gaze_locked
+
+        # In CMD_EYES mode: joystick directly controls eyes
+        if motion.cmd_type == OrionMotionCmd.CMD_EYES:
+            eyes_out.gaze_x = joy_eyes.gaze_x
+            eyes_out.gaze_y = joy_eyes.gaze_y
+
+        # Not in CMD_EYES mode: derive gaze from motion (unless locked)
+        elif not joy_eyes.gaze_locked:
+            # Derive gaze from motion commands
+            gaze_from_strafe = self._clamp(motion.lin_y / self.max_motion_speed, -1.0, 1.0)
+            gaze_from_turn = self._clamp(motion.ang_z / self.max_motion_speed, -1.0, 1.0)
+            
+            # Weighted blend: strafe dominates, turn adds subtle offset
+            eyes_out.gaze_x = self._clamp(
+                gaze_from_strafe * self.strafe_gaze_weight + 
+                gaze_from_turn * self.turn_gaze_weight, 
+                -1.0, 1.0
+            )
+            
+            # TODO(orion): Vertical: could map pitch to gaze_y in the future
+            eyes_out.gaze_y = 0.0
+        
+        return eyes_out
+
+    @staticmethod
+    def _clamp(val, lo, hi):
+        return max(lo, min(hi, val))
+
     def publish_latest(self):
+        joy_motion = self.latest_joy_motion
+        joy_eyes = self.latest_joy_eyes
+
         # TODO(orion): For now we directly send joy command to orion_base
         self.orion_motion_cmd_pub.publish(self.latest_joy_motion)
-        self.orion_eyes_cmd_pub.publish(self.latest_joy_eyes)
+
+        # Get eyes cmd from mux function and publish
+        eyes_cmd = self.eyes_mux(joy_eyes, joy_motion)
+        self.orion_eyes_cmd_pub.publish(eyes_cmd)
 
 def main(args=None):
     rclpy.init(args=args)

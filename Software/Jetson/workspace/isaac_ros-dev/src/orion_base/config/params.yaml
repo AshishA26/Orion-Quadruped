@@ -32,3 +32,6 @@ stm32_bridge_node:
 cmd_mux_node:
   ros__parameters:
     send_rate_hz: 50.0
+    max_motion_speed: 1.5
+    strafe_gaze_weight: 0.7
+    turn_gaze_weight: 0.3
