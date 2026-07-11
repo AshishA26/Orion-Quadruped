@@ -48,6 +48,7 @@ def generate_launch_description():
         executable='roboeyes_node',
         name='roboeyes_node',
         output='screen',
+        parameters=[params_file],
         remappings=[
             ('orion_eyes_cmd', '/orion_eyes_cmd'),
         ]
