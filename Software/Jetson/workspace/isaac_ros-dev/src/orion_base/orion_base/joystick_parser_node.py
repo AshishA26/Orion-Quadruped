@@ -148,22 +148,25 @@ class JoystickParser(Node):
             self.eyes_gaze_x = max(-1.0, min(1.0, self.eyes_gaze_x))
             self.eyes_gaze_y = max(-1.0, min(1.0, self.eyes_gaze_y))
         
-        if msg.axes[DPAD_VERT] > 0.5:
-            self.eyes_mood = OrionEyesCmd.MOOD_DEFAULT
-        elif msg.axes[DPAD_VERT] < -0.5:
-            self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
-        elif msg.axes[DPAD_HORZ] > 0.5:
-            self.eyes_mood = OrionEyesCmd.MOOD_ANGRY
-        elif msg.axes[DPAD_HORZ] < -0.5:
-            self.eyes_mood = OrionEyesCmd.MOOD_TIRED
-        elif msg.axes[DPAD_VERT] > 0.5 and msg.button[BTN_L1] == 1:
-            self.eyes_mood = OrionEyesCmd.MOOD_CURIOUS
-        elif msg.axes[DPAD_VERT] < -0.5 and msg.button[BTN_L1] == 1:
-            self.eyes_mood = OrionEyesCmd.MOOD_SAD
-        elif msg.axes[DPAD_HORZ] > 0.5 and msg.button[BTN_L1] == 1:
-            self.eyes_mood = OrionEyesCmd.MOOD_SCARY
-        elif msg.axes[DPAD_HORZ] < -0.5 and msg.button[BTN_L1] == 1:
-            self.eyes_mood = OrionEyesCmd.MOOD_SLEEPING
+        if msg.buttons[BTN_L1] == 1:
+            if msg.axes[DPAD_VERT] > 0.5:
+                self.eyes_mood = OrionEyesCmd.MOOD_CURIOUS
+            elif msg.axes[DPAD_VERT] < -0.5:
+                self.eyes_mood = OrionEyesCmd.MOOD_SAD
+            elif msg.axes[DPAD_HORZ] > 0.5:
+                self.eyes_mood = OrionEyesCmd.MOOD_SCARY
+            elif msg.axes[DPAD_HORZ] < -0.5:
+                self.eyes_mood = OrionEyesCmd.MOOD_SLEEPING
+        else:
+            if msg.axes[DPAD_VERT] > 0.5:
+                self.eyes_mood = OrionEyesCmd.MOOD_DEFAULT
+            elif msg.axes[DPAD_VERT] < -0.5:
+                self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
+            elif msg.axes[DPAD_HORZ] > 0.5:
+                self.eyes_mood = OrionEyesCmd.MOOD_ANGRY
+            elif msg.axes[DPAD_HORZ] < -0.5:
+                self.eyes_mood = OrionEyesCmd.MOOD_TIRED
+
         
         # Power on/off eyes
         if msg.buttons[BTN_SQUARE] == 1:
