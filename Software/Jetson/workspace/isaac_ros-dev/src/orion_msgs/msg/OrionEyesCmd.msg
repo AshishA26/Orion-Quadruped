@@ -15,3 +15,5 @@ float32 gaze_y        # Vertical gaze direction [-1.0, 1.0]
 bool power            # true = eyes on, false = eyes off
 bool mood_changed     # true = mood was just updated this message (avoids re-setting same mood every tick)
 bool gaze_locked      # true = gaze is locked (ignore motion-based gaze, use only joystick gaze)
+float32 left_eye_scale   # 1.0 = normal, >1.0 = bigger (set by cmd_mux from motion)
+float32 right_eye_scale  # 1.0 = normal, >1.0 = bigger (set by cmd_mux from motion)

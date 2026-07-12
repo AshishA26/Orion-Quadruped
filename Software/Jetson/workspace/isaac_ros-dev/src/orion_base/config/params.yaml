@@ -35,6 +35,13 @@ cmd_mux_node:
     max_motion_speed: 1.5
     strafe_gaze_weight: 0.7
     turn_gaze_weight: 0.3
+    # Asymmetric eye scaling (curiosity on motion)
+    curious_scale_enabled: true
+    curious_scale_max: 1.3
+    strafe_scale_weight: 0.7
+    turn_scale_weight: 0.3
+    yaw_scale_weight: 0.4
+    max_yaw: 0.524
 
 # Roboeyes
 roboeyes_node:
@@ -46,3 +53,12 @@ roboeyes_node:
     eye_color_r: 0
     eye_color_g: 190
     eye_color_b: 255
+    # Animation tuning
+    blink_duration: 0.2
+    auto_blink: true
+    auto_idle: true
+    blink_interval_min: 1.0
+    blink_interval_max: 4.0
+    idle_interval_min: 0.5
+    idle_interval_max: 2.5
+    gaze_smoothing: 0.15

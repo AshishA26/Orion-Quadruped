@@ -33,11 +33,24 @@ class CmdMux(Node):
         self.declare_parameter('max_motion_speed', 1.5)
         self.declare_parameter('strafe_gaze_weight', 0.7)
         self.declare_parameter('turn_gaze_weight', 0.3)
+        # Asymmetric eye scaling (curiosity on motion)
+        self.declare_parameter('curious_scale_enabled', True)
+        self.declare_parameter('curious_scale_max', 1.3)
+        self.declare_parameter('strafe_scale_weight', 0.7)
+        self.declare_parameter('turn_scale_weight', 0.3)
+        self.declare_parameter('yaw_scale_weight', 0.4)
+        self.declare_parameter('max_yaw', 0.524)
         
         send_rate = 1.0 / self.get_parameter('send_rate_hz').value
         self.max_motion_speed = self.get_parameter('max_motion_speed').value
         self.strafe_gaze_weight = self.get_parameter('strafe_gaze_weight').value
         self.turn_gaze_weight = self.get_parameter('turn_gaze_weight').value
+        self.curious_scale_enabled = self.get_parameter('curious_scale_enabled').value
+        self.curious_scale_max = self.get_parameter('curious_scale_max').value
+        self.strafe_scale_weight = self.get_parameter('strafe_scale_weight').value
+        self.turn_scale_weight = self.get_parameter('turn_scale_weight').value
+        self.yaw_scale_weight = self.get_parameter('yaw_scale_weight').value
+        self.max_yaw = self.get_parameter('max_yaw').value
 
         self.latest_joy_motion = OrionMotionCmd()
         self.latest_joy_eyes = OrionEyesCmd()
@@ -77,6 +90,36 @@ class CmdMux(Node):
             
             # TODO(orion): Vertical: could map pitch to gaze_y in the future
             eyes_out.gaze_y = 0.0
+
+        # --- Asymmetric eye scaling (curiosity on motion) ---
+        # Compute a turn_factor from strafe, angular velocity, and body yaw.
+        # Positive = turning/strafing left, negative = turning/strafing right.
+        # The eye on the SAME side as the turn direction becomes bigger.
+        if self.curious_scale_enabled:
+            strafe_norm = self._clamp(motion.lin_y / self.max_motion_speed, -1.0, 1.0)
+            turn_norm = self._clamp(motion.ang_z / self.max_motion_speed, -1.0, 1.0)
+            yaw_norm = self._clamp(motion.yaw / self.max_yaw, -1.0, 1.0)
+
+            turn_factor = self._clamp(
+                strafe_norm * self.strafe_scale_weight +
+                turn_norm * self.turn_scale_weight +
+                yaw_norm * self.yaw_scale_weight,
+                -1.0, 1.0
+            )
+
+            scale_amount = abs(turn_factor) * (self.curious_scale_max - 1.0)
+            if turn_factor > 0:  # Turning/strafing left → left eye bigger
+                eyes_out.left_eye_scale = 1.0 + scale_amount
+                eyes_out.right_eye_scale = 1.0
+            elif turn_factor < 0:  # Turning/strafing right → right eye bigger
+                eyes_out.left_eye_scale = 1.0
+                eyes_out.right_eye_scale = 1.0 + scale_amount
+            else:
+                eyes_out.left_eye_scale = 1.0
+                eyes_out.right_eye_scale = 1.0
+        else:
+            eyes_out.left_eye_scale = 1.0
+            eyes_out.right_eye_scale = 1.0
         
         return eyes_out
 
