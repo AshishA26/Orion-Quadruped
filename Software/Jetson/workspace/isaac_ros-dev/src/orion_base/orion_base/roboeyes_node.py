@@ -11,7 +11,7 @@ class RoboEyes:
                  blink_duration=0.2, auto_blink=True, auto_idle=True,
                  blink_interval_min=1.0, blink_interval_max=4.0,
                  idle_interval_min=0.5, idle_interval_max=2.5,
-                 gaze_smoothing=0.15):
+                 gaze_smoothing=0.15, max_gaze_x_bound=0.13, max_gaze_y_bound=0.18):
         self.width = width
         self.height = height
         self.bg_color = bg_color
@@ -42,6 +42,8 @@ class RoboEyes:
         self.idle_interval_min = idle_interval_min
         self.idle_interval_max = idle_interval_max
         self.gaze_smoothing = gaze_smoothing
+        self.max_gaze_x_bound = max_gaze_x_bound
+        self.max_gaze_y_bound = max_gaze_y_bound
         
         # --- Animation State ---
         self.x = 0.0 
@@ -132,8 +134,8 @@ class RoboEyes:
         # --- 2. Idle Movement ---
         if self.auto_idle and not self.external_gaze:
             if current_time > self.next_move_time:
-                max_x = int(self.width * 0.13)
-                max_y = int(self.height * 0.18)
+                max_x = int(self.width * self.max_gaze_x_bound)
+                max_y = int(self.height * self.max_gaze_y_bound)
                 self.target_x = random.randint(-max_x, max_x)
                 self.target_y = random.randint(-max_y, max_y)
                 self.next_move_time = current_time + random.uniform(self.idle_interval_min, self.idle_interval_max)
@@ -213,26 +215,26 @@ class RoboEyes:
                 cv2.rectangle(frame, (final_x, final_y - 10), (final_x + ew, final_y + int(cur_h * 0.4)), self.bg_color, -1)
                 cv2.rectangle(frame, (final_x, final_y + int(cur_h * 0.6)), (final_x + ew, final_y + cur_h + 10), self.bg_color, -1)
 
-        # --- Compute scaled eye dimensions ---
-        l_ew = int(self.eye_w * self.left_eye_scale)
+        # --- Compute scaled eye dimensions (vertical scale only) ---
+        l_ew = self.eye_w
         l_eh = int(self.eye_h * self.left_eye_scale)
-        l_er = int(self.eye_r * self.left_eye_scale)
-        r_ew = int(self.eye_w * self.right_eye_scale)
+        l_er = self.eye_r
+        r_ew = self.eye_w
         r_eh = int(self.eye_h * self.right_eye_scale)
-        r_er = int(self.eye_r * self.right_eye_scale)
+        r_er = self.eye_r
 
-        # Draw execution (center-anchored: position adjusted so scaling grows from eye center)
+        # Draw execution (bottom-aligned: position adjusted so scaling grows upwards only)
         if self.cyclops:
-            draw_single_eye(cx - l_ew // 2 + int(self.x), cy - l_eh // 2 + int(self.y), 
+            draw_single_eye(cx - l_ew // 2 + int(self.x), cy + self.eye_h // 2 + int(self.y) - l_eh, 
                             l_ew, l_eh, l_er, self.blink_l, True)
         else:
             # Left eye: original center is at (cx - eye_spacing - eye_w/2, cy)
             l_cx = cx - self.eye_spacing - self.eye_w // 2
-            draw_single_eye(l_cx - l_ew // 2 + int(self.x), cy - l_eh // 2 + int(self.y), 
+            draw_single_eye(l_cx - l_ew // 2 + int(self.x), cy + self.eye_h // 2 + int(self.y) - l_eh, 
                             l_ew, l_eh, l_er, self.blink_l, True)
             # Right eye: original center is at (cx + eye_spacing + eye_w/2, cy)
             r_cx = cx + self.eye_spacing + self.eye_w // 2
-            draw_single_eye(r_cx - r_ew // 2 + int(self.x), cy - r_eh // 2 + int(self.y), 
+            draw_single_eye(r_cx - r_ew // 2 + int(self.x), cy + self.eye_h // 2 + int(self.y) - r_eh, 
                             r_ew, r_eh, r_er, self.blink_r, False)
 
 class RoboEyesNode(Node):
@@ -255,6 +257,8 @@ class RoboEyesNode(Node):
         self.declare_parameter('idle_interval_min', 0.5)
         self.declare_parameter('idle_interval_max', 2.5)
         self.declare_parameter('gaze_smoothing', 0.15)
+        self.declare_parameter('max_gaze_x_bound', 0.13)
+        self.declare_parameter('max_gaze_y_bound', 0.18)
 
         self.width = self.get_parameter('width').value
         self.height = self.get_parameter('height').value
@@ -277,6 +281,8 @@ class RoboEyesNode(Node):
             idle_interval_min=self.get_parameter('idle_interval_min').value,
             idle_interval_max=self.get_parameter('idle_interval_max').value,
             gaze_smoothing=self.get_parameter('gaze_smoothing').value,
+            max_gaze_x_bound=self.get_parameter('max_gaze_x_bound').value,
+            max_gaze_y_bound=self.get_parameter('max_gaze_y_bound').value,
         )
         self.canvas = np.zeros((self.height, self.width, 3), dtype=np.uint8)
         
@@ -326,8 +332,8 @@ class RoboEyesNode(Node):
 
         if msg.gaze_locked or abs(msg.gaze_x) > 0.05 or abs(msg.gaze_y) > 0.05:
             self.eyes.external_gaze = True
-            max_x = int(self.width * 0.13)
-            max_y = int(self.height * 0.18)
+            max_x = int(self.width * self.eyes.max_gaze_x_bound)
+            max_y = int(self.height * self.eyes.max_gaze_y_bound)
             self.eyes.target_x = int(msg.gaze_x * max_x)
             self.eyes.target_y = int(msg.gaze_y * max_y)
         else:

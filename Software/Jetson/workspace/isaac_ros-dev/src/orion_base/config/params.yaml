@@ -33,14 +33,11 @@ cmd_mux_node:
   ros__parameters:
     send_rate_hz: 50.0
     max_motion_speed: 1.5
-    strafe_gaze_weight: 0.7
-    turn_gaze_weight: 0.3
+    strafe_gaze_weight: 0.8
     # Asymmetric eye scaling (curiosity on motion)
     curious_scale_enabled: true
     curious_scale_max: 1.3
-    strafe_scale_weight: 0.7
-    turn_scale_weight: 0.3
-    yaw_scale_weight: 0.4
+    strafe_scale_weight: 0.8
     max_yaw: 0.524
 
 # Roboeyes
@@ -62,3 +59,6 @@ roboeyes_node:
     idle_interval_min: 0.5
     idle_interval_max: 2.5
     gaze_smoothing: 0.15
+    # Gaze movement boundaries (how close to the screen edge eyes can look)
+    max_gaze_x_bound: 0.2
+    max_gaze_y_bound: 0.25
