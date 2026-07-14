@@ -1,8 +1,9 @@
 # Isaac ROS Workspace
 New commands to run for simplicity:
 ```bash
+sudo chmod 666 /dev/ttyUSB0
 sudo chmod 666 /dev/ttyTHS1
-cd ${ISAAC_ROS_WS}/src/isaac_ros_common && ./scripts/run_dev.sh
+cd ${ISAAC_ROS_WS}/src/isaac_ros_common && ./scripts/run_dev.sh --skip_image_build
 ./install_deps.sh
 ./run_robot.sh # Run only this command when making changes to the code
 ```
@@ -15,7 +16,6 @@ sudo usermod -a -G dialout,input $USER
 
 Depending on permission denied errors, might have to run this everytime:
 ```bash
-sudo chmod 666 /dev/ttyUSB0
 sudo chmod 666 /dev/input/js0
 ```
 
@@ -46,7 +46,8 @@ RUN apt-get update && apt-get install -y \
     ros-humble-joy \
     ros-humble-teleop-twist-joy \
     python3-serial \
-    xterm
+    xterm \
+    ros-humble-foxglove-bridge
 
 ENV LD_LIBRARY_PATH=/opt/ros/humble/share/gxf_isaac_optimizer/gxf/lib:${LD_LIBRARY_PATH}
 RUN echo "source /opt/ros/humble/setup.bash" >> /etc/bash.bashrc

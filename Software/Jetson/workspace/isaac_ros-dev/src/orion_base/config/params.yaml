@@ -35,7 +35,7 @@ cmd_mux_node:
     max_motion_speed: 1.5
     strafe_gaze_weight: 0.8
     # Asymmetric eye scaling (curiosity on motion)
-    curious_scale_enabled: true
+    curious_scale_enabled: false
     curious_scale_max: 1.3
     strafe_scale_weight: 0.8
     max_yaw: 0.524
