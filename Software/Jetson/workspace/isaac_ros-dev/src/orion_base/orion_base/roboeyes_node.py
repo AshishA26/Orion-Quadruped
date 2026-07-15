@@ -13,7 +13,7 @@ class RoboEyes:
                  blink_interval_min=1.0, blink_interval_max=4.0,
                  idle_interval_min=0.5, idle_interval_max=2.5,
                  gaze_smoothing=0.15, max_gaze_x_bound=0.13, max_gaze_y_bound=0.18,
-                 power_transition_speed=0.05, fps=60, power_off_has_line=True):
+                 power_transition_speed=0.05, fps=60, power_off_has_line=True, power_off_line_delay=1.0):
         self.width = width
         self.height = height      
         self.eye_w = eye_w
@@ -36,6 +36,7 @@ class RoboEyes:
         self.power_transition_speed = power_transition_speed
         self.fps = fps
         self.power_off_has_line = power_off_has_line
+        self.power_off_line_delay = power_off_line_delay
 
         # --- Animation State ---
         self.x = 0.0 
@@ -70,6 +71,7 @@ class RoboEyes:
         self.target_right_scale = 1.0
 
         self.power = True
+        self.power_off_complete_time = None
 
     def set_mood(self, mood):
         self.mood = mood
@@ -113,9 +115,14 @@ class RoboEyes:
         else:
             # If power is off, eyes are closed, if power is on, eyes are open
             target = 1.0 if not self.power else 0.0
-            transition_speed = 0.05
-            self.blink_l += (target - self.blink_l) * transition_speed
-            self.blink_r += (target - self.blink_r) * transition_speed
+            self.blink_l += (target - self.blink_l) * self.power_transition_speed
+            self.blink_r += (target - self.blink_r) * self.power_transition_speed
+
+        if not self.power:
+            if self.blink_l >= 0.99 and self.power_off_complete_time is None:
+                self.power_off_complete_time = time.time()
+        else:
+            self.power_off_complete_time = None
 
         # --- 2. Idle Movement ---
         if self.auto_idle and not self.external_gaze:
@@ -170,8 +177,8 @@ class RoboEyes:
             else:
                 if self.power_off_has_line: # Draw line when power is off and for blinks
                     cv2.line(frame, (final_x, ey + eh // 2 + self.off_y), (final_x + ew, ey + eh // 2 + self.off_y), self.eye_color, 2)
-                else: # Draw line only for blinks, not when power is off
-                    if self.power:
+                else: # Draw line only for blinks, not when power is off (except during the 1s delay)
+                    if self.power or self.power_off_complete_time is None or (time.time() - self.power_off_complete_time < self.power_off_line_delay):
                         cv2.line(frame, (final_x, ey + eh // 2 + self.off_y), (final_x + ew, ey + eh // 2 + self.off_y), self.eye_color, 2)
                 
             if self.mood == 'happy':
@@ -228,6 +235,7 @@ class RoboEyesNode(Node):
         self.declare_parameter('max_gaze_y_bound', 0.18)
         self.declare_parameter('power_transition_speed', 0.05)
         self.declare_parameter('power_off_has_line', True)
+        self.declare_parameter('power_off_line_delay', 1.0)
 
         self.width = self.get_parameter('width').value
         self.height = self.get_parameter('height').value
@@ -256,6 +264,7 @@ class RoboEyesNode(Node):
             power_transition_speed=self.get_parameter('power_transition_speed').value,
             fps=self.fps,
             power_off_has_line=self.get_parameter('power_off_has_line').value,
+            power_off_line_delay=self.get_parameter('power_off_line_delay').value,
         )
         self.canvas = np.zeros((self.height, self.width, 3), dtype=np.uint8)
         
