@@ -127,14 +127,19 @@ class JoystickParser(Node):
         lin_x = msg.axes[LS_VERT] * speed_multiplier
         lin_y = msg.axes[LS_HORZ] * speed_multiplier
         ang_z = msg.axes[RS_HORZ] * speed_multiplier
+        yawing_direction = 0.0
 
         # --- Posture Commands ---
         if msg.axes[DPAD_HORZ] > 0.5: self.roll += self.TILT_STEP
         elif msg.axes[DPAD_HORZ] < -0.5: self.roll -= self.TILT_STEP
         if msg.axes[DPAD_VERT] > 0.5: self.pitch -= self.TILT_STEP
         elif msg.axes[DPAD_VERT] < -0.5: self.pitch += self.TILT_STEP
-        if msg.buttons[BTN_SQUARE] == 1: self.yaw += self.TILT_STEP
-        if msg.buttons[BTN_CIRCLE] == 1: self.yaw -= self.TILT_STEP
+        if msg.buttons[BTN_SQUARE] == 1: 
+            self.yaw += self.TILT_STEP
+            yawing_direction = 1.0
+        if msg.buttons[BTN_CIRCLE] == 1: 
+            self.yaw -= self.TILT_STEP
+            yawing_direction = -1.0
         if msg.buttons[BTN_TRIANGLE] == 1: self.z_offset += self.Z_OFFSET_STEP
         if msg.buttons[BTN_CROSS] == 1: self.z_offset -= self.Z_OFFSET_STEP
 
@@ -144,7 +149,7 @@ class JoystickParser(Node):
         self.yaw = max(-self.MAX_YAW, min(self.MAX_YAW, self.yaw))
         self.z_offset = max(-self.MAX_Z_OFFSET, min(self.MAX_Z_OFFSET, self.z_offset))
 
-        return (lin_x, lin_y, ang_z)
+        return (lin_x, lin_y, ang_z, yawing_direction)
 
     def operation_extras(self, msg) -> Tuple[float, float]:
         # --- XY Position/Offset Control ---
@@ -234,6 +239,7 @@ class JoystickParser(Node):
         lin_x = 0.0
         lin_y = 0.0
         ang_z = 0.0
+        yawing_direction = 0.0
         x_offset = 0.0
         y_offset = 0.0
 
@@ -256,7 +262,7 @@ class JoystickParser(Node):
         # Require holding L2 button before accepting any movement or tilt commands
         if msg.buttons[BTN_L2] == 1:
             if self.cmd_type == OrionMotionCmd.CMD_NORMAL: # Normal
-                lin_x, lin_y, ang_z = self.operation_normal(msg)
+                lin_x, lin_y, ang_z, yawing_direction = self.operation_normal(msg)
             elif self.cmd_type == OrionMotionCmd.CMD_EXTRAS: # Extras
                 x_offset, y_offset = self.operation_extras(msg)
         
@@ -272,6 +278,7 @@ class JoystickParser(Node):
         motion_msg.lin_x = lin_x
         motion_msg.lin_y = lin_y
         motion_msg.ang_z = ang_z
+        motion_msg.yawing_direction = yawing_direction
         motion_msg.roll = self.roll
         motion_msg.pitch = self.pitch
         motion_msg.yaw = self.yaw

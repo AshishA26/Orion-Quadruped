@@ -31,10 +31,12 @@ class CmdMux(Node):
         self.orion_eyes_cmd_pub = self.create_publisher(OrionEyesCmd, 'orion_eyes_cmd', 10)            
 
         self.declare_parameter('send_rate_hz', 50.0)
+        self.declare_parameter('motion_based_eyes', True)
         self.declare_parameter('curious_scale_enabled', True)
         self.declare_parameter('curious_scale_max', 1.3)
         
         send_rate = 1.0 / self.get_parameter('send_rate_hz').value
+        self.motion_based_eyes = self.get_parameter('motion_based_eyes').value
         self.curious_scale_enabled = self.get_parameter('curious_scale_enabled').value
         self.curious_scale_max = self.get_parameter('curious_scale_max').value
 
@@ -54,18 +56,24 @@ class CmdMux(Node):
 
         gaze_from_strafe = self._clamp(motion.lin_y, -1.0, 1.0)
         gaze_from_turn = self._clamp(motion.ang_z, -1.0, 1.0)
-        gaze_max = max([gaze_from_strafe, gaze_from_turn], key=abs)
+        gaze_from_yaw = motion.yawing_direction
+        gaze_max = max([gaze_from_strafe, gaze_from_turn, gaze_from_yaw], key=abs)
 
         # In CMD_EYES mode: joystick directly controls eyes
         if motion.cmd_type == OrionMotionCmd.CMD_EYES:
             eyes_out.gaze_x = joy_eyes.gaze_x
             eyes_out.gaze_y = joy_eyes.gaze_y
 
-        # Not in CMD_EYES mode: derive gaze from motion
-        else:
+        # Not in CMD_EYES mode: derive gaze from motion if motion based eyes is enabled
+        elif self.motion_based_eyes:
             eyes_out.gaze_x = self._clamp(gaze_max, -1.0, 1.0)
             
             # TODO(orion): Vertical: could map pitch to gaze_y in the future
+            eyes_out.gaze_y = 0.0
+
+        # Not in CMD_EYES mode and motion based eyes is disabled
+        else:
+            eyes_out.gaze_x = 0.0
             eyes_out.gaze_y = 0.0
 
         # Asymmetric eye scaling (curiosity on motion)

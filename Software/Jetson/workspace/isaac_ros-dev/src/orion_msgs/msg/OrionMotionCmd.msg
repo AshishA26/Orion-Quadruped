@@ -20,6 +20,7 @@ float32 roll
 float32 pitch
 float32 yaw
 float32 z_offset
+float32 yawing_direction
 
 # Position offsets
 float32 x_offset
