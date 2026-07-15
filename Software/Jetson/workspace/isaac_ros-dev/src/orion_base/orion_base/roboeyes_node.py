@@ -5,13 +5,15 @@ import cv2
 import numpy as np
 import time
 import random
+import math
 
 class RoboEyes:
     def __init__(self, width, height, eye_w, eye_h, eye_r, eye_spacing,
                  bg_color=(0, 0, 0), eye_color=(255, 150, 0), blink_duration=0.2,
                  blink_interval_min=1.0, blink_interval_max=4.0,
                  idle_interval_min=0.5, idle_interval_max=2.5,
-                 gaze_smoothing=0.15, max_gaze_x_bound=0.13, max_gaze_y_bound=0.18):
+                 gaze_smoothing=0.15, max_gaze_x_bound=0.13, max_gaze_y_bound=0.18,
+                 power_transition_speed=0.05, fps=60, power_off_has_line=True):
         self.width = width
         self.height = height      
         self.eye_w = eye_w
@@ -31,7 +33,10 @@ class RoboEyes:
         self.gaze_smoothing = gaze_smoothing
         self.max_gaze_x_bound = max_gaze_x_bound
         self.max_gaze_y_bound = max_gaze_y_bound
-        
+        self.power_transition_speed = power_transition_speed
+        self.fps = fps
+        self.power_off_has_line = power_off_has_line
+
         # --- Animation State ---
         self.x = 0.0 
         self.y = 0.0
@@ -106,12 +111,11 @@ class RoboEyes:
                     self.blink_l = val
                     self.blink_r = val
         else:
-            if not self.power:
-                self.blink_l = 1.0
-                self.blink_r = 1.0
-            else:
-                self.blink_l = 0.0
-                self.blink_r = 0.0
+            # If power is off, eyes are closed, if power is on, eyes are open
+            target = 1.0 if not self.power else 0.0
+            transition_speed = 0.05
+            self.blink_l += (target - self.blink_l) * transition_speed
+            self.blink_r += (target - self.blink_r) * transition_speed
 
         # --- 2. Idle Movement ---
         if self.auto_idle and not self.external_gaze:
@@ -164,7 +168,11 @@ class RoboEyes:
                     cv2.circle(frame, (final_x + ew - r, final_y + cur_h - r), r, self.eye_color, -1)
                     cv2.circle(frame, (final_x + r, final_y + cur_h - r), r, self.eye_color, -1)
             else:
-                cv2.line(frame, (final_x, ey + eh // 2 + self.off_y), (final_x + ew, ey + eh // 2 + self.off_y), self.eye_color, 2)
+                if self.power_off_has_line: # Draw line when power is off and for blinks
+                    cv2.line(frame, (final_x, ey + eh // 2 + self.off_y), (final_x + ew, ey + eh // 2 + self.off_y), self.eye_color, 2)
+                else: # Draw line only for blinks, not when power is off
+                    if self.power:
+                        cv2.line(frame, (final_x, ey + eh // 2 + self.off_y), (final_x + ew, ey + eh // 2 + self.off_y), self.eye_color, 2)
                 
             if self.mood == 'happy':
                 cv2.circle(frame, (final_x + ew // 2, final_y + cur_h + int(ew/2) - 20), ew, self.bg_color, -1)
@@ -218,6 +226,8 @@ class RoboEyesNode(Node):
         self.declare_parameter('gaze_smoothing', 0.15)
         self.declare_parameter('max_gaze_x_bound', 0.13)
         self.declare_parameter('max_gaze_y_bound', 0.18)
+        self.declare_parameter('power_transition_speed', 0.05)
+        self.declare_parameter('power_off_has_line', True)
 
         self.width = self.get_parameter('width').value
         self.height = self.get_parameter('height').value
@@ -243,6 +253,9 @@ class RoboEyesNode(Node):
             gaze_smoothing=self.get_parameter('gaze_smoothing').value,
             max_gaze_x_bound=self.get_parameter('max_gaze_x_bound').value,
             max_gaze_y_bound=self.get_parameter('max_gaze_y_bound').value,
+            power_transition_speed=self.get_parameter('power_transition_speed').value,
+            fps=self.fps,
+            power_off_has_line=self.get_parameter('power_off_has_line').value,
         )
         self.canvas = np.zeros((self.height, self.width, 3), dtype=np.uint8)
         
@@ -265,6 +278,14 @@ class RoboEyesNode(Node):
         self.get_logger().info('RoboEyes Node Started Successfully')
 
     def eyes_cmd_callback(self, msg):
+        # If transitioning from power off to power on, delay the next blink/move
+        if msg.power and not self.eyes.power:
+            current_time = time.time()
+            # Dynamically calculate transition duration (in seconds)
+            transition_duration = 4.6 / (self.eyes.power_transition_speed * self.fps)
+            self.eyes.next_blink_time = current_time + transition_duration + random.uniform(self.eyes.blink_interval_min, self.eyes.blink_interval_max)
+            self.eyes.next_move_time = current_time + transition_duration + random.uniform(self.eyes.idle_interval_min, self.eyes.idle_interval_max)
+
         self.eyes.power = msg.power
         if not msg.power:
             self.eyes.auto_blink = False

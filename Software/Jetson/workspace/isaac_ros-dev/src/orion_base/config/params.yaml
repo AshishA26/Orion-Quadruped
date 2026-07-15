@@ -58,3 +58,5 @@ roboeyes_node:
     gaze_smoothing: 0.15
     max_gaze_x_bound: 0.2
     max_gaze_y_bound: 0.25
+    power_transition_speed: 0.05
+    power_off_has_line: true
