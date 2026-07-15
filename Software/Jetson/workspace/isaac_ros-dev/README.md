@@ -3,6 +3,7 @@ New commands to run for simplicity:
 ```bash
 sudo chmod 666 /dev/ttyUSB0
 sudo chmod 666 /dev/ttyTHS1
+sudo chmod 666 /dev/input/js0
 cd ${ISAAC_ROS_WS}/src/isaac_ros_common && ./scripts/run_dev.sh --skip_image_build
 ./install_deps.sh
 ./run_robot.sh # Run only this command when making changes to the code
@@ -12,11 +13,6 @@ Do this once on the jetson:
 ```bash
 # Grant access to serial comm ports (lidar, stm) and human interface devices (joystick)
 sudo usermod -a -G dialout,input $USER 
-```
-
-Depending on permission denied errors, might have to run this everytime:
-```bash
-sudo chmod 666 /dev/input/js0
 ```
 
 ## Notes

@@ -7,27 +7,48 @@ from orion_msgs.msg import OrionEyesCmd
 from typing import Tuple
 
 # --- Joystick axis and button mapping (PS5 controller) ---
-# All settings are in CMD_NORMAL, unless otherwise specified
-LS_HORZ = 0 # Strafe left/right if CMD_NORMAL, change y offset if CMD_EXTRAS
-LS_VERT = 1 # Move forward/backward if CMD_NORMAL, change x offset if CMD_EXTRAS
-RS_HORZ = 2 # Turn left/right
-RS_VERT = 5
-DPAD_VERT = 7 # Pitch if CMD_NORMAL, move pivot point forward/backward if CMD_EXTRAS
-DPAD_HORZ = 6 # Roll if CMD_NORMAL, move pivot point left/right if CMD_EXTRAS
-BTN_SQUARE = 0 # Yaw left if CMD_NORMAL, reset pivot point in CMD_EXTRAS
-BTN_CROSS = 1 # Height (z offset) decrease
-BTN_CIRCLE = 2 # Yaw right
-BTN_TRIANGLE = 3 # Height (z offset) increase
-BTN_L1 = 4 # Deadman switch
-BTN_R1 = 5 # Reset, sets CMD_RESET
-BTN_L2 = 3 # Sets CMD_EYES
-BTN_R2 = 4 # Boost mode (axis 4)
-BTN_SHARE = 8 # Sets CMD_HEEL
-BTN_OPTIONS = 9 # Sets CMD_WAVE
-BTN_L3 = 10 # Sets CMD_DANCE
-BTN_R3 = 11  # Sets CMD_EXTRAS
-BTN_PS = 12
-BTN_TOUCHPAD = 13 # Sets CMD_NORMAL
+# NOTE: All settings are in CMD_NORMAL, unless otherwise specified
+# NOTE: For PS5 controller, L2 and R2 require msg.axes, not msg.buttons
+# LS_HORZ = 0 # Strafe left/right if CMD_NORMAL, change y offset if CMD_EXTRAS
+# LS_VERT = 1 # Move forward/backward if CMD_NORMAL, change x offset if CMD_EXTRAS
+# RS_HORZ = 2 # Turn left/right
+# RS_VERT = 5
+# DPAD_VERT = 7 # Pitch if CMD_NORMAL, move pivot point forward/backward if CMD_EXTRAS
+# DPAD_HORZ = 6 # Roll if CMD_NORMAL, move pivot point left/right if CMD_EXTRAS
+# BTN_SQUARE = 0 # Yaw left if CMD_NORMAL, reset pivot point in CMD_EXTRAS
+# BTN_CROSS = 1 # Height (z offset) decrease
+# BTN_CIRCLE = 2 # Yaw right
+# BTN_TRIANGLE = 3 # Height (z offset) increase
+# BTN_L1 = 4 # Deadman switch
+# BTN_R1 = 5 # Reset, sets CMD_RESET
+# BTN_L2 = 3 # Sets CMD_EYES
+# BTN_R2 = 4 # Boost mode (axis 4)
+# BTN_SHARE = 8 # Sets CMD_HEEL
+# BTN_OPTIONS = 9 # Sets CMD_WAVE
+# BTN_L3 = 10 # Sets CMD_DANCE
+# BTN_R3 = 11  # Sets CMD_EXTRAS
+# BTN_PS = 12
+# BTN_TOUCHPAD = 13 # Sets CMD_NORMAL
+
+# --- Joystick axis and button mapping (Fandragon controller) ---
+LS_HORZ = 0
+LS_VERT = 1 
+RS_HORZ = 2
+RS_VERT = 3
+DPAD_VERT = 5
+DPAD_HORZ = 4
+BTN_SQUARE = 3 # X
+BTN_CROSS = 2 # A
+BTN_CIRCLE = 1 # B
+BTN_TRIANGLE = 0 # Y
+BTN_L1 = 4
+BTN_R1 = 5
+BTN_L2 = 6
+BTN_R2 = 7
+BTN_SHARE = 8  # Select
+BTN_OPTIONS = 9 # Start
+BTN_L3 = 10
+BTN_R3 = 11
 
 class JoystickParser(Node):
     def __init__(self):
@@ -78,8 +99,12 @@ class JoystickParser(Node):
         self.eyes_mood = OrionEyesCmd.MOOD_DEFAULT
         self.eyes_gaze_x = 0.0
         self.eyes_gaze_y = 0.0
-        self.eyes_locked = False
+        self.auto_blink = True
+        self.auto_idle = True
         self.prev_mood = OrionEyesCmd.MOOD_DEFAULT
+        
+        self.persist_gaze_x = 0.0
+        self.persist_gaze_y = 0.0
 
     def operation_reset(self):
         self.roll = 0.0
@@ -90,7 +115,8 @@ class JoystickParser(Node):
     def operation_normal(self, msg) -> Tuple[float, float, float]:
         # --- Boost Mode ---
         # Get the speed multiplier value from R2
-        r2_val = (-msg.axes[BTN_R2] + 1.0) / 2.0 # Normalize from [-1,1] to [0,1]
+        # r2_val = (-msg.axes[BTN_R2] + 1.0) / 2.0 # Normalize from [-1,1] to [0,1] # For PS5 controller only
+        r2_val = msg.buttons[BTN_R2] # For Fandragon controller
         speed_multiplier = self.MAX_SPEED + (r2_val * self.BOOST)
 
         # --- Walking Commands ---
@@ -136,49 +162,69 @@ class JoystickParser(Node):
         return (x_offset, y_offset)
 
     def operation_eyes(self, msg):
-        # Gaze control - persistent
+        # Right stick always updates the persistent gaze accumulator
+        self.persist_gaze_x += msg.axes[RS_HORZ] * 0.02
+        self.persist_gaze_y -= msg.axes[RS_VERT] * 0.02
+        self.persist_gaze_x = max(-1.0, min(1.0, self.persist_gaze_x))
+        self.persist_gaze_y = max(-1.0, min(1.0, self.persist_gaze_y))
+
+        # 2. Left stick controls absolute gaze, or falls back to persistent gaze if centered
         if (abs(msg.axes[LS_HORZ]) < 0.05) and (abs(msg.axes[LS_VERT]) < 0.05):
-            self.eyes_gaze_x += msg.axes[RS_HORZ] * 0.02
-            self.eyes_gaze_y -= msg.axes[RS_VERT] * 0.02
-            self.eyes_gaze_x = max(-1.0, min(1.0, self.eyes_gaze_x))
-            self.eyes_gaze_y = max(-1.0, min(1.0, self.eyes_gaze_y))
+            self.eyes_gaze_x = self.persist_gaze_x
+            self.eyes_gaze_y = self.persist_gaze_y
         else:
             self.eyes_gaze_x = msg.axes[LS_HORZ]
             self.eyes_gaze_y = -msg.axes[LS_VERT]
             self.eyes_gaze_x = max(-1.0, min(1.0, self.eyes_gaze_x))
             self.eyes_gaze_y = max(-1.0, min(1.0, self.eyes_gaze_y))
+
+        # # Gaze control - persistent
+        # if (abs(msg.axes[LS_HORZ]) < 0.05) and (abs(msg.axes[LS_VERT]) < 0.05):
+        #     self.eyes_gaze_x += msg.axes[RS_HORZ] * 0.02
+        #     self.eyes_gaze_y -= msg.axes[RS_VERT] * 0.02
+        #     self.eyes_gaze_x = max(-1.0, min(1.0, self.eyes_gaze_x))
+        #     self.eyes_gaze_y = max(-1.0, min(1.0, self.eyes_gaze_y))
+        # else:
+        #     self.eyes_gaze_x = msg.axes[LS_HORZ]
+        #     self.eyes_gaze_y = -msg.axes[LS_VERT]
+        #     self.eyes_gaze_x = max(-1.0, min(1.0, self.eyes_gaze_x))
+        #     self.eyes_gaze_y = max(-1.0, min(1.0, self.eyes_gaze_y))
         
+        if msg.axes[DPAD_VERT] > 0.5:
+            self.eyes_mood = OrionEyesCmd.MOOD_DEFAULT
+        elif msg.axes[DPAD_VERT] < -0.5:
+            self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
+        elif msg.axes[DPAD_HORZ] > 0.5:
+            self.eyes_mood = OrionEyesCmd.MOOD_CURIOUS
+        elif msg.axes[DPAD_HORZ] < -0.5:
+            self.eyes_mood = OrionEyesCmd.MOOD_SLEEPING
+
         if msg.buttons[BTN_L1] == 1:
-            if msg.axes[DPAD_VERT] > 0.5:
-                self.eyes_mood = OrionEyesCmd.MOOD_CURIOUS
-            elif msg.axes[DPAD_VERT] < -0.5:
-                self.eyes_mood = OrionEyesCmd.MOOD_SAD
-            elif msg.axes[DPAD_HORZ] > 0.5:
-                self.eyes_mood = OrionEyesCmd.MOOD_SCARY
-            elif msg.axes[DPAD_HORZ] < -0.5:
-                self.eyes_mood = OrionEyesCmd.MOOD_SLEEPING
+            # Idle on/off
+            if msg.buttons[BTN_SQUARE] == 1:
+                self.auto_idle = True
+            elif msg.buttons[BTN_CIRCLE] == 1:
+                self.auto_idle = False
+
+            # Blink on/off
+            if msg.buttons[BTN_TRIANGLE] == 1:
+                self.auto_blink = True
+            elif msg.buttons[BTN_CROSS] == 1:
+                self.auto_blink = False
+
         else:
-            if msg.axes[DPAD_VERT] > 0.5:
-                self.eyes_mood = OrionEyesCmd.MOOD_DEFAULT
-            elif msg.axes[DPAD_VERT] < -0.5:
-                self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
-            elif msg.axes[DPAD_HORZ] > 0.5:
-                self.eyes_mood = OrionEyesCmd.MOOD_ANGRY
-            elif msg.axes[DPAD_HORZ] < -0.5:
-                self.eyes_mood = OrionEyesCmd.MOOD_TIRED
+            # Power on/off eyes
+            if msg.buttons[BTN_SQUARE] == 1:
+                self.eyes_power = True
+            elif msg.buttons[BTN_CIRCLE] == 1:
+                self.eyes_power = False
 
-        
-        # Power on/off eyes
-        if msg.buttons[BTN_SQUARE] == 1:
-            self.eyes_power = True
-        elif msg.buttons[BTN_CIRCLE] == 1:
-            self.eyes_power = False
-
-        # Lock/Unlock gaze
-        if msg.buttons[BTN_TRIANGLE] == 1:
-            self.eyes_locked = True
-        elif msg.buttons[BTN_CROSS] == 1:
-            self.eyes_locked = False
+            # Reset and recenter gaze
+            # if msg.buttons[BTN_TRIANGLE] == 1:
+                # self.eyes_gaze_x = 0.0
+                # self.eyes_gaze_y = 0.0
+                # self.persist_gaze_x = 0.0
+                # self.persist_gaze_y = 0.0
 
     def joy_callback(self, msg):
         lin_x = 0.0
@@ -191,17 +237,15 @@ class JoystickParser(Node):
         # No deadman switch required
         if msg.buttons[BTN_R1] == 1:
             self.cmd_type = OrionMotionCmd.CMD_RESET
-        elif msg.buttons[BTN_TOUCHPAD] == 1:
+        elif msg.buttons[BTN_L3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_NORMAL
         elif msg.buttons[BTN_R3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EXTRAS
-        elif msg.buttons[BTN_L3] == 1:
-            self.cmd_type = OrionMotionCmd.CMD_DANCE
         elif msg.buttons[BTN_OPTIONS] == 1:
             self.cmd_type = OrionMotionCmd.CMD_WAVE
         elif msg.buttons[BTN_SHARE] == 1:
             self.cmd_type = OrionMotionCmd.CMD_HEEL
-        elif msg.axes[BTN_L2] < 0:
+        elif msg.buttons[BTN_L2] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EYES
 
         # --- Deadman Switch ---
@@ -241,7 +285,10 @@ class JoystickParser(Node):
         eyes_msg.gaze_y = self.eyes_gaze_y
         eyes_msg.power = self.eyes_power
         eyes_msg.mood_changed = (self.eyes_mood != self.prev_mood)
-        eyes_msg.gaze_locked = self.eyes_locked
+        eyes_msg.auto_blink = self.auto_blink
+        eyes_msg.auto_idle = self.auto_idle
+        eyes_msg.left_eye_scale = 1.0 # cmd_mux_node handles scaling the eyes based on overall motion
+        eyes_msg.right_eye_scale = 1.0
         self.eyes_publisher.publish(eyes_msg)
         self.prev_mood = self.eyes_mood
 

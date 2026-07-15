@@ -7,35 +7,22 @@ import time
 import random
 
 class RoboEyes:
-    def __init__(self, width, height, bg_color=(0, 0, 0), eye_color=(255, 150, 0),
-                 blink_duration=0.2, auto_blink=True, auto_idle=True,
+    def __init__(self, width, height, eye_w, eye_h, eye_r, eye_spacing,
+                 bg_color=(0, 0, 0), eye_color=(255, 150, 0), blink_duration=0.2,
                  blink_interval_min=1.0, blink_interval_max=4.0,
                  idle_interval_min=0.5, idle_interval_max=2.5,
                  gaze_smoothing=0.15, max_gaze_x_bound=0.13, max_gaze_y_bound=0.18):
         self.width = width
-        self.height = height
+        self.height = height      
+        self.eye_w = eye_w
+        self.eye_h = eye_h
+        self.eye_r = eye_r
+        self.eye_spacing = eye_spacing
         self.bg_color = bg_color
-        
-        # Store default color to revert after mood changes
-        self.base_eye_color = eye_color
-        self.eye_color = eye_color
-        
-        # --- Configuration ---
-        if self.width == 1920 and self.height == 1080:
-            self.eye_w = int(280*1.5)
-            self.eye_h = int(350*1.5)
-            self.eye_r = int(70*1.5)
-            self.eye_spacing = int(100*1.2)
-        else:
-            self.eye_w = 120
-            self.eye_h = 130
-            self.eye_r = 30
-            self.eye_spacing = 50
+        self.eye_color = eye_color  
         
         self.mood = 'default'
-        self.cyclops = False
         
-        # --- Configurable Animation Parameters ---
         self.blink_duration = blink_duration
         self.blink_interval_min = blink_interval_min
         self.blink_interval_max = blink_interval_max
@@ -52,7 +39,7 @@ class RoboEyes:
         self.target_y = 0
         
         # Blink/Wink State
-        self.auto_blink = auto_blink
+        self.auto_blink = True
         self.is_blinking = False
         self.is_winking = False
         self.blink_start_time = 0
@@ -61,13 +48,13 @@ class RoboEyes:
         self.next_blink_time = time.time() + random.uniform(self.blink_interval_min, self.blink_interval_max)
         
         # Shake/Flicker State
-        self.hflicker = False
-        self.vflicker = False
+        self.hflicker = False # TODO(orion): Unused
+        self.vflicker = False # TODO(orion): Unused
         self.off_x = 0
         self.off_y = 0
 
         # Idle State
-        self.auto_idle = auto_idle
+        self.auto_idle = True
         self.external_gaze = False
         self.next_move_time = time.time() + random.uniform(self.idle_interval_min, self.idle_interval_max)
 
@@ -79,19 +66,8 @@ class RoboEyes:
 
     def set_mood(self, mood):
         self.mood = mood
-        if mood == 'angry':
-            self.eye_color = (0, 0, 255) # Pure Red
-        else:
-            self.eye_color = self.base_eye_color # Revert to default blue
-            
-        # Optional: Auto-trigger flickers based on mood
-        if mood == 'scary':
-            self.hflicker = True
-        else:
-            self.hflicker = False
-            self.vflicker = False
 
-    def trigger_wink(self, right_eye=True):
+    def trigger_wink(self, right_eye=True): # TODO(orion): Unused
         self.is_winking = True
         self.is_blinking = True
         self.blink_start_time = time.time()
@@ -183,28 +159,9 @@ class RoboEyes:
                     cv2.circle(frame, (final_x + r, final_y + cur_h - r), r, self.eye_color, -1)
             else:
                 cv2.line(frame, (final_x, ey + eh // 2 + self.off_y), (final_x + ew, ey + eh // 2 + self.off_y), self.eye_color, 2)
-
-            # 2. Mood Masks
-            if self.mood == 'angry':
-                offset = int(eh * 0.35)
-                if is_left:
-                    pts = [[final_x - 10, final_y - 50], [final_x + ew + 10, final_y - 50], 
-                           [final_x + ew + 10, final_y + offset], [final_x, final_y]]
-                else:
-                    pts = [[final_x - 10, final_y - 50], [final_x + ew + 10, final_y - 50], 
-                           [final_x + ew, final_y], [final_x - 10, final_y + offset]]
-                cv2.fillPoly(frame, [np.array(pts, np.int32)], self.bg_color)
                 
-            elif self.mood == 'happy':
+            if self.mood == 'happy':
                 cv2.circle(frame, (final_x + ew // 2, final_y + cur_h + int(ew/2) - 20), ew, self.bg_color, -1)
-                
-            elif self.mood == 'tired':
-                droop = int(cur_h * 0.4)
-                cv2.rectangle(frame, (final_x, final_y - 10), (final_x + ew, final_y + droop), self.bg_color, -1)
-                
-            elif self.mood == 'scary':
-                cv2.rectangle(frame, (final_x, final_y - 10), (final_x + ew, final_y + int(eh * 0.2)), self.bg_color, -1)
-                cv2.rectangle(frame, (final_x, final_y + cur_h - int(eh * 0.2)), (final_x + ew, final_y + cur_h + 10), self.bg_color, -1)
                 
             elif self.mood == 'curious':
                 if abs(self.x) > 20:
@@ -223,19 +180,14 @@ class RoboEyes:
         r_eh = int(self.eye_h * self.right_eye_scale)
         r_er = self.eye_r
 
-        # Draw execution (bottom-aligned: position adjusted so scaling grows upwards only)
-        if self.cyclops:
-            draw_single_eye(cx - l_ew // 2 + int(self.x), cy + self.eye_h // 2 + int(self.y) - l_eh, 
-                            l_ew, l_eh, l_er, self.blink_l, True)
-        else:
-            # Left eye: original center is at (cx - eye_spacing - eye_w/2, cy)
-            l_cx = cx - self.eye_spacing - self.eye_w // 2
-            draw_single_eye(l_cx - l_ew // 2 + int(self.x), cy + self.eye_h // 2 + int(self.y) - l_eh, 
-                            l_ew, l_eh, l_er, self.blink_l, True)
-            # Right eye: original center is at (cx + eye_spacing + eye_w/2, cy)
-            r_cx = cx + self.eye_spacing + self.eye_w // 2
-            draw_single_eye(r_cx - r_ew // 2 + int(self.x), cy + self.eye_h // 2 + int(self.y) - r_eh, 
-                            r_ew, r_eh, r_er, self.blink_r, False)
+        # Left eye: original center is at (cx - eye_spacing - eye_w/2, cy)
+        l_cx = cx - self.eye_spacing - self.eye_w // 2
+        draw_single_eye(l_cx - l_ew // 2 + int(self.x), cy + self.eye_h // 2 + int(self.y) - l_eh, 
+                        l_ew, l_eh, l_er, self.blink_l, True)
+        # Right eye: original center is at (cx + eye_spacing + eye_w/2, cy)
+        r_cx = cx + self.eye_spacing + self.eye_w // 2
+        draw_single_eye(r_cx - r_ew // 2 + int(self.x), cy + self.eye_h // 2 + int(self.y) - r_eh, 
+                        r_ew, r_eh, r_er, self.blink_r, False)
 
 class RoboEyesNode(Node):
     def __init__(self):
@@ -243,15 +195,16 @@ class RoboEyesNode(Node):
         
         self.declare_parameter('width', 1920)
         self.declare_parameter('height', 1080)
+        self.declare_parameter('eye_w', 420)
+        self.declare_parameter('eye_h', 525)
+        self.declare_parameter('eye_r', 105)
+        self.declare_parameter('eye_spacing', 120)
         self.declare_parameter('fullscreen', True)
         self.declare_parameter('fps', 60)
         self.declare_parameter('eye_color_r', 0)
         self.declare_parameter('eye_color_g', 150)
         self.declare_parameter('eye_color_b', 255)
-        # Animation tuning parameters
         self.declare_parameter('blink_duration', 0.2)
-        self.declare_parameter('auto_blink', True)
-        self.declare_parameter('auto_idle', True)
         self.declare_parameter('blink_interval_min', 1.0)
         self.declare_parameter('blink_interval_max', 4.0)
         self.declare_parameter('idle_interval_min', 0.5)
@@ -264,18 +217,19 @@ class RoboEyesNode(Node):
         self.height = self.get_parameter('height').value
         self.fullscreen = self.get_parameter('fullscreen').value
         self.fps = self.get_parameter('fps').value
-        
         color_b = self.get_parameter('eye_color_b').value
         color_g = self.get_parameter('eye_color_g').value
         color_r = self.get_parameter('eye_color_r').value
         
         self.eyes = RoboEyes(
             self.width, self.height,
+            eye_w=self.get_parameter('eye_w').value,
+            eye_h=self.get_parameter('eye_h').value,
+            eye_r=self.get_parameter('eye_r').value,
+            eye_spacing=self.get_parameter('eye_spacing').value,
             bg_color=(0, 0, 0),
             eye_color=(color_b, color_g, color_r),
             blink_duration=self.get_parameter('blink_duration').value,
-            auto_blink=self.get_parameter('auto_blink').value,
-            auto_idle=self.get_parameter('auto_idle').value,
             blink_interval_min=self.get_parameter('blink_interval_min').value,
             blink_interval_max=self.get_parameter('blink_interval_max').value,
             idle_interval_min=self.get_parameter('idle_interval_min').value,
@@ -308,29 +262,21 @@ class RoboEyesNode(Node):
         if not msg.power:
             self.eyes.blink_l, self.eyes.blink_r = 1.0, 1.0 
             self.eyes.auto_blink = False
+            self.eyes.auto_idle = False
         else:
-            self.eyes.auto_blink = True
+            self.eyes.auto_blink = msg.auto_blink
+            self.eyes.auto_idle = msg.auto_idle
             
-        if msg.mood == OrionEyesCmd.MOOD_DEFAULT:
-            self.eyes.set_mood('default')
-        elif msg.mood == OrionEyesCmd.MOOD_HAPPY:
+        if msg.mood == OrionEyesCmd.MOOD_HAPPY:
             self.eyes.set_mood('happy')
-        elif msg.mood == OrionEyesCmd.MOOD_ANGRY:
-            self.eyes.set_mood('angry')
-        elif msg.mood == OrionEyesCmd.MOOD_TIRED:
-            self.eyes.set_mood('tired')
         elif msg.mood == OrionEyesCmd.MOOD_CURIOUS:
             self.eyes.set_mood('curious')
-        elif msg.mood == OrionEyesCmd.MOOD_SCARY:
-            self.eyes.set_mood('scary')
-        elif msg.mood == OrionEyesCmd.MOOD_SAD:
-            self.eyes.set_mood('tired') # Map Sad to Tired mask
         elif msg.mood == OrionEyesCmd.MOOD_SLEEPING:
             self.eyes.set_mood('sleeping')
         else:
             self.eyes.set_mood('default')
 
-        if msg.gaze_locked or abs(msg.gaze_x) > 0.05 or abs(msg.gaze_y) > 0.05:
+        if abs(msg.gaze_x) > 0.05 or abs(msg.gaze_y) > 0.05:
             self.eyes.external_gaze = True
             max_x = int(self.width * self.eyes.max_gaze_x_bound)
             max_y = int(self.height * self.eyes.max_gaze_y_bound)
@@ -339,9 +285,8 @@ class RoboEyesNode(Node):
         else:
             self.eyes.external_gaze = False
 
-        # --- Eye Scale (asymmetric curiosity) ---
-        self.eyes.target_left_scale = msg.left_eye_scale if msg.left_eye_scale > 0.0 else 1.0
-        self.eyes.target_right_scale = msg.right_eye_scale if msg.right_eye_scale > 0.0 else 1.0
+        self.eyes.target_left_scale = msg.left_eye_scale
+        self.eyes.target_right_scale = msg.right_eye_scale
 
     def render_loop(self):
         self.eyes.update()
