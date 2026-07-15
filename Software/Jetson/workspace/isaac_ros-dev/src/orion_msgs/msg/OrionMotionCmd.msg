@@ -6,6 +6,7 @@ uint8 CMD_HEEL = 4
 uint8 CMD_DANCE = 5
 uint8 CMD_EXTRAS = 6
 uint8 CMD_EYES = 7
+uint8 CMD_BOOTUP = 8
 
 # --- Fields ---
 uint8 cmd_type
@@ -20,6 +21,7 @@ float32 roll
 float32 pitch
 float32 yaw
 float32 z_offset
+float32 yawing_direction
 
 # Position offsets
 float32 x_offset

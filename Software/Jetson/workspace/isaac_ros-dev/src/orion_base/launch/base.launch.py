@@ -48,6 +48,7 @@ def generate_launch_description():
         executable='roboeyes_node',
         name='roboeyes_node',
         output='screen',
+        parameters=[params_file],
         remappings=[
             ('orion_eyes_cmd', '/orion_eyes_cmd'),
         ]
@@ -68,10 +69,18 @@ def generate_launch_description():
         ]
     )
 
+    foxglove_bridge_node = Node(
+            package='foxglove_bridge',
+            executable='foxglove_bridge',
+            name='foxglove_bridge',
+            parameters=[{'port': 8765, 'address': '0.0.0.0'}],
+        )
+
     return LaunchDescription([
         stm32_bridge_node,
         joy_node,
         joystick_parser_node,
         roboeyes_node,
-        cmd_mux_node
+        cmd_mux_node,
+        foxglove_bridge_node
     ])

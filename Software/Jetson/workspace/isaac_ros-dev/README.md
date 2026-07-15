@@ -1,8 +1,10 @@
 # Isaac ROS Workspace
 New commands to run for simplicity:
 ```bash
+sudo chmod 666 /dev/ttyUSB0
 sudo chmod 666 /dev/ttyTHS1
-cd ${ISAAC_ROS_WS}/src/isaac_ros_common && ./scripts/run_dev.sh
+sudo chmod 666 /dev/input/js0
+cd ${ISAAC_ROS_WS}/src/isaac_ros_common && ./scripts/run_dev.sh --skip_image_build
 ./install_deps.sh
 ./run_robot.sh # Run only this command when making changes to the code
 ```
@@ -11,12 +13,6 @@ Do this once on the jetson:
 ```bash
 # Grant access to serial comm ports (lidar, stm) and human interface devices (joystick)
 sudo usermod -a -G dialout,input $USER 
-```
-
-Depending on permission denied errors, might have to run this everytime:
-```bash
-sudo chmod 666 /dev/ttyUSB0
-sudo chmod 666 /dev/input/js0
 ```
 
 ## Notes
@@ -46,7 +42,8 @@ RUN apt-get update && apt-get install -y \
     ros-humble-joy \
     ros-humble-teleop-twist-joy \
     python3-serial \
-    xterm
+    xterm \
+    ros-humble-foxglove-bridge
 
 ENV LD_LIBRARY_PATH=/opt/ros/humble/share/gxf_isaac_optimizer/gxf/lib:${LD_LIBRARY_PATH}
 RUN echo "source /opt/ros/humble/setup.bash" >> /etc/bash.bashrc
@@ -63,3 +60,14 @@ ros2 pkg create --build-type ament_python orion_bringup
 
 
 Note: Ensure that run_robot.sh is an executable using `chmod +x run_robot.sh`
+
+
+
+Note: .bashrc has
+```bash
+export ISAAC_ROS_WS=/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev
+export CONFIG_IMAGE_KEY="ros2_humble.orion"
+export CONFIG_DOCKER_SEARCH_DIRS=(/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev)
+export DISPLAY=:1
+xhost +local:root > /dev/null 2>&1
+```

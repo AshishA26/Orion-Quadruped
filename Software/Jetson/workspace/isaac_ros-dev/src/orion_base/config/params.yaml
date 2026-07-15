@@ -32,3 +32,32 @@ stm32_bridge_node:
 cmd_mux_node:
   ros__parameters:
     send_rate_hz: 50.0
+    motion_based_eyes: true
+    curious_scale_enabled: true
+    curious_scale_max: 1.2
+
+# Roboeyes
+roboeyes_node:
+  ros__parameters:
+    width: 1920
+    height: 1080
+    eye_w: 420 # 120
+    eye_h: 525 # 130
+    eye_r: 105 # 30
+    eye_spacing: 120 # 50
+    fullscreen: true
+    fps: 60
+    eye_color_r: 0
+    eye_color_g: 190
+    eye_color_b: 255
+    blink_duration: 0.2
+    blink_interval_min: 1.0
+    blink_interval_max: 4.0
+    idle_interval_min: 0.5
+    idle_interval_max: 2.5
+    gaze_smoothing: 0.15
+    max_gaze_x_bound: 0.2
+    max_gaze_y_bound: 0.25
+    power_transition_speed: 0.2
+    power_off_has_line: false
+    power_off_line_delay: 1.0

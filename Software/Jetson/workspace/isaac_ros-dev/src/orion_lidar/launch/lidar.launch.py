@@ -8,7 +8,7 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     orion_lidar_dir = get_package_share_directory('orion_lidar')
-    params_file = os.path.join(orion_lidar_dir, 'config', 'lidar.yaml')
+    params_file = os.path.join(orion_lidar_dir, 'config', 'params.yaml')
 
     # --- 1. RPLidar Node (A1M8 Driver) ---
     rplidar_node = Node(
