@@ -64,6 +64,8 @@ class RoboEyes:
         self.target_left_scale = 1.0
         self.target_right_scale = 1.0
 
+        self.power = True
+
     def set_mood(self, mood):
         self.mood = mood
 
@@ -78,7 +80,7 @@ class RoboEyes:
         self.off_x, self.off_y = 0, 0
         
         # --- 1. Blink Logic (Smooth Time-based Sine Wave) ---
-        if self.auto_blink and not self.is_blinking and current_time > self.next_blink_time:
+        if self.auto_blink and not self.is_blinking and current_time > self.next_blink_time and self.power:
             self.is_blinking = True
             self.is_winking = False
             self.blink_start_time = current_time
@@ -103,9 +105,13 @@ class RoboEyes:
                 else:
                     self.blink_l = val
                     self.blink_r = val
-        elif self.auto_blink:
-            self.blink_l = 0.0
-            self.blink_r = 0.0
+        else:
+            if not self.power:
+                self.blink_l = 1.0
+                self.blink_r = 1.0
+            else:
+                self.blink_l = 0.0
+                self.blink_r = 0.0
 
         # --- 2. Idle Movement ---
         if self.auto_idle and not self.external_gaze:
@@ -115,13 +121,13 @@ class RoboEyes:
                 self.target_x = random.randint(-max_x, max_x)
                 self.target_y = random.randint(-max_y, max_y)
                 self.next_move_time = current_time + random.uniform(self.idle_interval_min, self.idle_interval_max)
+        elif not self.auto_idle and not self.external_gaze:
+            self.target_x = 0.0
+            self.target_y = 0.0
         
         # Smooth interpolation
         self.x += (self.target_x - self.x) * self.gaze_smoothing
         self.y += (self.target_y - self.y) * self.gaze_smoothing
-
-        if not self.auto_idle and not self.auto_blink and not self.external_gaze:
-            self.x, self.y, self.target_x, self.target_y = 0, 0, 0, 0
 
         # --- 3. Shake/Jitter Logic ---
         if self.hflicker:
@@ -259,8 +265,8 @@ class RoboEyesNode(Node):
         self.get_logger().info('RoboEyes Node Started Successfully')
 
     def eyes_cmd_callback(self, msg):
+        self.eyes.power = msg.power
         if not msg.power:
-            self.eyes.blink_l, self.eyes.blink_r = 1.0, 1.0 
             self.eyes.auto_blink = False
             self.eyes.auto_idle = False
         else:

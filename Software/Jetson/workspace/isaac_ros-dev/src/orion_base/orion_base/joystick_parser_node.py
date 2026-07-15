@@ -220,11 +220,11 @@ class JoystickParser(Node):
                 self.eyes_power = False
 
             # Reset and recenter gaze
-            # if msg.buttons[BTN_TRIANGLE] == 1:
-                # self.eyes_gaze_x = 0.0
-                # self.eyes_gaze_y = 0.0
-                # self.persist_gaze_x = 0.0
-                # self.persist_gaze_y = 0.0
+            if msg.buttons[BTN_TRIANGLE] == 1:
+                self.eyes_gaze_x = 0.0
+                self.eyes_gaze_y = 0.0
+                self.persist_gaze_x = 0.0
+                self.persist_gaze_y = 0.0
 
     def joy_callback(self, msg):
         lin_x = 0.0
