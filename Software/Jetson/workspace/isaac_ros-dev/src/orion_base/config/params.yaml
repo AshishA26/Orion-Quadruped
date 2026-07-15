@@ -32,7 +32,7 @@ stm32_bridge_node:
 cmd_mux_node:
   ros__parameters:
     send_rate_hz: 50.0
-    curious_scale_enabled: True
+    curious_scale_enabled: true
     curious_scale_max: 1.3
 
 # Roboeyes

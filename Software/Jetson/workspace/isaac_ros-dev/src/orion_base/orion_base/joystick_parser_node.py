@@ -19,18 +19,22 @@ from typing import Tuple
 # BTN_CROSS = 1 # Height (z offset) decrease
 # BTN_CIRCLE = 2 # Yaw right
 # BTN_TRIANGLE = 3 # Height (z offset) increase
-# BTN_L1 = 4 # Deadman switch
+# BTN_L1 = 4 # Sets CMD_NORMAL
 # BTN_R1 = 5 # Reset, sets CMD_RESET
-# BTN_L2 = 3 # Sets CMD_EYES
+# BTN_L2 = 3 # Deadman switch if CMD_NORMAL or CMD_EXTRAS, does extra eye commands if CMD_EYES
 # BTN_R2 = 4 # Boost mode (axis 4)
-# BTN_SHARE = 8 # Sets CMD_HEEL
+# BTN_SHARE = 8 # Sets CMD_BOOTUP
 # BTN_OPTIONS = 9 # Sets CMD_WAVE
-# BTN_L3 = 10 # Sets CMD_DANCE
+# BTN_L3 = 10 # Sets CMD_EYES
 # BTN_R3 = 11  # Sets CMD_EXTRAS
 # BTN_PS = 12
-# BTN_TOUCHPAD = 13 # Sets CMD_NORMAL
+# BTN_TOUCHPAD = 13
 
 # --- Joystick axis and button mapping (Fandragon controller) ---
+# NOTE: Buttons are a little finicky on this controller. Like you have to hold L1 
+# hard to get it to register all the time.
+# NOTE: I left the naming the same as PS5, and have put notes on what the buttons 
+# are actually named on controller
 LS_HORZ = 0
 LS_VERT = 1 
 RS_HORZ = 2
@@ -199,7 +203,7 @@ class JoystickParser(Node):
         elif msg.axes[DPAD_HORZ] < -0.5:
             self.eyes_mood = OrionEyesCmd.MOOD_SLEEPING
 
-        if msg.buttons[BTN_L1] == 1:
+        if msg.buttons[BTN_L2] == 1:
             # Idle on/off
             if msg.buttons[BTN_SQUARE] == 1:
                 self.auto_idle = True
@@ -237,20 +241,20 @@ class JoystickParser(Node):
         # No deadman switch required
         if msg.buttons[BTN_R1] == 1:
             self.cmd_type = OrionMotionCmd.CMD_RESET
-        elif msg.buttons[BTN_L3] == 1:
+        elif msg.buttons[BTN_L1] == 1:
             self.cmd_type = OrionMotionCmd.CMD_NORMAL
         elif msg.buttons[BTN_R3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EXTRAS
         elif msg.buttons[BTN_OPTIONS] == 1:
             self.cmd_type = OrionMotionCmd.CMD_WAVE
         elif msg.buttons[BTN_SHARE] == 1:
-            self.cmd_type = OrionMotionCmd.CMD_HEEL
-        elif msg.buttons[BTN_L2] == 1:
+            self.cmd_type = OrionMotionCmd.CMD_BOOTUP
+        elif msg.buttons[BTN_L3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EYES
 
         # --- Deadman Switch ---
-        # Require holding L1 button before accepting any movement or tilt commands
-        if msg.buttons[BTN_L1] == 1:
+        # Require holding L2 button before accepting any movement or tilt commands
+        if msg.buttons[BTN_L2] == 1:
             if self.cmd_type == OrionMotionCmd.CMD_NORMAL: # Normal
                 lin_x, lin_y, ang_z = self.operation_normal(msg)
             elif self.cmd_type == OrionMotionCmd.CMD_EXTRAS: # Extras
