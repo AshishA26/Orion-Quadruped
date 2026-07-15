@@ -64,6 +64,13 @@ class CmdMux(Node):
             eyes_out.gaze_x = joy_eyes.gaze_x
             eyes_out.gaze_y = joy_eyes.gaze_y
 
+        # In CMD_WAVE mode, eyes should not dart around
+        elif motion.cmd_type == OrionMotionCmd.CMD_WAVE:
+            eyes_out.auto_idle = False
+            eyes_out.gaze_x = 0.0
+            eyes_out.gaze_y = 0.0
+            eyes_out.mood = OrionEyesCmd.MOOD_HAPPY
+
         # Not in CMD_EYES mode: derive gaze from motion if motion based eyes is enabled
         elif self.motion_based_eyes:
             eyes_out.gaze_x = self._clamp(gaze_max, -1.0, 1.0)

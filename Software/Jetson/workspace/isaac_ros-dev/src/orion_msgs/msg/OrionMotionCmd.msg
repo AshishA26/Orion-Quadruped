@@ -6,6 +6,7 @@ uint8 CMD_HEEL = 4
 uint8 CMD_DANCE = 5
 uint8 CMD_EXTRAS = 6
 uint8 CMD_EYES = 7
+uint8 CMD_BOOTUP = 8
 
 # --- Fields ---
 uint8 cmd_type
