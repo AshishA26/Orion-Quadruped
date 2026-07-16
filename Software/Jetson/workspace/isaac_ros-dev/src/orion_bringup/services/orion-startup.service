@@ -1,0 +1,21 @@
+[Unit]
+Description=Orion ISAAC ROS Container and nodes autostart bringup
+After=network.target
+
+[Service]
+Type=simple
+User=orion
+WorkingDirectory=/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev
+ExecStart=/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/scripts/autostart.sh
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=orion-startup
+
+[Install]
+WantedBy=multi-user.target
