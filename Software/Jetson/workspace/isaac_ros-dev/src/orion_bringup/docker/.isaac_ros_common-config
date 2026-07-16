@@ -1,0 +1,2 @@
+CONFIG_IMAGE_KEY="ros2_humble.orion"
+CONFIG_DOCKER_SEARCH_DIRS=(~/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev)

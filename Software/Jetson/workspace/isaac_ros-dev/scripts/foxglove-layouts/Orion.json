@@ -1,0 +1,210 @@
+{
+  "configById": {
+    "RawMessages!1rzgfj5": {
+      "defaultExpanded": false,
+      "topicPath": "/foxglove_bridge/sysinfo"
+    },
+    "SourceInfo!45ig922": {},
+    "RawMessages!38zsyqy": {
+      "defaultExpanded": false,
+      "topicPath": "/joy"
+    },
+    "Indicator!28592jt": {
+      "path": "/joy.buttons[6]",
+      "style": "bulb",
+      "fontSize": 36,
+      "fallbackColor": "#8b8b8b",
+      "fallbackLabel": "Dead man: Disabled",
+      "rules": [
+        {
+          "operator": "=",
+          "rawValue": "1",
+          "color": "#68e24a",
+          "label": "Dead man: ACTIVE"
+        }
+      ],
+      "foxglovePanelTitle": "Dead man switch"
+    },
+    "RawMessages!35vqsrj": {
+      "defaultExpanded": false,
+      "topicPath": "/orion_eyes_cmd"
+    },
+    "RawMessages!eupsej": {
+      "defaultExpanded": false,
+      "topicPath": "/orion_motion_cmd"
+    },
+    "RosOut!35s05ms": {
+      "minLogLevel": 1,
+      "searchTerms": [],
+      "nameFilter": {},
+      "fontSize": 12,
+      "showLevel": true,
+      "showDate": true,
+      "showTime": true,
+      "showTimezone": true,
+      "showName": true,
+      "showSourceLocation": false
+    },
+    "3D!43ui6bc": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 60,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "topics": {},
+      "layers": {
+        "grid": {
+          "visible": true,
+          "drawBehind": false,
+          "instanceId": "49220fb7-112f-426f-9ae0-dc2b2cd6dd59",
+          "layerId": "foxglove.Grid",
+          "size": 10,
+          "divisions": 10,
+          "lineWidth": 1,
+          "color": "#248eff",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "synchronize": false,
+      "imageMode": {}
+    },
+    "Image!2w6gwxp": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 60,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "topics": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "synchronize": false,
+      "imageMode": {}
+    },
+    "DiagnosticStatusPanel!1eve9pp": {
+      "topicToRender": "/diagnostics"
+    },
+    "Tab!23nizzl": {
+      "tabs": [
+        {
+          "title": "Raw Msgs",
+          "layout": {
+            "first": {
+              "first": {
+                "first": "RawMessages!1rzgfj5",
+                "second": "SourceInfo!45ig922",
+                "direction": "row"
+              },
+              "second": {
+                "first": "RawMessages!38zsyqy",
+                "second": "Indicator!28592jt",
+                "direction": "row"
+              },
+              "direction": "column"
+            },
+            "second": {
+              "first": "RawMessages!35vqsrj",
+              "second": "RawMessages!eupsej",
+              "direction": "column"
+            },
+            "direction": "row"
+          }
+        },
+        {
+          "title": "Logs",
+          "layout": "RosOut!35s05ms"
+        },
+        {
+          "title": "SLAM",
+          "layout": "3D!43ui6bc"
+        },
+        {
+          "title": "Camera",
+          "layout": "Image!2w6gwxp"
+        },
+        {
+          "title": "Diagnostics",
+          "layout": "DiagnosticStatusPanel!1eve9pp"
+        }
+      ],
+      "activeTabIdx": 0
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": "Tab!23nizzl"
+}
