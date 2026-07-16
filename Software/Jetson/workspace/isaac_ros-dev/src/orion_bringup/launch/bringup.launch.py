@@ -32,7 +32,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        # lidar_launch,
+        lidar_launch,
         base_launch,
         nav_launch
     ])
