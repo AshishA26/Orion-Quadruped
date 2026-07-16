@@ -1,0 +1,29 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+RUN apt-get update && apt-get install -y \
+    ros-humble-slam-toolbox \
+    ros-humble-rmw-cyclonedds-cpp \
+    ros-humble-sllidar-ros2 \
+    ros-humble-xacro \
+    ros-humble-teleop-twist-keyboard \
+    ros-humble-joy \
+    ros-humble-teleop-twist-joy \
+    ros-humble-foxglove-bridge \
+    python3-serial \
+    xterm
+
+
+# Install rosdeps
+COPY src /tmp/orion/src
+RUN source /opt/ros/humble/setup.bash && \
+    cd /tmp/orion && export MAKEFLAGS="-j6" && \
+    apt-get update && rosdep update && rosdep install --from-paths src --ignore-src -r -y && \
+    cd && rm -rf /tmp/orion
+
+# Dialout access for UART Lidar and STM32
+COPY src/submodules/isaac_ros_common/docker/scripts/workspace-entrypoint.sh  /usr/local/bin/scripts/
+
+ENV LD_LIBRARY_PATH=/opt/ros/humble/share/gxf_isaac_optimizer/gxf/lib:${LD_LIBRARY_PATH}
+
+RUN echo "source /opt/ros/humble/setup.bash" >> /etc/bash.bashrc

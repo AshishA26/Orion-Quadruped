@@ -1,0 +1,4 @@
+# Docker build only requires the package.xml files so rosdep can install system dependencies
+src/**/*
+!**/package.xml
+!**/workspace-entrypoint.sh
