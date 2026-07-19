@@ -248,28 +248,35 @@ class JoystickParser(Node):
         if msg.buttons[BTN_R1] == 1:
             self.cmd_type = OrionMotionCmd.CMD_RESET
         elif msg.buttons[BTN_L1] == 1:
+            self.operation_reset() # Reset first, and then go into normal mode
             self.cmd_type = OrionMotionCmd.CMD_NORMAL
         elif msg.buttons[BTN_R3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EXTRAS
         elif msg.buttons[BTN_OPTIONS] == 1:
             self.cmd_type = OrionMotionCmd.CMD_WAVE
-        elif msg.buttons[BTN_SHARE] == 1:
-            self.cmd_type = OrionMotionCmd.CMD_BOOTUP
+        # elif msg.buttons[BTN_SHARE] == 1:
+            # self.cmd_type = OrionMotionCmd.CMD_BOOTUP
         elif msg.buttons[BTN_L3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EYES
 
         # --- Deadman Switch ---
-        # Require holding L2 button before accepting any movement or tilt commands
-        if msg.buttons[BTN_L2] == 1:
-            if self.cmd_type == OrionMotionCmd.CMD_NORMAL: # Normal
-                lin_x, lin_y, ang_z, yawing_direction = self.operation_normal(msg)
-            elif self.cmd_type == OrionMotionCmd.CMD_EXTRAS: # Extras
-                x_offset, y_offset = self.operation_extras(msg)
+        # Require holding L2 button before accepting any movement or tilt commands (deprecated)
+        # if msg.buttons[BTN_L2] == 1:
+
+        if self.cmd_type == OrionMotionCmd.CMD_NORMAL: # Normal
+            lin_x, lin_y, ang_z, yawing_direction = self.operation_normal(msg)
+        elif self.cmd_type == OrionMotionCmd.CMD_EXTRAS: # Extras
+            x_offset, y_offset = self.operation_extras(msg)
         
         if self.cmd_type == OrionMotionCmd.CMD_RESET:
             self.operation_reset()
         elif self.cmd_type == OrionMotionCmd.CMD_EYES:
             self.operation_eyes(msg)
+
+        # Sets happy eyes for tennis ball scene
+        if msg.buttons[BTN_SHARE] == 1:
+            self.auto_idle = False
+            self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
 
         # --- Publish Message ---
         # Create and publish motion command message
