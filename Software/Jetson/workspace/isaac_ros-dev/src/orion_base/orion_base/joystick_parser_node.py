@@ -254,17 +254,23 @@ class JoystickParser(Node):
             self.cmd_type = OrionMotionCmd.CMD_EXTRAS
         elif msg.buttons[BTN_OPTIONS] == 1:
             self.cmd_type = OrionMotionCmd.CMD_WAVE
-        # elif msg.buttons[BTN_SHARE] == 1:
-            # self.cmd_type = OrionMotionCmd.CMD_BOOTUP
+        elif msg.buttons[BTN_SHARE] == 1:
+            self.cmd_type = OrionMotionCmd.CMD_HEEL
         elif msg.buttons[BTN_L3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EYES
 
         # --- Deadman Switch ---
-        # Require holding L2 button before accepting any movement or tilt commands (deprecated)
+        # Require holding L2 button before accepting any movement or tilt commands (DEPRECATED)
         # if msg.buttons[BTN_L2] == 1:
 
         if self.cmd_type == OrionMotionCmd.CMD_NORMAL: # Normal
             lin_x, lin_y, ang_z, yawing_direction = self.operation_normal(msg)
+            
+            # Sets happy eyes for tennis ball scene using L2
+            if msg.buttons[BTN_L2] == 1:
+                self.auto_idle = False
+                self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
+
         elif self.cmd_type == OrionMotionCmd.CMD_EXTRAS: # Extras
             x_offset, y_offset = self.operation_extras(msg)
         
@@ -272,11 +278,6 @@ class JoystickParser(Node):
             self.operation_reset()
         elif self.cmd_type == OrionMotionCmd.CMD_EYES:
             self.operation_eyes(msg)
-
-        # Sets happy eyes for tennis ball scene
-        if msg.buttons[BTN_SHARE] == 1:
-            self.auto_idle = False
-            self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
 
         # --- Publish Message ---
         # Create and publish motion command message
