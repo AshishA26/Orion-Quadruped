@@ -9,6 +9,7 @@ from typing import Tuple
 # --- Joystick axis and button mapping (PS5 controller) ---
 # NOTE: All settings are in CMD_NORMAL, unless otherwise specified
 # NOTE: For PS5 controller, L2 and R2 require msg.axes, not msg.buttons
+# NOTE: No longer a deadman switch
 # LS_HORZ = 0 # Strafe left/right if CMD_NORMAL, change y offset if CMD_EXTRAS
 # LS_VERT = 1 # Move forward/backward if CMD_NORMAL, change x offset if CMD_EXTRAS
 # RS_HORZ = 2 # Turn left/right
@@ -21,7 +22,7 @@ from typing import Tuple
 # BTN_TRIANGLE = 3 # Height (z offset) increase
 # BTN_L1 = 4 # Sets CMD_NORMAL
 # BTN_R1 = 5 # Reset, sets CMD_RESET
-# BTN_L2 = 3 # Deadman switch if CMD_NORMAL or CMD_EXTRAS, does extra eye commands if CMD_EYES
+# BTN_L2 = 3 # Makes happy eyes for tennis ball scene if CMD_NORMAL, does extra eye commands if CMD_EYES
 # BTN_R2 = 4 # Boost mode (axis 4)
 # BTN_SHARE = 8 # Sets CMD_BOOTUP
 # BTN_OPTIONS = 9 # Sets CMD_WAVE
@@ -177,7 +178,7 @@ class JoystickParser(Node):
         self.persist_gaze_x = max(-1.0, min(1.0, self.persist_gaze_x))
         self.persist_gaze_y = max(-1.0, min(1.0, self.persist_gaze_y))
 
-        # 2. Left stick controls absolute gaze, or falls back to persistent gaze if centered
+        # Left stick controls absolute gaze, or falls back to persistent gaze if centered
         if (abs(msg.axes[LS_HORZ]) < 0.05) and (abs(msg.axes[LS_VERT]) < 0.05):
             self.eyes_gaze_x = self.persist_gaze_x
             self.eyes_gaze_y = self.persist_gaze_y
@@ -186,18 +187,6 @@ class JoystickParser(Node):
             self.eyes_gaze_y = -msg.axes[LS_VERT]
             self.eyes_gaze_x = max(-1.0, min(1.0, self.eyes_gaze_x))
             self.eyes_gaze_y = max(-1.0, min(1.0, self.eyes_gaze_y))
-
-        # # Gaze control - persistent
-        # if (abs(msg.axes[LS_HORZ]) < 0.05) and (abs(msg.axes[LS_VERT]) < 0.05):
-        #     self.eyes_gaze_x += msg.axes[RS_HORZ] * 0.02
-        #     self.eyes_gaze_y -= msg.axes[RS_VERT] * 0.02
-        #     self.eyes_gaze_x = max(-1.0, min(1.0, self.eyes_gaze_x))
-        #     self.eyes_gaze_y = max(-1.0, min(1.0, self.eyes_gaze_y))
-        # else:
-        #     self.eyes_gaze_x = msg.axes[LS_HORZ]
-        #     self.eyes_gaze_y = -msg.axes[LS_VERT]
-        #     self.eyes_gaze_x = max(-1.0, min(1.0, self.eyes_gaze_x))
-        #     self.eyes_gaze_y = max(-1.0, min(1.0, self.eyes_gaze_y))
         
         if msg.axes[DPAD_VERT] > 0.5:
             self.eyes_mood = OrionEyesCmd.MOOD_DEFAULT
@@ -248,6 +237,7 @@ class JoystickParser(Node):
         if msg.buttons[BTN_R1] == 1:
             self.cmd_type = OrionMotionCmd.CMD_RESET
         elif msg.buttons[BTN_L1] == 1:
+            self.operation_reset() # Reset first, and then go into normal mode
             self.cmd_type = OrionMotionCmd.CMD_NORMAL
         elif msg.buttons[BTN_R3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EXTRAS
@@ -258,13 +248,16 @@ class JoystickParser(Node):
         elif msg.buttons[BTN_L3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EYES
 
-        # --- Deadman Switch ---
-        # Require holding L2 button before accepting any movement or tilt commands
-        if msg.buttons[BTN_L2] == 1:
-            if self.cmd_type == OrionMotionCmd.CMD_NORMAL: # Normal
-                lin_x, lin_y, ang_z, yawing_direction = self.operation_normal(msg)
-            elif self.cmd_type == OrionMotionCmd.CMD_EXTRAS: # Extras
-                x_offset, y_offset = self.operation_extras(msg)
+        if self.cmd_type == OrionMotionCmd.CMD_NORMAL: # Normal
+            lin_x, lin_y, ang_z, yawing_direction = self.operation_normal(msg)
+            
+            # Sets happy eyes for tennis ball scene using L2
+            if msg.buttons[BTN_L2] == 1:
+                self.auto_idle = False
+                self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
+
+        elif self.cmd_type == OrionMotionCmd.CMD_EXTRAS: # Extras
+            x_offset, y_offset = self.operation_extras(msg)
         
         if self.cmd_type == OrionMotionCmd.CMD_RESET:
             self.operation_reset()
