@@ -27,9 +27,12 @@ cd ${ISAAC_ROS_WS}/src/submodules/isaac_ros_common && ./scripts/run_dev.sh --ski
 ```
 
 ## Notes
-
+### ROS
 Creating a package (when inside docker container):
 ```bash
 cd src
 ros2 pkg create --build-type ament_python orion_bringup
 ```
+
+### General
+To fix SSH / connectivity issues from no machine or vs-code, ensure you have the right wifi set, and are on MAXN Super power mode.
