@@ -1,0 +1,5 @@
+# orion_camera/config/params.yaml
+
+camera_node:
+  ros__parameters:
+    
