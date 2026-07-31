@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: Orion Quadruped Project
-# Copyright (c) 2026. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
-#
 # GStreamer-based dual CSI camera ROS 2 node for IMX219-83.
 # Uses the nvarguscamerasrc GStreamer pipeline (proven in dual_camera.py)
 # to capture from two CSI sensors and publish as ROS 2 Image/CameraInfo.
@@ -15,8 +11,9 @@ import yaml
 import cv2
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import Image, CameraInfo
+from sensor_msgs.msg import Image, CameraInfo, CompressedImage
 from cv_bridge import CvBridge
+import numpy as np
 
 
 class CSICamera:
@@ -139,7 +136,7 @@ class GStreamerDualCameraNode(Node):
     """ROS 2 node publishing dual CSI camera feeds via GStreamer."""
 
     def __init__(self):
-        super().__init__('gstreamer_dual_camera')
+        super().__init__('gstreamer_dual_camera_node')
 
         # --- Parameters ---
         self.declare_parameter('capture_width', 1920)
@@ -159,8 +156,14 @@ class GStreamerDualCameraNode(Node):
         # --- Publishers ---
         self.left_image_pub = self.create_publisher(Image, 'left/image_raw', 2)
         self.left_info_pub = self.create_publisher(CameraInfo, 'left/camera_info', 2)
+        self.left_image_compressed_pub = self.create_publisher(
+            CompressedImage, 'left/image_compressed', 2
+        )
         self.right_image_pub = self.create_publisher(Image, 'right/image_raw', 2)
         self.right_info_pub = self.create_publisher(CameraInfo, 'right/camera_info', 2)
+        self.right_image_compressed_pub = self.create_publisher(
+            CompressedImage, 'right/image_compressed', 2
+        )
 
         self.bridge = CvBridge()
 
@@ -214,6 +217,13 @@ class GStreamerDualCameraNode(Node):
             img_msg.header.frame_id = 'left_camera'
             self.left_image_pub.publish(img_msg)
 
+            compressed_msg = CompressedImage()
+            compressed_msg.header.stamp = now
+            compressed_msg.header.frame_id = 'left_camera'
+            compressed_msg.format = 'jpeg'
+            compressed_msg.data = np.array(cv2.imencode('.jpg', frame_l)[1]).tobytes()
+            self.left_image_compressed_pub.publish(compressed_msg)
+
             self.left_camera_info.header.stamp = now
             self.left_camera_info.header.frame_id = 'left_camera'
             self.left_info_pub.publish(self.left_camera_info)
@@ -225,6 +235,13 @@ class GStreamerDualCameraNode(Node):
             img_msg.header.stamp = now
             img_msg.header.frame_id = 'right_camera'
             self.right_image_pub.publish(img_msg)
+
+            compressed_msg = CompressedImage()
+            compressed_msg.header.stamp = now
+            compressed_msg.header.frame_id = 'right_camera'
+            compressed_msg.format = 'jpeg'
+            compressed_msg.data = np.array(cv2.imencode('.jpg', frame_r)[1]).tobytes()
+            self.right_image_compressed_pub.publish(compressed_msg)
 
             self.right_camera_info.header.stamp = now
             self.right_camera_info.header.frame_id = 'right_camera'

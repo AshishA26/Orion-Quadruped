@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: Orion Quadruped Project
-# Copyright (c) 2026. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
-#
 # Isaac ROS Argus Camera launch for IMX219-83 dual CSI camera.
 # Launches two ArgusMonoNode instances (one per sensor) since the
 # IMX219-83 has two independent sensors with no hardware sync.

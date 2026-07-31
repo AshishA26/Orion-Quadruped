@@ -17,6 +17,7 @@
   <depend>sensor_msgs</depend>
   <depend>isaac_ros_argus_camera</depend>
   <depend>cv_bridge</depend>
+  <depend>numpy</depend>
 
   <export>
     <build_type>ament_python</build_type>

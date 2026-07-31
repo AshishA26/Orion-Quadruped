@@ -35,13 +35,13 @@ def generate_launch_description():
     # Include Camera launch (Isaac ROS Argus — GPU-accelerated, zero-copy)
     # camera_launch = IncludeLaunchDescription(
     #     PythonLaunchDescriptionSource(
-    #         os.path.join(orion_camera_dir, 'launch', 'camera.launch.py')
+    #         os.path.join(orion_camera_dir, 'launch', 'argus_dual_camera.launch.py')
     #     )
     # )
     # Alternative: GStreamer camera (no Isaac container dependency)
     camera_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(orion_camera_dir, 'launch', 'gstreamer_camera.launch.py')
+            os.path.join(orion_camera_dir, 'launch', 'gstreamer_dual_camera.launch.py')
         )
     )
 
