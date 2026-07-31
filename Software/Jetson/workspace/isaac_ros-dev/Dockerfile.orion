@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     ros-humble-joy \
     ros-humble-teleop-twist-joy \
     ros-humble-foxglove-bridge \
+    ros-humble-rqt-image-view \
     python3-serial \
     xterm
 

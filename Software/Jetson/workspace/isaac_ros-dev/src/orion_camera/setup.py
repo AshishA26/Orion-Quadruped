@@ -28,7 +28,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'camera_node = orion_camera.camera_node:main'
+            'camera_node = orion_camera.camera_node:main',
+            'gstreamer_camera_node = orion_camera.gstreamer_camera_node:main',
         ],
     },
 )

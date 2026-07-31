@@ -1,5 +1,14 @@
 # orion_camera/config/params.yaml
+# Shared camera parameters for both Isaac ROS Argus and GStreamer solutions.
 
 camera_node:
   ros__parameters:
-    
+    # IMX219-83 dual CSI camera settings
+    capture_width: 640
+    capture_height: 360
+    framerate: 10
+    flip_method: 0  # 0=none, 2=rotate-180
+
+    # TF frame IDs
+    left_frame_id: "left_camera"
+    right_frame_id: "right_camera"

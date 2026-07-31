@@ -9,6 +9,7 @@ def generate_launch_description():
     orion_base_dir = get_package_share_directory('orion_base')
     orion_lidar_dir = get_package_share_directory('orion_lidar')
     orion_nav_dir = get_package_share_directory('orion_navigation')
+    orion_camera_dir = get_package_share_directory('orion_camera')
 
     # Include Lidar launch
     lidar_launch = IncludeLaunchDescription(
@@ -31,8 +32,22 @@ def generate_launch_description():
         )
     )
 
+    # Include Camera launch (Isaac ROS Argus — GPU-accelerated, zero-copy)
+    # camera_launch = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(orion_camera_dir, 'launch', 'camera.launch.py')
+    #     )
+    # )
+    # Alternative: GStreamer camera (no Isaac container dependency)
+    camera_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(orion_camera_dir, 'launch', 'gstreamer_camera.launch.py')
+        )
+    )
+
     return LaunchDescription([
         lidar_launch,
         base_launch,
-        nav_launch
+        nav_launch,
+        camera_launch,
     ])
