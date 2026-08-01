@@ -5,49 +5,25 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 import launch
-from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 
 
 def generate_launch_description():
     orion_camera_dir = get_package_share_directory('orion_camera')
-
-    # --- Launch Arguments ---
-    launch_args = [
-        DeclareLaunchArgument(
-            'left_camera_info_url',
-            default_value='file://' + os.path.join(
-                orion_camera_dir, 'config', 'left_camera_info.yaml'),
-            description='URL for the left camera calibration file.'
-        ),
-        DeclareLaunchArgument(
-            'right_camera_info_url',
-            default_value='file://' + os.path.join(
-                orion_camera_dir, 'config', 'right_camera_info.yaml'),
-            description='URL for the right camera calibration file.'
-        ),
-    ]
-
-    left_camera_info_url = LaunchConfiguration('left_camera_info_url')
-    right_camera_info_url = LaunchConfiguration('right_camera_info_url')
+    params_file = os.path.join(orion_camera_dir, 'config', 'params.yaml')
 
     # --- Left Camera (CSI sensor_id=0) ---
     argus_left = ComposableNode(
         name='argus_left',
         package='isaac_ros_argus_camera',
         plugin='nvidia::isaac_ros::argus::ArgusMonoNode',
-        namespace='left',
+        namespace='argus',
         remappings=[
             ('left/image_raw', 'image_raw'),
             ('left/camera_info', 'camera_info'),
         ],
-        parameters=[{
-            'camera_id': 0,
-            'module_id': 0,
-            'camera_info_url': left_camera_info_url,
-        }],
+        parameters=[params_file],
     )
 
     # --- Right Camera (CSI sensor_id=1) ---
@@ -55,16 +31,12 @@ def generate_launch_description():
         name='argus_right',
         package='isaac_ros_argus_camera',
         plugin='nvidia::isaac_ros::argus::ArgusMonoNode',
-        namespace='right',
+        namespace='argus',
         remappings=[
             ('left/image_raw', 'image_raw'),
             ('left/camera_info', 'camera_info'),
         ],
-        parameters=[{
-            'camera_id': 1,
-            'module_id': 1,
-            'camera_info_url': right_camera_info_url,
-        }],
+        parameters=[params_file],
     )
 
     # --- Container ---
@@ -80,4 +52,4 @@ def generate_launch_description():
         arguments=['--ros-args', '--log-level', 'info'],
     )
 
-    return launch.LaunchDescription(launch_args + [argus_container])
+    return launch.LaunchDescription([argus_container])
