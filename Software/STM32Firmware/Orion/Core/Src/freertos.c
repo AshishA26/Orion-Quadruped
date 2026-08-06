@@ -30,6 +30,7 @@
 #include "LegMotion.h"
 #include "BodyIK.h"
 #include "imu.h"
+#include "ina3221.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,6 +56,7 @@ extern UART_HandleTypeDef huart2; // HUART1 is used for Jetson, so use HUART2 fo
 extern UART_HandleTypeDef huart1; // The UART connected to the Jetson
 
 IMU_OrientationTypeDef current_imu_orientation; // Global variable to hold the latest IMU orientation
+INA3221_ReadingsTypeDef current_battery_readings; // Global variable to hold the latest battery readings
 
 // Struct matching the Jetson packet (1 byte type + 36 bytes floats)
 // Packed to ensure no padding bytes are added by the compiler, which would break parsing
@@ -97,6 +99,11 @@ int parser_state = 0;
 struct CmdPayload last_cmd; // Struct to hold the payload data cleanly
 volatile int new_cmd_ready = 0; // Flag to indicate a new command is ready // Not used right now
 uint32_t last_cmd_timestamp_ms = 0; // Extra safety to prevent stale commands
+
+// Telemetry TX
+#define TELEM_BATTERY 0x10
+#define TELEM_PKT_SIZE 40  // 2 header + 1 type + 36 payload + 1 checksum
+static uint8_t telem_tx_buf[TELEM_PKT_SIZE]; // Must be static/global for DMA
 
 // volatile uint32_t checksum_errors = 0;
 // volatile uint32_t uart_errors = 0;
@@ -399,6 +406,33 @@ void StartControlTask(void *argument)
     //     HAL_UART_Transmit(&huart2, (uint8_t*)err_msg, (uint16_t)n, 10);
     // }
 
+    // --- Debug Print Battery Values ---
+    // static uint32_t last_batt_print = 0;
+    // if (HAL_GetTick() - last_batt_print > 1000) { // Print every 1 second
+    //     last_batt_print = HAL_GetTick();
+        
+    //     // Safely copy the global readings
+    //     INA3221_ReadingsTypeDef batt;
+    //     osMutexAcquire(batteryMutexHandle, osWaitForever);
+    //     batt = current_battery_readings;
+    //     osMutexRelease(batteryMutexHandle);
+        
+    //     // Format and transmit (printing all 9 channels)
+    //     char batt_msg[128];
+    //     int len = snprintf(batt_msg, sizeof(batt_msg), 
+    //                        "Batt: %d.%02d, %d.%02d, %d.%02d | %d.%02d, %d.%02d, %d.%02d | %d.%02d, %d.%02d, %d.%02d\r\n", 
+    //                        (int)batt.bus_voltage_V[0], (int)(batt.bus_voltage_V[0]*100)%100,
+    //                        (int)batt.bus_voltage_V[1], (int)(batt.bus_voltage_V[1]*100)%100,
+    //                        (int)batt.bus_voltage_V[2], (int)(batt.bus_voltage_V[2]*100)%100,
+    //                        (int)batt.bus_voltage_V[3], (int)(batt.bus_voltage_V[3]*100)%100,
+    //                        (int)batt.bus_voltage_V[4], (int)(batt.bus_voltage_V[4]*100)%100,
+    //                        (int)batt.bus_voltage_V[5], (int)(batt.bus_voltage_V[5]*100)%100,
+    //                        (int)batt.bus_voltage_V[6], (int)(batt.bus_voltage_V[6]*100)%100,
+    //                        (int)batt.bus_voltage_V[7], (int)(batt.bus_voltage_V[7]*100)%100,
+    //                        (int)batt.bus_voltage_V[8], (int)(batt.bus_voltage_V[8]*100)%100);
+    //     HAL_UART_Transmit(&huart2, (uint8_t*)batt_msg, (uint16_t)len, 100);
+    // }
+
     osDelay(20); // Steady 50Hz control loop cycle execution
 
     // char msg2[64];
@@ -548,6 +582,33 @@ void StartCommTask(void *argument)
         old_pos = (old_pos + 1) % DMA_RX_BUFFER_SIZE;
     }
 
+    // // --- Battery Telemetry TX (1 Hz) ---
+    // static uint32_t last_telem_ms = 0;
+    // if (HAL_GetTick() - last_telem_ms >= 1000) {
+    //     last_telem_ms = HAL_GetTick();
+        
+    //     // Snapshot battery readings
+    //     INA3221_ReadingsTypeDef batt_snap;
+    //     osMutexAcquire(batteryMutexHandle, osWaitForever);
+    //     batt_snap = current_battery_readings;
+    //     osMutexRelease(batteryMutexHandle);
+        
+    //     // Build packet: [0xAA][0x55][0x10][9 floats = 36 bytes][XOR checksum]
+    //     telem_tx_buf[0] = 0xAA;
+    //     telem_tx_buf[1] = 0x55;
+    //     telem_tx_buf[2] = TELEM_BATTERY;
+    //     memcpy(&telem_tx_buf[3], batt_snap.bus_voltage_V, 9 * sizeof(float));
+        
+    //     uint8_t cksum = 0;
+    //     for (int i = 2; i < TELEM_PKT_SIZE - 1; i++) {
+    //         cksum ^= telem_tx_buf[i];
+    //     }
+    //     telem_tx_buf[TELEM_PKT_SIZE - 1] = cksum;
+        
+    //     // Fire-and-forget DMA transmit (non-blocking, ~0.9ms at 460800 baud)
+    //     HAL_UART_Transmit_DMA(&huart1, telem_tx_buf, TELEM_PKT_SIZE);
+    // }
+
     // Let FreeRTOS give CPU time to other tasks
     osDelay(10); // 100Hz command processing rate
   }
@@ -564,10 +625,19 @@ void StartCommTask(void *argument)
 void StartBatteryTask(void *argument)
 {
   /* USER CODE BEGIN StartBatteryTask */
+  osDelay(2000);
+  INA3221_Init(&hi2c3, &huart2);
+  INA3221_ReadingsTypeDef readings;
+
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    if (INA3221_ReadAll(&hi2c3, &readings) == HAL_OK) {
+      osMutexAcquire(batteryMutexHandle, osWaitForever);
+      current_battery_readings = readings;
+      osMutexRelease(batteryMutexHandle);
+    }
+    osDelay(1000); // 1 Hz as battery voltage does not change fast
   }
   /* USER CODE END StartBatteryTask */
 }
