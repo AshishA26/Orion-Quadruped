@@ -6,3 +6,6 @@
 	path = Software/Jetson/workspace/isaac_ros-dev/src/submodules/rf2o_laser_odometry
 	url = git@github.com:Adlink-ROS/rf2o_laser_odometry.git
 	branch = humble-devel
+[submodule "Software/Jetson/workspace/isaac_ros-dev/src/submodules/isaac_ros_argus_camera"]
+	path = Software/Jetson/workspace/isaac_ros-dev/src/submodules/isaac_ros_argus_camera
+	url = git@github.com:AshishA26/isaac_ros_argus_camera.git

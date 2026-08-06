@@ -1,0 +1,37 @@
+# orion_camera/config/params.yaml
+
+gstreamer_dual_camera_node:
+  ros__parameters:
+    # IMX219-83 dual CSI camera settings
+    capture_width: 1280
+    capture_height: 720
+    framerate: 60
+    flip_method: 0  # 0=none, 2=rotate-180
+
+    # Calibration file paths
+    # TODO(orion): Must first calibrate cameras, then put in proper paths to camera calibration info
+    # left_camera_info_path: "/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/left_camera_info.yaml"
+    # right_camera_info_path: "/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/right_camera_info.yaml"
+
+    # TF frame IDs
+    left_frame_id: "left_camera"
+    right_frame_id: "right_camera"
+
+/argus/argus_left:
+  ros__parameters:
+    camera_id: 0
+    module_id: 0
+    # camera_info_url: "file:///home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/left_camera_info.yaml"
+
+/argus/argus_right:
+  ros__parameters:
+    camera_id: 1
+    module_id: 1
+    # camera_info_url: "file:///home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/right_camera_info.yaml"
+
+hand_pose_node:
+  ros__parameters:
+    max_num_hands: 1
+    model_complexity: 0
+    min_detection_confidence: 0.4
+    min_tracking_confidence: 0.4

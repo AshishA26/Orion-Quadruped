@@ -1,0 +1,26 @@
+#TODO(orion)
+image_width: 1920
+image_height: 1080
+camera_name: right_camera
+camera_matrix:
+  rows: 3
+  cols: 3
+  # Approximate IMX219 intrinsics at 1920x1080
+  # f ≈ 3.04mm / 0.00112mm (pixel pitch) ≈ 2714px at full 3280x2464
+  # Scaled to 1920x1080: fx ≈ 1380, fy ≈ 1380, cx ≈ 960, cy ≈ 540
+  # REPLACE with actual calibration values
+  data: [1380.0, 0.0, 960.0, 0.0, 1380.0, 540.0, 0.0, 0.0, 1.0]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  # [k1, k2, p1, p2, k3] - REPLACE with actual calibration values
+  data: [0.0, 0.0, 0.0, 0.0, 0.0]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [1380.0, 0.0, 960.0, 0.0, 0.0, 1380.0, 540.0, 0.0, 0.0, 0.0, 1.0, 0.0]

@@ -10,9 +10,9 @@ RUN apt-get update && apt-get install -y \
     ros-humble-joy \
     ros-humble-teleop-twist-joy \
     ros-humble-foxglove-bridge \
+    ros-humble-rqt-image-view \
     python3-serial \
     xterm
-
 
 # Install rosdeps
 COPY src /tmp/orion/src
@@ -27,3 +27,5 @@ COPY src/submodules/isaac_ros_common/docker/scripts/workspace-entrypoint.sh  /us
 ENV LD_LIBRARY_PATH=/opt/ros/humble/share/gxf_isaac_optimizer/gxf/lib:${LD_LIBRARY_PATH}
 
 RUN echo "source /opt/ros/humble/setup.bash" >> /etc/bash.bashrc
+
+RUN python3 -m pip install mediapipe==0.10.14 --no-deps
