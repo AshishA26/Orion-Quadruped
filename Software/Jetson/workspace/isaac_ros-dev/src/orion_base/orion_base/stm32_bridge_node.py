@@ -2,6 +2,7 @@ import math
 import rclpy
 from rclpy.node import Node
 from orion_msgs.msg import OrionMotionCmd
+from std_msgs.msg import Float32MultiArray
 import serial
 import struct
 from typing import Tuple
@@ -13,7 +14,7 @@ class STM32Bridge(Node):
 
         # Configure Serial Port (UART)
         self.declare_parameter('serial_port', '/dev/ttyTHS1')
-        self.declare_parameter('baud_rate', 115200)
+        self.declare_parameter('baud_rate', 460800)
         self.declare_parameter('send_rate_hz', 50.0)
         serial_port = self.get_parameter('serial_port').value
         baud_rate = self.get_parameter('baud_rate').value
@@ -32,6 +33,11 @@ class STM32Bridge(Node):
         # Create a timer to write to UART
         self.write_timer = self.create_timer(send_rate, self.send_to_stm32)
 
+        # Battery Telemetry Publisher and Read Timer
+        self.battery_pub = self.create_publisher(Float32MultiArray, 'battery_voltages', 10)
+        self.rx_buffer = bytearray()
+        self.read_timer = self.create_timer(1000, self.read_from_stm32) # 50 Hz read check
+
     def calculate_checksum(self, payload_bytes):
         # Simple XOR checksum of the payload
         checksum = 0
@@ -42,6 +48,45 @@ class STM32Bridge(Node):
     def motion_callback(self, msg):
         # Store the latest command
         self.latest_msg = msg
+
+    def read_from_stm32(self):
+        pass
+        # if not self.serial_conn or not self.serial_conn.is_open:
+        #     return
+
+        # # Read everything available in the serial buffer
+        # if self.serial_conn.in_waiting > 0:
+        #     new_bytes = self.serial_conn.read(self.serial_conn.in_waiting)
+        #     self.rx_buffer.extend(new_bytes)
+        #     self.get_logger().info(f"Received {len(new_bytes)} bytes from STM32")
+
+        # # Process packets in the buffer
+        # while len(self.rx_buffer) >= 40:
+        #     # Look for Header: 0xAA, 0x55 and Type: 0x10
+        #     if self.rx_buffer[0] == 0xAA and self.rx_buffer[1] == 0x55 and self.rx_buffer[2] == 0x10:
+        #         packet = self.rx_buffer[:40]
+                
+        #         # Validate Checksum (XOR from index 2 to 38)
+        #         cksum = 0
+        #         for b in packet[2:39]:
+        #             cksum ^= b
+                
+        #         if cksum == packet[39]:
+        #             # Unpack 9 little-endian floats (36 bytes)
+        #             floats = struct.unpack('<9f', packet[3:39])
+                    
+        #             # Publish
+        #             msg = Float32MultiArray()
+        #             msg.data = list(floats)
+        #             self.battery_pub.publish(msg)
+        #         else:
+        #             self.get_logger().warn("Battery telemetry checksum failed")
+                
+        #         # Consume this packet
+        #         self.rx_buffer = self.rx_buffer[40:]
+        #     else:
+        #         # If header doesn't match, drop 1 byte and search again
+        #         self.rx_buffer.pop(0)
 
     def send_to_stm32(self):
         if not self.serial_conn or not self.serial_conn.is_open:
