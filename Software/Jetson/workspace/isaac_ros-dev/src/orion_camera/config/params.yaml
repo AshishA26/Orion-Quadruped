@@ -9,6 +9,7 @@ gstreamer_dual_camera_node:
     flip_method: 0  # 0=none, 2=rotate-180
 
     # Calibration file paths
+    # TODO(orion): Must first calibrate cameras, then put in proper paths to camera calibration info
     # left_camera_info_path: "/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/left_camera_info.yaml"
     # right_camera_info_path: "/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/right_camera_info.yaml"
 
