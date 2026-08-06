@@ -80,6 +80,7 @@ struct __attribute__((packed)) CmdPayload {
 #define CMD_DANCE 0x05
 #define CMD_EXTRAS 0x06
 #define CMD_EYES 0x07
+#define CMD_BOOTUP 0x08
 
 // DMA Buffer and tracking
 #define DMA_RX_BUFFER_SIZE 64 // Larger than the expected command size to ensure no bytes are missed
@@ -122,6 +123,13 @@ const osThreadAttr_t commTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for batteryTask */
+osThreadId_t batteryTaskHandle;
+const osThreadAttr_t batteryTask_attributes = {
+  .name = "batteryTask",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityBelowNormal,
+};
 /* Definitions for cmdMutex */
 osMutexId_t cmdMutexHandle;
 const osMutexAttr_t cmdMutex_attributes = {
@@ -132,6 +140,11 @@ osMutexId_t imuMutexHandle;
 const osMutexAttr_t imuMutex_attributes = {
   .name = "imuMutex"
 };
+/* Definitions for batteryMutex */
+osMutexId_t batteryMutexHandle;
+const osMutexAttr_t batteryMutex_attributes = {
+  .name = "batteryMutex"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -141,6 +154,7 @@ const osMutexAttr_t imuMutex_attributes = {
 void StartControlTask(void *argument);
 void StartIMUTask(void *argument);
 void StartCommTask(void *argument);
+void StartBatteryTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -159,6 +173,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of imuMutex */
   imuMutexHandle = osMutexNew(&imuMutex_attributes);
+
+  /* creation of batteryMutex */
+  batteryMutexHandle = osMutexNew(&batteryMutex_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -185,6 +202,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of commTask */
   commTaskHandle = osThreadNew(StartCommTask, NULL, &commTask_attributes);
+
+  /* creation of batteryTask */
+  batteryTaskHandle = osThreadNew(StartBatteryTask, NULL, &batteryTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -351,6 +371,10 @@ void StartControlTask(void *argument)
 
         case CMD_EYES:
             break;
+        
+        case CMD_BOOTUP:
+          // TODO  
+          break;
     }
 
     // Update previous command tracker for the next loop iteration
@@ -528,6 +552,24 @@ void StartCommTask(void *argument)
     osDelay(10); // 100Hz command processing rate
   }
   /* USER CODE END StartCommTask */
+}
+
+/* USER CODE BEGIN Header_StartBatteryTask */
+/**
+* @brief Function implementing the batteryTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartBatteryTask */
+void StartBatteryTask(void *argument)
+{
+  /* USER CODE BEGIN StartBatteryTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartBatteryTask */
 }
 
 /* Private application code --------------------------------------------------*/
