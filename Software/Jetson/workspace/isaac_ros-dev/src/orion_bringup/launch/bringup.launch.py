@@ -45,9 +45,16 @@ def generate_launch_description():
         )
     )
 
+    hand_pose_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(orion_camera_dir, 'launch', 'hand_pose.launch.py')
+        )
+    )
+
     return LaunchDescription([
         lidar_launch,
         base_launch,
         nav_launch,
         camera_launch,
+        hand_pose_launch,
     ])

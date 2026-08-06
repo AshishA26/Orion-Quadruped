@@ -9,8 +9,8 @@ gstreamer_dual_camera_node:
     flip_method: 0  # 0=none, 2=rotate-180
 
     # Calibration file paths
-    left_camera_info_path: "/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/left_camera_info.yaml"
-    right_camera_info_path: "/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/right_camera_info.yaml"
+    # left_camera_info_path: "/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/left_camera_info.yaml"
+    # right_camera_info_path: "/home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/right_camera_info.yaml"
 
     # TF frame IDs
     left_frame_id: "left_camera"
@@ -20,11 +20,17 @@ gstreamer_dual_camera_node:
   ros__parameters:
     camera_id: 0
     module_id: 0
-    camera_info_url: "file:///home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/left_camera_info.yaml"
+    # camera_info_url: "file:///home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/left_camera_info.yaml"
 
 /argus/argus_right:
   ros__parameters:
     camera_id: 1
     module_id: 1
-    camera_info_url: "file:///home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/right_camera_info.yaml"
+    # camera_info_url: "file:///home/orion/Documents/Quadruped/Software/Jetson/workspace/isaac_ros-dev/src/orion_camera/config/right_camera_info.yaml"
 
+hand_pose_node:
+  ros__parameters:
+    max_num_hands: 1
+    model_complexity: 0
+    min_detection_confidence: 0.4
+    min_tracking_confidence: 0.4

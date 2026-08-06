@@ -29,6 +29,7 @@ setup(
     entry_points={
         'console_scripts': [
             'gstreamer_dual_camera_node = orion_camera.gstreamer_dual_camera_node:main',
+            'hand_pose_node = orion_camera.hand_pose_node:main',
         ],
     },
 )
