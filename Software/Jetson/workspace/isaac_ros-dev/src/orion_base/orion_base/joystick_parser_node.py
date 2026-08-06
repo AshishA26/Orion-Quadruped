@@ -22,9 +22,9 @@ from typing import Tuple
 # BTN_TRIANGLE = 3 # Height (z offset) increase
 # BTN_L1 = 4 # Sets CMD_NORMAL
 # BTN_R1 = 5 # Reset, sets CMD_RESET
-# BTN_L2 = 3 # Makes happy eyes for tennis ball scene if CMD_NORMAL, does extra eye commands if CMD_EYES
+# BTN_L2 = 3 # Powers on eyes (used to make happy eyes for tennis ball scene) if CMD_NORMAL. Does extra eye commands if CMD_EYES
 # BTN_R2 = 4 # Boost mode (axis 4)
-# BTN_SHARE = 8 # Sets CMD_BOOTUP
+# BTN_SHARE = 8 # Powers off eyes (used to set CMD_BOOTUP or CMD_HEEL)
 # BTN_OPTIONS = 9 # Sets CMD_WAVE
 # BTN_L3 = 10 # Sets CMD_EYES
 # BTN_R3 = 11  # Sets CMD_EXTRAS
@@ -97,7 +97,7 @@ class JoystickParser(Node):
         self.pivot_y = 0.0
 
         # Store the command type
-        self.cmd_type = OrionMotionCmd.CMD_RESET
+        self.cmd_type = OrionMotionCmd.CMD_NORMAL
 
         # Eyes state
         self.eyes_power = True
@@ -243,18 +243,22 @@ class JoystickParser(Node):
             self.cmd_type = OrionMotionCmd.CMD_EXTRAS
         elif msg.buttons[BTN_OPTIONS] == 1:
             self.cmd_type = OrionMotionCmd.CMD_WAVE
-        elif msg.buttons[BTN_SHARE] == 1:
-            self.cmd_type = OrionMotionCmd.CMD_BOOTUP
+        # elif msg.buttons[BTN_SHARE] == 1:
+            # self.cmd_type = OrionMotionCmd.CMD_BOOTUP
         elif msg.buttons[BTN_L3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EYES
 
         if self.cmd_type == OrionMotionCmd.CMD_NORMAL: # Normal
             lin_x, lin_y, ang_z, yawing_direction = self.operation_normal(msg)
             
-            # Sets happy eyes for tennis ball scene using L2
             if msg.buttons[BTN_L2] == 1:
-                self.auto_idle = False
-                self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
+                # Powers on eyes
+                self.eyes_power = True
+                # Sets happy eyes for tennis ball scene using L2
+                # self.auto_idle = False
+                # self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
+            if msg.buttons[BTN_SHARE] == 1:
+                self.eyes_power = False
 
         elif self.cmd_type == OrionMotionCmd.CMD_EXTRAS: # Extras
             x_offset, y_offset = self.operation_extras(msg)
