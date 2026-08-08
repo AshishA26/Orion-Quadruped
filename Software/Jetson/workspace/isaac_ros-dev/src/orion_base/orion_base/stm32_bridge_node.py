@@ -1,13 +1,13 @@
 import math
 import rclpy
 from rclpy.node import Node
-from orion_msgs.msg import OrionMotionCmd, OrionImuFeedback, OrionBatteryVoltage
+from orion_msgs.msg import OrionMotionCmd, OrionImuFeedback, OrionBatteryVoltage, OrionLegInfo
 from std_msgs.msg import Float32MultiArray
 import serial
 import struct
 from typing import Tuple
 
-TELEM_PKT_SIZE = 51
+TELEM_PKT_SIZE = 99 # 2 header + 96 payload (12 imu bytes, 36 battery voltage bytes, 48 joint angle bytes) + 1 checksum
 
 class STM32Bridge(Node):
     def __init__(self):
@@ -35,11 +35,21 @@ class STM32Bridge(Node):
         # Create a timer to write to UART
         self.write_timer = self.create_timer(send_rate, self.send_to_stm32)
 
-        # Battery Telemetry Publisher and Read Timer
+        # Battery Telemetry Publisher
         self.battery_front_pub = self.create_publisher(OrionBatteryVoltage, 'battery_voltage_front', 10)
         self.battery_rear_pub = self.create_publisher(OrionBatteryVoltage, 'battery_voltage_rear', 10)
         self.battery_jetson_pub = self.create_publisher(OrionBatteryVoltage, 'battery_voltage_jetson', 10)
+
+        # IMU publisher
         self.imu_pub = self.create_publisher(OrionImuFeedback, 'imu_degrees', 10)
+
+        # Joint angle publisher
+        self.front_left_leg_pub = self.create_publisher(OrionLegInfo, 'joint_angles_front_left', 10)
+        self.front_right_leg_pub = self.create_publisher(OrionLegInfo, 'joint_angles_front_right', 10)
+        self.back_left_leg_pub = self.create_publisher(OrionLegInfo, 'joint_angles_back_left', 10)
+        self.back_right_leg_pub = self.create_publisher(OrionLegInfo, 'joint_angles_back_right', 10)
+
+        # Read timer and buffer
         self.rx_buffer = bytearray()
         self.read_timer = self.create_timer(0.02, self.read_from_stm32) # 50 Hz read check
 
@@ -77,12 +87,13 @@ class STM32Bridge(Node):
                     cksum ^= b
                 
                 if cksum == packet[TELEM_PKT_SIZE-1]:
-                    # Unpack 12 little-endian floats (48 bytes)
-                    floats = struct.unpack('<12f', bytes(packet[2:TELEM_PKT_SIZE-1]))
+                    # Unpack 24 little-endian floats (96 bytes)
+                    floats = struct.unpack('<24f', bytes(packet[2:TELEM_PKT_SIZE-1]))
                     
                     # Split data
                     imu_data = floats[:3]
-                    battery_data = floats[3:]
+                    battery_data = floats[3:12]
+                    joint_data = floats[12:]
 
                     # Publish imu data
                     imu_msg = OrionImuFeedback()
@@ -112,8 +123,34 @@ class STM32Bridge(Node):
                     battery_jetson_msg.total = battery_data[8]
                     self.battery_jetson_pub.publish(battery_jetson_msg)
 
+                    # Publish joint angle data
+
+                    front_left_msg = OrionLegInfo()
+                    front_left_msg.hip_angle = joint_data[0]
+                    front_left_msg.femur_angle = joint_data[1]
+                    front_left_msg.tibia_angle = joint_data[2]
+                    self.front_left_leg_pub.publish(front_left_msg)
+
+                    front_right_msg = OrionLegInfo()
+                    front_right_msg.hip_angle = joint_data[3]
+                    front_right_msg.femur_angle = joint_data[4]
+                    front_right_msg.tibia_angle = joint_data[5]
+                    self.front_right_leg_pub.publish(front_right_msg)
+
+                    back_left_msg = OrionLegInfo()
+                    back_left_msg.hip_angle = joint_data[6]
+                    back_left_msg.femur_angle = joint_data[7]
+                    back_left_msg.tibia_angle = joint_data[8]
+                    self.back_left_leg_pub.publish(back_left_msg)
+
+                    back_right_msg = OrionLegInfo()
+                    back_right_msg.hip_angle = joint_data[9]
+                    back_right_msg.femur_angle = joint_data[10]
+                    back_right_msg.tibia_angle = joint_data[11]
+                    self.back_right_leg_pub.publish(back_right_msg)
+
                 else:
-                    self.get_logger().warn("Battery telemetry checksum failed")
+                    self.get_logger().warn("Telemetry checksum failed")
                 
                 # Consume this packet
                 self.rx_buffer = self.rx_buffer[TELEM_PKT_SIZE:]

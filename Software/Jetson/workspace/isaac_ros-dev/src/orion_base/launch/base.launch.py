@@ -43,7 +43,11 @@ def generate_launch_description():
             ('battery_voltage_front', '/battery_voltage_front'),
             ('battery_voltage_rear', '/battery_voltage_rear'),
             ('battery_voltage_jetson', '/battery_voltage_jetson'),
-            ('imu_degrees', '/imu_degrees')
+            ('imu_degrees', '/imu_degrees'),
+            ('joint_angles_front_left', '/joint_angles_front_left'),
+            ('joint_angles_front_right', '/joint_angles_front_right'),
+            ('joint_angles_back_left', '/joint_angles_back_left'),
+            ('joint_angles_back_right', '/joint_angles_back_right')
         ]
     )
 
