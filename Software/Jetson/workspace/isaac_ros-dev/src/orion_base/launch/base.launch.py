@@ -40,7 +40,8 @@ def generate_launch_description():
         parameters=[params_file],
         remappings=[
             ('orion_motion_cmd', '/orion_motion_cmd'),
-            ('battery_voltages', '/battery_voltages')
+            ('battery_voltages_raw', '/battery_voltages_raw'),
+            ('imu_raw', '/imu_raw')
         ]
     )
 

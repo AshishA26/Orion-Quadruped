@@ -7,6 +7,8 @@ import serial
 import struct
 from typing import Tuple
 
+TELEM_PKT_SIZE = 51
+
 class STM32Bridge(Node):
     def __init__(self):
         super().__init__('stm32_bridge_node')
@@ -34,7 +36,8 @@ class STM32Bridge(Node):
         self.write_timer = self.create_timer(send_rate, self.send_to_stm32)
 
         # Battery Telemetry Publisher and Read Timer
-        self.battery_pub = self.create_publisher(Float32MultiArray, 'battery_voltages', 10)
+        self.battery_pub = self.create_publisher(Float32MultiArray, 'battery_voltages_raw', 10)
+        self.imu_pub = self.create_publisher(Float32MultiArray, 'imu_raw', 10)
         self.rx_buffer = bytearray()
         self.read_timer = self.create_timer(0.02, self.read_from_stm32) # 50 Hz read check
 
@@ -62,29 +65,39 @@ class STM32Bridge(Node):
             # self.get_logger().info(f"Received {len(new_bytes)} bytes from STM32")
 
         # Process packets in the buffer
-        while len(self.rx_buffer) >= 39:
+        while len(self.rx_buffer) >= TELEM_PKT_SIZE:
             # Look for Header: 0xAA and 0x55 (this particular order means recieving from STM to jetson)
             if self.rx_buffer[0] == 0xAA and self.rx_buffer[1] == 0x55:
-                packet = self.rx_buffer[:39]
+                packet = self.rx_buffer[:TELEM_PKT_SIZE]
                 
                 # Validate Checksum (XOR from index 2 to 37)
                 cksum = 0
-                for b in packet[2:38]:
+                for b in packet[2:TELEM_PKT_SIZE-1]:
                     cksum ^= b
                 
-                if cksum == packet[38]:
-                    # Unpack 9 little-endian floats (36 bytes)
-                    floats = struct.unpack('<9f', bytes(packet[2:38]))
+                if cksum == packet[TELEM_PKT_SIZE-1]:
+                    # Unpack 12 little-endian floats (48 bytes)
+                    floats = struct.unpack('<12f', bytes(packet[2:TELEM_PKT_SIZE-1]))
                     
-                    # Publish
-                    msg = Float32MultiArray()
-                    msg.data = list(floats)
-                    self.battery_pub.publish(msg)
+                    # Split data
+                    imu_data = floats[:3]
+                    battery_data = floats[3:]
+
+                    # Publish imu data
+                    imu_msg = Float32MultiArray()
+                    imu_msg.data = list(imu_data)
+                    self.imu_pub.publish(imu_msg)
+
+                    # Publish battery data
+                    battery_msg = Float32MultiArray()
+                    battery_msg.data = list(battery_data)
+                    self.battery_pub.publish(battery_msg)
+
                 else:
                     self.get_logger().warn("Battery telemetry checksum failed")
                 
                 # Consume this packet
-                self.rx_buffer = self.rx_buffer[39:]
+                self.rx_buffer = self.rx_buffer[TELEM_PKT_SIZE:]
             else:
                 # If header doesn't match, drop 1 byte and search again
                 self.rx_buffer.pop(0)
