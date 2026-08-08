@@ -4,26 +4,29 @@
       "defaultExpanded": false,
       "topicPath": "/foxglove_bridge/sysinfo"
     },
-    "SourceInfo!45ig922": {},
+    "RawMessages!csrfko": {
+      "defaultExpanded": false,
+      "topicPath": "/imu_degrees",
+      "fontSize": 24
+    },
     "RawMessages!38zsyqy": {
       "defaultExpanded": false,
       "topicPath": "/joy"
     },
-    "Indicator!28592jt": {
-      "path": "/joy.buttons[6]",
-      "style": "bulb",
-      "fontSize": 36,
-      "fallbackColor": "#8b8b8b",
-      "fallbackLabel": "Dead man: Disabled",
-      "rules": [
-        {
-          "operator": "=",
-          "rawValue": "1",
-          "color": "#68e24a",
-          "label": "Dead man: ACTIVE"
-        }
-      ],
-      "foxglovePanelTitle": "Dead man switch"
+    "RawMessages!n6fex3": {
+      "defaultExpanded": false,
+      "topicPath": "/battery_voltage_front",
+      "fontSize": 18
+    },
+    "RawMessages!a35g7q": {
+      "defaultExpanded": false,
+      "topicPath": "/battery_voltage_jetson",
+      "fontSize": 18
+    },
+    "RawMessages!16ruyd4": {
+      "defaultExpanded": false,
+      "topicPath": "/battery_voltage_rear",
+      "fontSize": 18
     },
     "RawMessages!35vqsrj": {
       "defaultExpanded": false,
@@ -47,18 +50,18 @@
     },
     "3D!43ui6bc": {
       "cameraState": {
-        "distance": 20,
+        "distance": 10.266841665582337,
         "perspective": true,
-        "phi": 60,
+        "phi": 43.538100007112504,
         "target": [
           0,
           0,
           0
         ],
         "targetOffset": [
-          0,
-          0,
-          0
+          -1.13959366949923,
+          0.4861032356864878,
+          -1.0559206866296055e-16
         ],
         "targetOrientation": [
           0,
@@ -66,15 +69,38 @@
           0,
           1
         ],
-        "thetaOffset": 60,
+        "thetaOffset": 70.3065191505491,
         "fovy": 45,
         "near": 0.5,
         "far": 5000
       },
       "followMode": "follow-pose",
       "scene": {},
-      "transforms": {},
-      "topics": {},
+      "transforms": {
+        "frame:laser": {
+          "visible": false
+        }
+      },
+      "topics": {
+        "/map": {
+          "visible": true
+        },
+        "/slam_toolbox/graph_visualization": {
+          "visible": false
+        },
+        "/slam_toolbox/scan_visualization": {
+          "visible": false
+        },
+        "/scan": {
+          "visible": true,
+          "colorField": "intensity",
+          "colorMode": "flat",
+          "colorMap": "turbo",
+          "pointShape": "square",
+          "pointSize": 2.63,
+          "flatColor": "#ff2727ff"
+        }
+      },
       "layers": {
         "grid": {
           "visible": true,
@@ -107,7 +133,9 @@
         "poseEstimateThetaDeviation": 0.26179939
       },
       "synchronize": false,
-      "imageMode": {}
+      "imageMode": {},
+      "followTf": "map",
+      "foxglovePanelTitle": "SLAM Map"
     },
     "Image!2w6gwxp": {
       "cameraState": {
@@ -150,10 +178,134 @@
         "poseEstimateThetaDeviation": 0.26179939
       },
       "synchronize": false,
-      "imageMode": {}
+      "imageMode": {
+        "imageTopic": "/left/image_compressed",
+        "rectifyImage": true
+      },
+      "foxglovePanelTitle": ""
+    },
+    "Image!1c1j1aj": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 60,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "topics": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "synchronize": false,
+      "imageMode": {
+        "imageTopic": "/right/image_compressed"
+      }
     },
     "DiagnosticStatusPanel!1eve9pp": {
       "topicToRender": "/diagnostics"
+    },
+    "Image!3bdbndi": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 60,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "topics": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "synchronize": false,
+      "imageMode": {
+        "imageTopic": "/annotated_image_compressed"
+      }
+    },
+    "flight-indicators.AttitudeIndicator!dhf9ko": {
+      "pitchPath": "/imu_degrees.pitch",
+      "rollPath": "/imu_degrees.roll",
+      "foxglovePanelTitle": "Roll & Pitch"
+    },
+    "flight-indicators.HeadingIndicator!3naepha": {
+      "headingPath": "/imu_degrees.yaw",
+      "foxglovePanelTitle": "Yaw"
+    },
+    "rpy-panel.RPY Visualization!vlnc81": {},
+    "RawMessages!zpqfw8": {
+      "defaultExpanded": false,
+      "fontSize": 24,
+      "topicPath": "/joint_angles_front_left"
+    },
+    "RawMessages!1hgfpru": {
+      "defaultExpanded": false,
+      "fontSize": 24,
+      "topicPath": "/joint_angles_back_left"
+    },
+    "RawMessages!41b0jvh": {
+      "defaultExpanded": false,
+      "fontSize": 24,
+      "topicPath": "/joint_angles_front_right"
+    },
+    "RawMessages!4e2se19": {
+      "defaultExpanded": false,
+      "fontSize": 24,
+      "topicPath": "/joint_angles_back_right"
     },
     "Tab!23nizzl": {
       "tabs": [
@@ -163,22 +315,35 @@
             "first": {
               "first": {
                 "first": "RawMessages!1rzgfj5",
-                "second": "SourceInfo!45ig922",
+                "second": "RawMessages!csrfko",
                 "direction": "row"
               },
               "second": {
                 "first": "RawMessages!38zsyqy",
-                "second": "Indicator!28592jt",
+                "second": {
+                  "first": "RawMessages!n6fex3",
+                  "second": {
+                    "first": "RawMessages!a35g7q",
+                    "second": "RawMessages!16ruyd4",
+                    "direction": "column",
+                    "splitPercentage": 46.26571990760543
+                  },
+                  "direction": "column",
+                  "splitPercentage": 32.390537335878314
+                },
                 "direction": "row"
               },
-              "direction": "column"
+              "direction": "column",
+              "splitPercentage": 36.830253422454156
             },
             "second": {
               "first": "RawMessages!35vqsrj",
               "second": "RawMessages!eupsej",
-              "direction": "column"
+              "direction": "column",
+              "splitPercentage": 36.830253422454156
             },
-            "direction": "row"
+            "direction": "row",
+            "splitPercentage": 63.051823416506714
           }
         },
         {
@@ -191,11 +356,48 @@
         },
         {
           "title": "Camera",
-          "layout": "Image!2w6gwxp"
+          "layout": {
+            "first": "Image!2w6gwxp",
+            "second": "Image!1c1j1aj",
+            "direction": "row"
+          }
         },
         {
           "title": "Diagnostics",
           "layout": "DiagnosticStatusPanel!1eve9pp"
+        },
+        {
+          "title": "Annotated",
+          "layout": "Image!3bdbndi"
+        },
+        {
+          "title": "RPY",
+          "layout": {
+            "direction": "row",
+            "first": "flight-indicators.AttitudeIndicator!dhf9ko",
+            "second": {
+              "first": "flight-indicators.HeadingIndicator!3naepha",
+              "second": "rpy-panel.RPY Visualization!vlnc81",
+              "direction": "row"
+            },
+            "splitPercentage": 30.615640599001665
+          }
+        },
+        {
+          "title": "JointAngles",
+          "layout": {
+            "first": {
+              "first": "RawMessages!zpqfw8",
+              "second": "RawMessages!1hgfpru",
+              "direction": "column"
+            },
+            "second": {
+              "first": "RawMessages!41b0jvh",
+              "second": "RawMessages!4e2se19",
+              "direction": "column"
+            },
+            "direction": "row"
+          }
         }
       ],
       "activeTabIdx": 0
