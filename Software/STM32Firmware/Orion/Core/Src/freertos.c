@@ -90,7 +90,7 @@ struct __attribute__((packed)) CmdPayload {
 uint8_t dma_rx_buffer[DMA_RX_BUFFER_SIZE]; // Circular Queue for DMA reception of UART data
 uint16_t old_pos = 0;
 
-// Parser state machine variables
+// RX Parser state machine variables
 #define PAYLOAD_SIZE 45
 uint8_t payload_buffer[PAYLOAD_SIZE]; // Queue to hold incoming payload bytes
 uint8_t payload_index = 0;
@@ -101,8 +101,8 @@ struct CmdPayload last_cmd; // Struct to hold the payload data cleanly
 volatile int new_cmd_ready = 0; // Flag to indicate a new command is ready // Not used right now
 uint32_t last_cmd_timestamp_ms = 0; // Extra safety to prevent stale commands
 
-// Telemetry TX
-#define TELEM_PKT_SIZE 39  // 2 header + 36 payload + 1 checksum
+// TX telemetry
+#define TELEM_PKT_SIZE 51  // 2 header + 48 payload + 1 checksum
 static uint8_t telem_tx_buf[TELEM_PKT_SIZE]; // Must be static/global for DMA
 
 // volatile uint32_t checksum_errors = 0;
@@ -647,11 +647,32 @@ void StartTxCommTask(void *argument)
           batt_snap = current_battery_readings;
           osMutexRelease(batteryMutexHandle);
 
-          // Build packet: [0xAA][0x55][9 floats = 36 bytes][XOR checksum]
+          // Snapshot imu reading
+          IMU_OrientationTypeDef imu_snap;
+          osMutexAcquire(imuMutexHandle, osWaitForever);
+          imu_snap = current_imu_orientation;
+          osMutexRelease(imuMutexHandle);
+
+          // Build packet: [0xAA][0x55][3 floats = 12 bytes][9 floats = 36 bytes][XOR checksum]
           // This particular order represents transmission from STM to jetson
           telem_tx_buf[0] = 0xAA;
           telem_tx_buf[1] = 0x55;
-          memcpy(&telem_tx_buf[2], batt_snap.bus_voltage_V, 9 * sizeof(float));
+          float telem_floats[12] = {
+              imu_snap.roll,
+              imu_snap.pitch,
+              imu_snap.yaw,
+              batt_snap.bus_voltage_V[0],
+              batt_snap.bus_voltage_V[1],
+              batt_snap.bus_voltage_V[2],
+              batt_snap.bus_voltage_V[3],
+              batt_snap.bus_voltage_V[4],
+              batt_snap.bus_voltage_V[5],
+              batt_snap.bus_voltage_V[6],
+              batt_snap.bus_voltage_V[7],
+              batt_snap.bus_voltage_V[8],
+          };
+
+          memcpy(&telem_tx_buf[2], telem_floats, sizeof(telem_floats));
           
           // Checksum only the payload
           uint8_t cksum = 0;
@@ -661,6 +682,7 @@ void StartTxCommTask(void *argument)
           telem_tx_buf[TELEM_PKT_SIZE - 1] = cksum;
           
           // Fire-and-forget DMA transmit (non-blocking, ~0.9ms at 460800 baud)
+          // Needs USART1 global interrupt enabled
           HAL_UART_Transmit_DMA(&huart1, telem_tx_buf, TELEM_PKT_SIZE);
           
       //     // Debug: Transmit succeeded

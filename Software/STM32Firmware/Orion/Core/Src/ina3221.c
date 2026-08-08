@@ -71,8 +71,5 @@ HAL_StatusTypeDef INA3221_ReadAll(I2C_HandleTypeDef *hi2c, INA3221_ReadingsTypeD
         }
     }
     
-    // Zero out shunt voltages (not reading them for now)
-    memset(readings->shunt_voltage_mV, 0, sizeof(readings->shunt_voltage_mV));
-    
     return HAL_OK;
 }

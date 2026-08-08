@@ -14,7 +14,6 @@
 
 typedef struct {
     float bus_voltage_V[INA3221_TOTAL_CHANNELS];   // 9 bus voltages in volts
-    float shunt_voltage_mV[INA3221_TOTAL_CHANNELS]; // 9 shunt voltages in mV (for current calc)
 } INA3221_ReadingsTypeDef;
 
 HAL_StatusTypeDef INA3221_Init(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart_debug);

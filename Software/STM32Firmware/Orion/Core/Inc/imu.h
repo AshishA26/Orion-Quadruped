@@ -22,9 +22,9 @@
 #define AXIS_REMAP_SIGN 0x02
 
 typedef struct {
-    double yaw;
-    double roll;
-    double pitch;
+    float yaw;
+    float roll;
+    float pitch;
 } IMU_OrientationTypeDef;
 
 void IMU_Init(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart);
