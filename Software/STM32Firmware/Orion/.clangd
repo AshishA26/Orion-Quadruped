@@ -1,7 +1,7 @@
 CompileFlags:
   Add:
-    - '-ferror-limit=0'
-    - '-Wno-implicit-int'
+    - -ferror-limit=0
+    - -Wno-implicit-int
   CompilationDatabase: build/Debug
 Diagnostics:
   Suppress:

@@ -482,6 +482,24 @@ void calculateTrotGaitPositions(float vel_x, float vel_y, float ang_z, float out
     }
 }
 
+/**
+ * Gathers the current joint angles from all four LegIK instances and populates the output array.
+ * 
+ * @param outputAngles A 4x3 array to store the joint angles.
+ * @note Output format: outputAngles[LegIndex][JointIndex]
+ * @note JointIndex mapping: 0 = Hip, 1 = Femur, 2 = Tibia
+ * @note Leg order: Front left, front right, back left, back right
+ */
+void getJointAngles(float outputAngles[4][3])
+{
+    LegIK_t *legs[4] = {&legFrontLeft, &legFrontRight, &legBackLeft, &legBackRight};
+    
+    for (int i = 0; i < 4; i++) {
+        outputAngles[i][0] = LegIK_GetHipJointAngle(legs[i]);   // Hip
+        outputAngles[i][1] = LegIK_GetFemurJointAngle(legs[i]);  // Femur
+        outputAngles[i][2] = LegIK_GetTibiaJointAngle(legs[i]);  // Tibia
+    }
+}
 
 /**
  * Generates local foot coordinates and body posture offsets for a waving animation on the Front Right leg.

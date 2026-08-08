@@ -29,8 +29,12 @@ void LegIK_Init(LegIK_t *leg, float servoCenterHip, float servoCenterFemur, floa
     leg->thetaHipServo_ = servoCenterHip;
     leg->thetaFemurServo_ = servoCenterFemur;
     leg->thetaTibiaServo_ = servoCenterTibia;
-    
-    leg->offset_hip = 0.0f;
+    // leg->offset_hip = 0.0f;
+
+    // Joint angle tracking variables (does not set anything, just to send to jetson)
+    leg->jointAngleHip_ = 0;
+    leg->jointAngleTibia_ = 0;
+    leg->jointAngleFemur_ = 0;
 }
 
 bool LegIK_Calculate(LegIK_t *leg, float x, float y, float z) 
@@ -48,7 +52,7 @@ bool LegIK_Calculate(LegIK_t *leg, float x, float y, float z)
     // Note: atan2(y, z) handles the quadrant logic better than atan(y/z)
     // Note: Subtract the L1 offset angle so straight down equals 0 degrees
     float theta1_rad = atan2f(y, z) - atan2f(L1_HIP, D); 
-    
+
     // Final Hip Servo Angle
     if (leg->IS_LEFT_LEG) {
         if (leg->IS_FRONT_LEG) {
@@ -56,14 +60,14 @@ bool LegIK_Calculate(LegIK_t *leg, float x, float y, float z)
         } else {
             leg->thetaHipServo_ = leg->SERVO_CENTER_HIP - toDegrees(theta1_rad);
         }
-        leg->offset_hip = leg->SERVO_CENTER_HIP + 4.0f;
+        // leg->offset_hip = leg->SERVO_CENTER_HIP + 4.0f;
     } else {
         if (leg->IS_FRONT_LEG) {
             leg->thetaHipServo_ = leg->SERVO_CENTER_HIP - toDegrees(theta1_rad);
         } else {
             leg->thetaHipServo_ = leg->SERVO_CENTER_HIP + toDegrees(theta1_rad);
         }
-        leg->offset_hip = leg->SERVO_CENTER_HIP - 4.0f;
+        // leg->offset_hip = leg->SERVO_CENTER_HIP - 4.0f;
     }
 
     // --- Leg Plane (Femur & Tibia) ---
@@ -91,7 +95,7 @@ bool LegIK_Calculate(LegIK_t *leg, float x, float y, float z)
     sin_angle2 = fmaxf(-1.0f, fminf(1.0f, sin_angle2)); // Clamp between -1.0 and 1.0
     float beta_femur = asinf(sin_angle2);
     float theta2_rad = toRadians(90.0f) - (beta_femur - alpha_femur); // TODO: will this reference to 90 deg cause issues if moving femur above horizontal?
-    
+
     // Accounting for Tibia servo offset and femur coupling
     float phi = toDegrees(theta3_rad) - THETA_TIBIA_OFFSET;
     float theta_s = 90.0f - phi + toDegrees(theta2_rad);
@@ -105,7 +109,12 @@ bool LegIK_Calculate(LegIK_t *leg, float x, float y, float z)
         leg->thetaFemurServo_ = leg->SERVO_CENTER_FEMUR + toDegrees(theta2_rad);
         leg->thetaTibiaServo_ = leg->SERVO_CENTER_TIBIA + theta_s; 
     }
-    
+
+    // Keep track of joint angles to send to jetson
+    leg->jointAngleHip_ = toDegrees(theta1_rad);
+    leg->jointAngleFemur_ = toDegrees(theta2_rad);
+    leg->jointAngleTibia_ = toDegrees(theta3_rad);
+
     return true;
 }
 
@@ -116,3 +125,7 @@ int LegIK_GetTibiaServoChannel(LegIK_t *leg) { return leg->CHANNEL_TIBIA; }
 float LegIK_GetHipServoAngle(LegIK_t *leg) { return leg->thetaHipServo_; }
 float LegIK_GetFemurServoAngle(LegIK_t *leg) { return leg->thetaFemurServo_; }
 float LegIK_GetTibiaServoAngle(LegIK_t *leg) { return leg->thetaTibiaServo_; }
+
+float LegIK_GetHipJointAngle(LegIK_t *leg) { return leg->jointAngleHip_; }
+float LegIK_GetFemurJointAngle(LegIK_t *leg) { return leg->jointAngleFemur_; }
+float LegIK_GetTibiaJointAngle(LegIK_t *leg) { return leg->jointAngleTibia_; }

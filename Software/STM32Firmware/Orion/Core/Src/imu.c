@@ -83,9 +83,9 @@ void IMU_ReadOrientation(I2C_HandleTypeDef *hi2c, IMU_OrientationTypeDef *orient
     pitch_raw = (int16_t)((buffer[5] << 8) | buffer[4]);
 
     // Scale the data (16 ticks per degree)
-    yaw   = (double)yaw_raw / 16.0;
-    roll  = (double)roll_raw / 16.0;
-    pitch = (double)pitch_raw / 16.0;
+    yaw   = (float)yaw_raw / 16.0f;
+    roll  = (float)roll_raw / 16.0f;
+    pitch = (float)pitch_raw / 16.0f;
 
     orientation->yaw = yaw;
     orientation->roll = roll;

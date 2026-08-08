@@ -30,6 +30,8 @@
 #include "LegMotion.h"
 #include "BodyIK.h"
 #include "imu.h"
+#include "ina3221.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,6 +57,7 @@ extern UART_HandleTypeDef huart2; // HUART1 is used for Jetson, so use HUART2 fo
 extern UART_HandleTypeDef huart1; // The UART connected to the Jetson
 
 IMU_OrientationTypeDef current_imu_orientation; // Global variable to hold the latest IMU orientation
+INA3221_ReadingsTypeDef current_battery_readings; // Global variable to hold the latest battery readings
 
 // Struct matching the Jetson packet (1 byte type + 36 bytes floats)
 // Packed to ensure no padding bytes are added by the compiler, which would break parsing
@@ -80,13 +83,14 @@ struct __attribute__((packed)) CmdPayload {
 #define CMD_DANCE 0x05
 #define CMD_EXTRAS 0x06
 #define CMD_EYES 0x07
+#define CMD_BOOTUP 0x08
 
 // DMA Buffer and tracking
 #define DMA_RX_BUFFER_SIZE 64 // Larger than the expected command size to ensure no bytes are missed
 uint8_t dma_rx_buffer[DMA_RX_BUFFER_SIZE]; // Circular Queue for DMA reception of UART data
 uint16_t old_pos = 0;
 
-// Parser state machine variables
+// RX Parser state machine variables
 #define PAYLOAD_SIZE 45
 uint8_t payload_buffer[PAYLOAD_SIZE]; // Queue to hold incoming payload bytes
 uint8_t payload_index = 0;
@@ -96,6 +100,10 @@ int parser_state = 0;
 struct CmdPayload last_cmd; // Struct to hold the payload data cleanly
 volatile int new_cmd_ready = 0; // Flag to indicate a new command is ready // Not used right now
 uint32_t last_cmd_timestamp_ms = 0; // Extra safety to prevent stale commands
+
+// TX telemetry
+#define TELEM_PKT_SIZE 99  // 2 header + 96 payload + 1 checksum
+static uint8_t telem_tx_buf[TELEM_PKT_SIZE]; // Must be static/global for DMA
 
 // volatile uint32_t checksum_errors = 0;
 // volatile uint32_t uart_errors = 0;
@@ -113,12 +121,26 @@ osThreadId_t imuTaskHandle;
 const osThreadAttr_t imuTask_attributes = {
   .name = "imuTask",
   .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for rxCommTask */
+osThreadId_t rxCommTaskHandle;
+const osThreadAttr_t rxCommTask_attributes = {
+  .name = "rxCommTask",
+  .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
-/* Definitions for commTask */
-osThreadId_t commTaskHandle;
-const osThreadAttr_t commTask_attributes = {
-  .name = "commTask",
+/* Definitions for batteryTask */
+osThreadId_t batteryTaskHandle;
+const osThreadAttr_t batteryTask_attributes = {
+  .name = "batteryTask",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityLow1,
+};
+/* Definitions for txCommTask */
+osThreadId_t txCommTaskHandle;
+const osThreadAttr_t txCommTask_attributes = {
+  .name = "txCommTask",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
@@ -132,6 +154,11 @@ osMutexId_t imuMutexHandle;
 const osMutexAttr_t imuMutex_attributes = {
   .name = "imuMutex"
 };
+/* Definitions for batteryMutex */
+osMutexId_t batteryMutexHandle;
+const osMutexAttr_t batteryMutex_attributes = {
+  .name = "batteryMutex"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -140,7 +167,9 @@ const osMutexAttr_t imuMutex_attributes = {
 
 void StartControlTask(void *argument);
 void StartIMUTask(void *argument);
-void StartCommTask(void *argument);
+void StartRxCommTask(void *argument);
+void StartBatteryTask(void *argument);
+void StartTxCommTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -159,6 +188,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of imuMutex */
   imuMutexHandle = osMutexNew(&imuMutex_attributes);
+
+  /* creation of batteryMutex */
+  batteryMutexHandle = osMutexNew(&batteryMutex_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -183,8 +215,14 @@ void MX_FREERTOS_Init(void) {
   /* creation of imuTask */
   imuTaskHandle = osThreadNew(StartIMUTask, NULL, &imuTask_attributes);
 
-  /* creation of commTask */
-  commTaskHandle = osThreadNew(StartCommTask, NULL, &commTask_attributes);
+  /* creation of rxCommTask */
+  rxCommTaskHandle = osThreadNew(StartRxCommTask, NULL, &rxCommTask_attributes);
+
+  /* creation of batteryTask */
+  batteryTaskHandle = osThreadNew(StartBatteryTask, NULL, &batteryTask_attributes);
+
+  /* creation of txCommTask */
+  txCommTaskHandle = osThreadNew(StartTxCommTask, NULL, &txCommTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -351,6 +389,10 @@ void StartControlTask(void *argument)
 
         case CMD_EYES:
             break;
+        
+        case CMD_BOOTUP:
+          // TODO  
+          break;
     }
 
     // Update previous command tracker for the next loop iteration
@@ -373,6 +415,33 @@ void StartControlTask(void *argument)
     //     char err_msg[64];
     //     int n = snprintf(err_msg, sizeof(err_msg), "CS_Err: %lu | UART_Err: %lu\r\n", checksum_errors, uart_errors);
     //     HAL_UART_Transmit(&huart2, (uint8_t*)err_msg, (uint16_t)n, 10);
+    // }
+
+    // --- Debug Print Battery Values ---
+    // static uint32_t last_batt_print = 0;
+    // if (HAL_GetTick() - last_batt_print > 1000) { // Print every 1 second
+    //     last_batt_print = HAL_GetTick();
+        
+    //     // Safely copy the global readings
+    //     INA3221_ReadingsTypeDef batt;
+    //     osMutexAcquire(batteryMutexHandle, osWaitForever);
+    //     batt = current_battery_readings;
+    //     osMutexRelease(batteryMutexHandle);
+        
+    //     // Format and transmit (printing all 9 channels)
+    //     char batt_msg[128];
+    //     int len = snprintf(batt_msg, sizeof(batt_msg), 
+    //                        "Batt: %d.%02d, %d.%02d, %d.%02d | %d.%02d, %d.%02d, %d.%02d | %d.%02d, %d.%02d, %d.%02d\r\n", 
+    //                        (int)batt.bus_voltage_V[0], (int)(batt.bus_voltage_V[0]*100)%100,
+    //                        (int)batt.bus_voltage_V[1], (int)(batt.bus_voltage_V[1]*100)%100,
+    //                        (int)batt.bus_voltage_V[2], (int)(batt.bus_voltage_V[2]*100)%100,
+    //                        (int)batt.bus_voltage_V[3], (int)(batt.bus_voltage_V[3]*100)%100,
+    //                        (int)batt.bus_voltage_V[4], (int)(batt.bus_voltage_V[4]*100)%100,
+    //                        (int)batt.bus_voltage_V[5], (int)(batt.bus_voltage_V[5]*100)%100,
+    //                        (int)batt.bus_voltage_V[6], (int)(batt.bus_voltage_V[6]*100)%100,
+    //                        (int)batt.bus_voltage_V[7], (int)(batt.bus_voltage_V[7]*100)%100,
+    //                        (int)batt.bus_voltage_V[8], (int)(batt.bus_voltage_V[8]*100)%100);
+    //     HAL_UART_Transmit(&huart2, (uint8_t*)batt_msg, (uint16_t)len, 100);
     // }
 
     osDelay(20); // Steady 50Hz control loop cycle execution
@@ -434,16 +503,16 @@ void StartIMUTask(void *argument)
   /* USER CODE END StartIMUTask */
 }
 
-/* USER CODE BEGIN Header_StartCommTask */
+/* USER CODE BEGIN Header_StartRxCommTask */
 /**
-* @brief Function implementing the commTask thread.
+* @brief Function implementing the rxCommTask thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_StartCommTask */
-void StartCommTask(void *argument)
+/* USER CODE END Header_StartRxCommTask */
+void StartRxCommTask(void *argument)
 {
-  /* USER CODE BEGIN StartCommTask */
+  /* USER CODE BEGIN StartRxCommTask */
 
   // Start continuous DMA reception on USART1 in the background
   HAL_UART_Receive_DMA(&huart1, dma_rx_buffer, DMA_RX_BUFFER_SIZE);
@@ -466,7 +535,7 @@ void StartCommTask(void *argument)
 
         // State machine to find headers, read payload, and check checksum
         switch(parser_state) {
-            
+            // This order of 0x55 and 0xAA represents tranmission from jetson to STM  
             // Looking for Header 1 (0x55)
             // If 1st header byte was found, set state to 1 to look for 2nd header byte
             case 0:
@@ -527,7 +596,122 @@ void StartCommTask(void *argument)
     // Let FreeRTOS give CPU time to other tasks
     osDelay(10); // 100Hz command processing rate
   }
-  /* USER CODE END StartCommTask */
+  /* USER CODE END StartRxCommTask */
+}
+
+/* USER CODE BEGIN Header_StartBatteryTask */
+/**
+* @brief Function implementing the batteryTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartBatteryTask */
+void StartBatteryTask(void *argument)
+{
+  /* USER CODE BEGIN StartBatteryTask */
+  osDelay(2000);
+  INA3221_Init(&hi2c3, &huart2);
+  INA3221_ReadingsTypeDef readings;
+
+  /* Infinite loop */
+  for(;;)
+  {
+    if (INA3221_ReadAll(&hi2c3, &readings) == HAL_OK) {
+      osMutexAcquire(batteryMutexHandle, osWaitForever);
+      current_battery_readings = readings;
+      osMutexRelease(batteryMutexHandle);
+    }
+    osDelay(1000); // 1 Hz as battery voltage does not change fast
+  }
+  /* USER CODE END StartBatteryTask */
+}
+
+/* USER CODE BEGIN Header_StartTxCommTask */
+/**
+* @brief Function implementing the txCommTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTxCommTask */
+void StartTxCommTask(void *argument)
+{
+  /* USER CODE BEGIN StartTxCommTask */
+  /* Infinite loop */
+  for(;;)
+  {
+      // Wait for previous DMA transfer to complete
+      if (huart1.gState == HAL_UART_STATE_READY) {
+          // Snapshot battery readings
+          INA3221_ReadingsTypeDef batt_snap;
+          osMutexAcquire(batteryMutexHandle, osWaitForever);
+          batt_snap = current_battery_readings;
+          osMutexRelease(batteryMutexHandle);
+
+          // Snapshot imu reading
+          IMU_OrientationTypeDef imu_snap;
+          osMutexAcquire(imuMutexHandle, osWaitForever);
+          imu_snap = current_imu_orientation;
+          osMutexRelease(imuMutexHandle);
+
+          // Snapshot joint angles
+          float joint_angles[4][3];
+          getJointAngles(joint_angles);
+
+          // Build packet: [0xAA][0x55][3 floats = 12 bytes][9 floats = 36 bytes][12 floats = 48 bytes][XOR checksum]
+          // This particular order represents transmission from STM to jetson
+          telem_tx_buf[0] = 0xAA;
+          telem_tx_buf[1] = 0x55;
+          float telem_floats[24] = {
+              imu_snap.roll,
+              imu_snap.pitch,
+              imu_snap.yaw,
+              batt_snap.bus_voltage_V[0],
+              batt_snap.bus_voltage_V[1],
+              batt_snap.bus_voltage_V[2],
+              batt_snap.bus_voltage_V[3],
+              batt_snap.bus_voltage_V[4],
+              batt_snap.bus_voltage_V[5],
+              batt_snap.bus_voltage_V[6],
+              batt_snap.bus_voltage_V[7],
+              batt_snap.bus_voltage_V[8],
+              joint_angles[0][0],
+              joint_angles[0][1],
+              joint_angles[0][2],
+              joint_angles[1][0],
+              joint_angles[1][1],
+              joint_angles[1][2],
+              joint_angles[2][0],
+              joint_angles[2][1],
+              joint_angles[2][2],
+              joint_angles[3][0],
+              joint_angles[3][1],
+              joint_angles[3][2],
+          };
+
+          memcpy(&telem_tx_buf[2], telem_floats, sizeof(telem_floats));
+          
+          // Checksum only the payload
+          uint8_t cksum = 0;
+          for (int i = 2; i < TELEM_PKT_SIZE - 1; i++) {
+              cksum ^= telem_tx_buf[i];
+          }
+          telem_tx_buf[TELEM_PKT_SIZE - 1] = cksum;
+          
+          // Fire-and-forget DMA transmit (non-blocking, ~0.9ms at 460800 baud)
+          // Needs USART1 global interrupt enabled
+          HAL_UART_Transmit_DMA(&huart1, telem_tx_buf, TELEM_PKT_SIZE);
+          
+      //     // Debug: Transmit succeeded
+      //     char msg[] = "TX Task: Sent via DMA\r\n";
+      //     HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 10);
+      // } else {
+      //     // Debug: UART is stuck busy!
+      //     char msg[] = "TX Task: UART1 BUSY!\r\n";
+      //     HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 10);
+      }
+      osDelay(100);
+  }
+  /* USER CODE END StartTxCommTask */
 }
 
 /* Private application code --------------------------------------------------*/
