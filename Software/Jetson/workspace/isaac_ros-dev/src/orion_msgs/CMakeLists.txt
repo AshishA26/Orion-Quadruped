@@ -28,5 +28,7 @@ endif()
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/OrionEyesCmd.msg"
   "msg/OrionMotionCmd.msg"
+  "msg/OrionImuFeedback.msg"
+  "msg/OrionBatteryVoltage.msg"
  )
 ament_package()

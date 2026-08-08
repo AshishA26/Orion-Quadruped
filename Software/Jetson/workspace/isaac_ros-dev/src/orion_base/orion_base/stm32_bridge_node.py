@@ -1,7 +1,7 @@
 import math
 import rclpy
 from rclpy.node import Node
-from orion_msgs.msg import OrionMotionCmd
+from orion_msgs.msg import OrionMotionCmd, OrionImuFeedback, OrionBatteryVoltage
 from std_msgs.msg import Float32MultiArray
 import serial
 import struct
@@ -36,11 +36,12 @@ class STM32Bridge(Node):
         self.write_timer = self.create_timer(send_rate, self.send_to_stm32)
 
         # Battery Telemetry Publisher and Read Timer
-        self.battery_pub = self.create_publisher(Float32MultiArray, 'battery_voltages_raw', 10)
-        self.imu_pub = self.create_publisher(Float32MultiArray, 'imu_raw', 10)
+        self.battery_front_pub = self.create_publisher(OrionBatteryVoltage, 'battery_voltage_front', 10)
+        self.battery_rear_pub = self.create_publisher(OrionBatteryVoltage, 'battery_voltage_rear', 10)
+        self.battery_jetson_pub = self.create_publisher(OrionBatteryVoltage, 'battery_voltage_jetson', 10)
+        self.imu_pub = self.create_publisher(OrionImuFeedback, 'imu_degrees', 10)
         self.rx_buffer = bytearray()
         self.read_timer = self.create_timer(0.02, self.read_from_stm32) # 50 Hz read check
-
 
     def calculate_checksum(self, payload_bytes):
         # Simple XOR checksum of the payload
@@ -84,14 +85,32 @@ class STM32Bridge(Node):
                     battery_data = floats[3:]
 
                     # Publish imu data
-                    imu_msg = Float32MultiArray()
-                    imu_msg.data = list(imu_data)
+                    imu_msg = OrionImuFeedback()
+                    imu_msg.roll = imu_data[0]
+                    imu_msg.pitch = imu_data[1]
+                    imu_msg.yaw = imu_data[2]
                     self.imu_pub.publish(imu_msg)
 
                     # Publish battery data
-                    battery_msg = Float32MultiArray()
-                    battery_msg.data = list(battery_data)
-                    self.battery_pub.publish(battery_msg)
+
+                    battery_front_msg = OrionBatteryVoltage()
+                    battery_front_msg.cell_1 = battery_data[0]
+                    battery_front_msg.cell_2 = battery_data[1]-battery_data[0]
+                    battery_front_msg.total = battery_data[1]
+                    self.battery_front_pub.publish(battery_front_msg)
+
+                    battery_rear_msg = OrionBatteryVoltage()
+                    battery_rear_msg.cell_1 = battery_data[3]
+                    battery_rear_msg.cell_2 = battery_data[4]-battery_data[3]
+                    battery_rear_msg.total = battery_data[4]
+                    self.battery_rear_pub.publish(battery_rear_msg)
+
+                    battery_jetson_msg = OrionBatteryVoltage()
+                    battery_jetson_msg.cell_1 = battery_data[6]
+                    battery_jetson_msg.cell_2 = battery_data[7]-battery_data[6]
+                    battery_jetson_msg.cell_3 = battery_data[8]-battery_data[7]
+                    battery_jetson_msg.total = battery_data[8]
+                    self.battery_jetson_pub.publish(battery_jetson_msg)
 
                 else:
                     self.get_logger().warn("Battery telemetry checksum failed")
