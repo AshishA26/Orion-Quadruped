@@ -25,7 +25,7 @@ from typing import Tuple
 # BTN_L2 = 3 # Powers on eyes (used to make happy eyes for tennis ball scene) if CMD_NORMAL. Does extra eye commands if CMD_EYES
 # BTN_R2 = 4 # Boost mode (axis 4)
 # BTN_SHARE = 8 # Powers off eyes (used to set CMD_BOOTUP or CMD_HEEL)
-# BTN_OPTIONS = 9 # Sets CMD_WAVE
+# BTN_OPTIONS = 9 # Sets CMD_HEEL (used to set CMD_WAVE)
 # BTN_L3 = 10 # Sets CMD_EYES
 # BTN_R3 = 11  # Sets CMD_EXTRAS
 # BTN_PS = 12
@@ -242,7 +242,7 @@ class JoystickParser(Node):
         elif msg.buttons[BTN_R3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EXTRAS
         elif msg.buttons[BTN_OPTIONS] == 1:
-            self.cmd_type = OrionMotionCmd.CMD_WAVE
+            self.cmd_type = OrionMotionCmd.CMD_HEEL
         # elif msg.buttons[BTN_SHARE] == 1:
             # self.cmd_type = OrionMotionCmd.CMD_BOOTUP
         elif msg.buttons[BTN_L3] == 1:
