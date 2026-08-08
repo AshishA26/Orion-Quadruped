@@ -36,7 +36,8 @@ class STM32Bridge(Node):
         # Battery Telemetry Publisher and Read Timer
         self.battery_pub = self.create_publisher(Float32MultiArray, 'battery_voltages', 10)
         self.rx_buffer = bytearray()
-        self.read_timer = self.create_timer(1000, self.read_from_stm32) # 50 Hz read check
+        self.read_timer = self.create_timer(0.02, self.read_from_stm32) # 50 Hz read check
+
 
     def calculate_checksum(self, payload_bytes):
         # Simple XOR checksum of the payload
@@ -50,43 +51,43 @@ class STM32Bridge(Node):
         self.latest_msg = msg
 
     def read_from_stm32(self):
-        pass
-        # if not self.serial_conn or not self.serial_conn.is_open:
-        #     return
+        if not self.serial_conn or not self.serial_conn.is_open:
+            self.get_logger().error("No connection!")
+            return
 
-        # # Read everything available in the serial buffer
-        # if self.serial_conn.in_waiting > 0:
-        #     new_bytes = self.serial_conn.read(self.serial_conn.in_waiting)
-        #     self.rx_buffer.extend(new_bytes)
-        #     self.get_logger().info(f"Received {len(new_bytes)} bytes from STM32")
+        # Read everything available in the serial buffer
+        if self.serial_conn.in_waiting > 0:
+            new_bytes = self.serial_conn.read(self.serial_conn.in_waiting)
+            self.rx_buffer.extend(new_bytes)
+            # self.get_logger().info(f"Received {len(new_bytes)} bytes from STM32")
 
-        # # Process packets in the buffer
-        # while len(self.rx_buffer) >= 40:
-        #     # Look for Header: 0xAA, 0x55 and Type: 0x10
-        #     if self.rx_buffer[0] == 0xAA and self.rx_buffer[1] == 0x55 and self.rx_buffer[2] == 0x10:
-        #         packet = self.rx_buffer[:40]
+        # Process packets in the buffer
+        while len(self.rx_buffer) >= 39:
+            # Look for Header: 0xAA and 0x55 (this particular order means recieving from STM to jetson)
+            if self.rx_buffer[0] == 0xAA and self.rx_buffer[1] == 0x55:
+                packet = self.rx_buffer[:39]
                 
-        #         # Validate Checksum (XOR from index 2 to 38)
-        #         cksum = 0
-        #         for b in packet[2:39]:
-        #             cksum ^= b
+                # Validate Checksum (XOR from index 2 to 37)
+                cksum = 0
+                for b in packet[2:38]:
+                    cksum ^= b
                 
-        #         if cksum == packet[39]:
-        #             # Unpack 9 little-endian floats (36 bytes)
-        #             floats = struct.unpack('<9f', packet[3:39])
+                if cksum == packet[38]:
+                    # Unpack 9 little-endian floats (36 bytes)
+                    floats = struct.unpack('<9f', bytes(packet[2:38]))
                     
-        #             # Publish
-        #             msg = Float32MultiArray()
-        #             msg.data = list(floats)
-        #             self.battery_pub.publish(msg)
-        #         else:
-        #             self.get_logger().warn("Battery telemetry checksum failed")
+                    # Publish
+                    msg = Float32MultiArray()
+                    msg.data = list(floats)
+                    self.battery_pub.publish(msg)
+                else:
+                    self.get_logger().warn("Battery telemetry checksum failed")
                 
-        #         # Consume this packet
-        #         self.rx_buffer = self.rx_buffer[40:]
-        #     else:
-        #         # If header doesn't match, drop 1 byte and search again
-        #         self.rx_buffer.pop(0)
+                # Consume this packet
+                self.rx_buffer = self.rx_buffer[39:]
+            else:
+                # If header doesn't match, drop 1 byte and search again
+                self.rx_buffer.pop(0)
 
     def send_to_stm32(self):
         if not self.serial_conn or not self.serial_conn.is_open:
@@ -110,6 +111,7 @@ class STM32Bridge(Node):
         # Make header and footer of packet
         # The header act as a synchronization marker to mark start of the packet.
         # - 0x55 in binary is 01010101 and 0xAA in binary is 10101010
+        # - This order of 0x55 and 0xAA represents transmission from jetson to STM
         # - They create a perfectly alternating pattern of highs and lows on the physical wire
         #   making it easy for reciever to synchronize its timing to the incoming signal. 
         # - It also makes it very easy to spot the start of a packet if on an oscilloscope.
