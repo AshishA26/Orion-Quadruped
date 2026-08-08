@@ -31,10 +31,16 @@ typedef struct {
     bool IS_FRONT_LEG;
     bool IS_LEFT_LEG;
     
+    // Degrees
     float thetaHipServo_;
     float thetaFemurServo_;
     float thetaTibiaServo_;
-    float offset_hip;
+    // float offset_hip;
+
+    // Joint angle (degrees) tracking variables (does not set anything, just to send to jetson)
+    float jointAngleHip_;
+    float jointAngleFemur_;
+    float jointAngleTibia_;
 } LegIK_t;
 
 /**
@@ -59,5 +65,10 @@ float LegIK_GetTibiaServoAngle(LegIK_t *leg);
 int LegIK_GetHipServoChannel(LegIK_t *leg);
 int LegIK_GetFemurServoChannel(LegIK_t *leg);
 int LegIK_GetTibiaServoChannel(LegIK_t *leg);
+
+// Getters for joint angles (for jetson)
+float LegIK_GetHipJointAngle(LegIK_t *leg);
+float LegIK_GetFemurJointAngle(LegIK_t *leg);
+float LegIK_GetTibiaJointAngle(LegIK_t *leg);
 
 #endif // LEGIK_H

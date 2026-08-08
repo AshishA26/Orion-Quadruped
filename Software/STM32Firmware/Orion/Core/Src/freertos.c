@@ -102,7 +102,7 @@ volatile int new_cmd_ready = 0; // Flag to indicate a new command is ready // No
 uint32_t last_cmd_timestamp_ms = 0; // Extra safety to prevent stale commands
 
 // TX telemetry
-#define TELEM_PKT_SIZE 51  // 2 header + 48 payload + 1 checksum
+#define TELEM_PKT_SIZE 99  // 2 header + 96 payload + 1 checksum
 static uint8_t telem_tx_buf[TELEM_PKT_SIZE]; // Must be static/global for DMA
 
 // volatile uint32_t checksum_errors = 0;
@@ -653,11 +653,15 @@ void StartTxCommTask(void *argument)
           imu_snap = current_imu_orientation;
           osMutexRelease(imuMutexHandle);
 
-          // Build packet: [0xAA][0x55][3 floats = 12 bytes][9 floats = 36 bytes][XOR checksum]
+          // Snapshot joint angles
+          float joint_angles[4][3];
+          getJointAngles(joint_angles);
+
+          // Build packet: [0xAA][0x55][3 floats = 12 bytes][9 floats = 36 bytes][12 floats = 48 bytes][XOR checksum]
           // This particular order represents transmission from STM to jetson
           telem_tx_buf[0] = 0xAA;
           telem_tx_buf[1] = 0x55;
-          float telem_floats[12] = {
+          float telem_floats[24] = {
               imu_snap.roll,
               imu_snap.pitch,
               imu_snap.yaw,
@@ -670,6 +674,18 @@ void StartTxCommTask(void *argument)
               batt_snap.bus_voltage_V[6],
               batt_snap.bus_voltage_V[7],
               batt_snap.bus_voltage_V[8],
+              joint_angles[0][0],
+              joint_angles[0][1],
+              joint_angles[0][2],
+              joint_angles[1][0],
+              joint_angles[1][1],
+              joint_angles[1][2],
+              joint_angles[2][0],
+              joint_angles[2][1],
+              joint_angles[2][2],
+              joint_angles[3][0],
+              joint_angles[3][1],
+              joint_angles[3][2],
           };
 
           memcpy(&telem_tx_buf[2], telem_floats, sizeof(telem_floats));
