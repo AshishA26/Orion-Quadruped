@@ -1,0 +1,40 @@
+{
+  "name": "rpy-panel",
+  "displayName": "RPY Visualization Panel",
+  "description": "Custom Foxglove panel for visualizing Roll, Pitch, and Yaw orientation data with circular gauges",
+  "publisher": "your-name",
+  "homepage": "",
+  "version": "1.1.0",
+  "license": "MIT",
+  "main": "./dist/extension.js",
+  "keywords": [
+    "foxglove-extension",
+    "robotics",
+    "visualization",
+    "rpy",
+    "orientation"
+  ],
+  "scripts": {
+    "build": "foxglove-extension build",
+    "package": "foxglove-extension package",
+    "pretest": "foxglove-extension pretest",
+    "watch": "foxglove-extension watch"
+  },
+  "devDependencies": {
+    "@foxglove/extension": "^2.59.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "create-foxglove-extension": "^1.3.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
