@@ -662,6 +662,14 @@ void StartTxCommTask(void *argument)
           
           // Fire-and-forget DMA transmit (non-blocking, ~0.9ms at 460800 baud)
           HAL_UART_Transmit_DMA(&huart1, telem_tx_buf, TELEM_PKT_SIZE);
+          
+      //     // Debug: Transmit succeeded
+      //     char msg[] = "TX Task: Sent via DMA\r\n";
+      //     HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 10);
+      // } else {
+      //     // Debug: UART is stuck busy!
+      //     char msg[] = "TX Task: UART1 BUSY!\r\n";
+      //     HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 10);
       }
       osDelay(100);
   }
