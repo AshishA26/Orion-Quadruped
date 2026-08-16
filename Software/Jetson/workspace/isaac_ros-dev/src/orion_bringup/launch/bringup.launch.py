@@ -10,6 +10,7 @@ def generate_launch_description():
     orion_lidar_dir = get_package_share_directory('orion_lidar')
     orion_nav_dir = get_package_share_directory('orion_navigation')
     orion_camera_dir = get_package_share_directory('orion_camera')
+    orion_urdf_dir = get_package_share_directory('orion_urdf')
 
     # Include Lidar launch
     lidar_launch = IncludeLaunchDescription(
@@ -51,10 +52,17 @@ def generate_launch_description():
         )
     )
 
+    urdf_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(orion_urdf_dir, 'launch', 'view_robot.launch.py')
+        )
+    )
+
     return LaunchDescription([
         lidar_launch,
         base_launch,
         nav_launch,
         camera_launch,
         hand_pose_launch,
+        urdf_launch,
     ])
