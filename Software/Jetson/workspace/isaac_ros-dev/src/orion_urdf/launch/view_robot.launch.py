@@ -35,7 +35,7 @@ def generate_launch_description():
         name='joint_state_publisher',
         parameters=[{
             'rate': 30.0,
-            'source_list': ['/my_custom_node_joint_states'] # Listen to your custom node!
+            # 'source_list': ['/my_custom_node_joint_states'] # Listen to your custom node!
         }]
     )
 

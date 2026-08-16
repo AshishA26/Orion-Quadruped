@@ -5,7 +5,7 @@ sllidar_node:
   ros__parameters:
     serial_port: '/dev/ttyUSB0'
     serial_baudrate: 115200  # A1M8 specific 
-    frame_id: 'laser'
+    frame_id: 'lidar_link'
     inverted: false
     angle_compensate: true
 
@@ -16,6 +16,7 @@ rf2o_laser_odometry:
     publish_tf: true
     base_frame_id: 'base_link'
     odom_frame_id: 'odom'
+    laser_frame_id: 'lidar_link'
     init_pose_from_topic: ''
     freq: 10.0
 
