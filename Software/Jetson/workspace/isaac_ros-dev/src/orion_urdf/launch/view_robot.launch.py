@@ -14,7 +14,7 @@ def generate_launch_description():
         description='Use joint_state_publisher_gui to move joints'
     )
 
-    urdf_file = PathJoinSubstitution([pkg, 'urdf', 'robot_description.urdf']) 
+    urdf_file = PathJoinSubstitution([pkg, 'urdf', 'robot_description_v2.urdf']) 
     robot_description = Command(['cat ', urdf_file])
 
     # OPTION A: Manual Slider GUI (Runs ONLY when use_gui:=true)
