@@ -110,10 +110,25 @@ bool LegIK_Calculate(LegIK_t *leg, float x, float y, float z)
         leg->thetaTibiaServo_ = leg->SERVO_CENTER_TIBIA + theta_s; 
     }
 
-    // Keep track of joint angles to send to jetson
-    leg->jointAngleHip_ = toDegrees(theta1_rad);
-    leg->jointAngleFemur_ = toDegrees(theta2_rad);
-    leg->jointAngleTibia_ = toDegrees(theta3_rad);
+    float hipJoint_deg, femurJoint_deg, tibiaJoint_deg;
+
+    // Mirror using the SAME left/right, front/back logic as the servo hip angle,
+    // but with no SERVO_CENTER offset — this needs to match sign convention of
+    // each leg's URDF axis, so treat the signs below as a starting point and
+    // verify/flip per-joint using the calibration procedure below.
+    if (leg->IS_LEFT_LEG) {
+        hipJoint_deg = leg->IS_FRONT_LEG ?  toDegrees(theta1_rad) : -toDegrees(theta1_rad);
+        femurJoint_deg = -toDegrees(theta2_rad);
+        tibiaJoint_deg = -(toDegrees(theta3_rad) - 180.0f);
+    } else {
+        hipJoint_deg = leg->IS_FRONT_LEG ? -toDegrees(theta1_rad) :  toDegrees(theta1_rad);
+        femurJoint_deg =  toDegrees(theta2_rad);
+        tibiaJoint_deg =  (toDegrees(theta3_rad) - 180.0f);
+    }
+
+    leg->jointAngleHip_   = hipJoint_deg;
+    leg->jointAngleFemur_ = femurJoint_deg;
+    leg->jointAngleTibia_ = tibiaJoint_deg;
 
     return true;
 }
