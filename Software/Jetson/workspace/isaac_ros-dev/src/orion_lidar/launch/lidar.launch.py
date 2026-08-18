@@ -19,15 +19,6 @@ def generate_launch_description():
         parameters=[params_file]
     )
 
-    # This connects robot base to the lidar. 
-    # Adjust args: x y z yaw pitch roll
-    base_to_laser_tf = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='base_to_laser_broadcaster',
-        arguments=['0.1', '0', '0.05', '0', '0', '0', 'base_link', 'laser']
-    )
-
     # Calculates odom -> base_link based on laser scan movement
     rf2o_node = Node(
         package='rf2o_laser_odometry',
@@ -48,17 +39,8 @@ def generate_launch_description():
         ros_arguments=['--log-level', 'error']
     )
 
-    rviz_node = Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        arguments=['-d', '/workspaces/isaac_ros-dev/src/orion_lidar/rviz_configs/mapping.rviz'],
-    )
-
     return LaunchDescription([
         rplidar_node,
-        base_to_laser_tf,
         rf2o_node,
-        slam_toolbox_node,
-        # rviz_node
+        slam_toolbox_node
     ])

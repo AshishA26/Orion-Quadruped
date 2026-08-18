@@ -52,7 +52,7 @@
   </joint>
 
   <link
-    name="lidar_link">
+    name="laser">
     <inertial>
       <origin
         xyz="-0.011935 0.00030729 -0.023703"
@@ -70,7 +70,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="-1.5708 0 0" />
+        rpy="-1.5708 0 -3.14159" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/lidar_link.STL" />
@@ -96,11 +96,11 @@
     type="fixed">
     <origin
       xyz="0.11305 -8.8769E-05 0.1345"
-      rpy="0 0 0" />
+      rpy="0 0 3.14159" />
     <parent
       link="chassis_link" />
     <child
-      link="lidar_link" />
+      link="laser" />
     <axis
       xyz="0 0 0" />
   </joint>
