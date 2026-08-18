@@ -9,22 +9,22 @@
     name="chassis_link">
     <inertial>
       <origin
-        xyz="0.094988 0.055488 0.18685"
+        xyz="-0.011069 1.7626E-05 0.040468"
         rpy="0 0 0" />
       <mass
-        value="1.7618" />
+        value="1.2884" />
       <inertia
-        ixx="0.0076067"
-        ixy="1.0229E-06"
-        ixz="2.1754E-07"
-        iyy="0.011153"
-        iyz="5.5464E-06"
-        izz="0.0044783" />
+        ixx="0.0031954"
+        ixy="2.1753E-07"
+        ixz="-2.4314E-06"
+        iyy="0.0061634"
+        iyz="-1.0229E-06"
+        izz="0.0084789" />
     </inertial>
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/chassis_link.STL" />
@@ -32,13 +32,13 @@
       <material
         name="">
         <color
-          rgba="0.79216 0.81961 0.93333 1" />
+          rgba="1 1 1 1" />
       </material>
     </visual>
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/chassis_link.STL" />
@@ -52,25 +52,25 @@
   </joint>
 
   <link
-    name="lidar_link">
+    name="laser">
     <inertial>
       <origin
-        xyz="-0.0119350479531696 0.000307288333342148 -0.0237034037736488"
+        xyz="-0.011935 0.00030729 -0.023703"
         rpy="0 0 0" />
       <mass
-        value="0.073250981310004" />
+        value="0.073251" />
       <inertia
-        ixx="1.8128998845544E-05"
-        ixy="-3.13526454563248E-07"
-        ixz="3.25184599826418E-07"
-        iyy="2.39500119447556E-05"
-        iyz="1.07178311997099E-08"
-        izz="3.94402515333502E-05" />
+        ixx="1.8129E-05"
+        ixy="-3.1353E-07"
+        ixz="3.2518E-07"
+        iyy="2.395E-05"
+        iyz="1.0718E-08"
+        izz="3.944E-05" />
     </inertial>
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 -3.14159" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/lidar_link.STL" />
@@ -78,13 +78,13 @@
       <material
         name="">
         <color
-          rgba="0.298039215686275 0.298039215686275 0.298039215686275 1" />
+          rgba="0.31 0.31 0.31 1" />
       </material>
     </visual>
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/lidar_link.STL" />
@@ -95,12 +95,12 @@
     name="lidar_joint"
     type="fixed">
     <origin
-      xyz="0.095089 -0.086952 0.1345"
-      rpy="0 0 1.5708" />
+      xyz="0.11305 -8.8769E-05 0.1345"
+      rpy="0 0 3.14159" />
     <parent
       link="chassis_link" />
     <child
-      link="lidar_link" />
+      link="laser" />
     <axis
       xyz="0 0 0" />
   </joint>
@@ -108,22 +108,22 @@
     name="left_camera_link">
     <inertial>
       <origin
-        xyz="-0.0111008216308172 -0.00486557934820156 -0.00233164800673732"
+        xyz="-0.011101 -0.0048656 -0.0023316"
         rpy="0 0 0" />
       <mass
-        value="0.00432134882914042" />
+        value="0.0043213" />
       <inertia
-        ixx="6.3667195395667E-07"
-        ixy="-6.67248837242982E-08"
-        ixz="-3.04643954641623E-08"
-        iyy="2.58264469780916E-07"
-        iyz="-7.56477810351698E-08"
-        izz="5.77195159340918E-07" />
+        ixx="6.3667E-07"
+        ixy="-6.6725E-08"
+        ixz="-3.0464E-08"
+        iyy="2.5826E-07"
+        iyz="-7.5648E-08"
+        izz="5.772E-07" />
     </inertial>
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/left_camera_link.STL" />
@@ -131,13 +131,13 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba="0.31 0.31 0.31 1" />
       </material>
     </visual>
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/left_camera_link.STL" />
@@ -148,8 +148,8 @@
     name="left_camera_joint"
     type="fixed">
     <origin
-      xyz="0.06515 -0.01347 0.09735"
-      rpy="0 0 1.5708" />
+      xyz="0.18653 0.02985 0.09735"
+      rpy="0 0 0" />
     <parent
       link="chassis_link" />
     <child
@@ -161,22 +161,22 @@
     name="right_camera_link">
     <inertial>
       <origin
-        xyz="-0.0111049091631151 0.00485620504276883 -0.00232806156321748"
+        xyz="-0.011105 0.0048562 -0.0023281"
         rpy="0 0 0" />
       <mass
-        value="0.00432566682914042" />
+        value="0.0043257" />
       <inertia
-        ixx="6.38382620493588E-07"
-        ixy="6.66541110504295E-08"
-        ixz="-3.0413074033386E-08"
-        iyy="2.57863664348528E-07"
-        iyz="7.43916759059245E-08"
-        izz="5.79434837125954E-07" />
+        ixx="6.3838E-07"
+        ixy="6.6654E-08"
+        ixz="-3.0413E-08"
+        iyy="2.5786E-07"
+        iyz="7.4392E-08"
+        izz="5.7943E-07" />
     </inertial>
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/right_camera_link.STL" />
@@ -184,13 +184,13 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba="0.31 0.31 0.31 1" />
       </material>
     </visual>
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/right_camera_link.STL" />
@@ -201,8 +201,8 @@
     name="right_camera_joint"
     type="fixed">
     <origin
-      xyz="0.125249999999999 -0.0134698446791103 0.0973500000000002"
-      rpy="0 0 1.5707963267949" />
+      xyz="0.18653 -0.03025 0.09735"
+      rpy="0 0 0" />
     <parent
       link="chassis_link" />
     <child
@@ -214,22 +214,22 @@
     name="front_left_link_1">
     <inertial>
       <origin
-        xyz="0.0105930561645632 0.0010145990710685 -0.00972481417663442"
+        xyz="0.010593 0.0010146 -0.0097248"
         rpy="0 0 0" />
       <mass
-        value="0.110718199912909" />
+        value="0.11072" />
       <inertia
-        ixx="2.8628168238556E-05"
-        ixy="-5.71058764841331E-08"
-        ixz="-2.87970680303836E-07"
-        iyy="3.48167270320842E-05"
-        iyz="1.64729742693072E-08"
-        izz="2.6350663583447E-05" />
+        ixx="2.8628E-05"
+        ixy="-5.7106E-08"
+        ixz="-2.8797E-07"
+        iyy="3.4817E-05"
+        iyz="1.6473E-08"
+        izz="2.6351E-05" />
     </inertial>
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_left_link_1.STL" />
@@ -237,13 +237,13 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba="0.84 0.84 0.84 1" />
       </material>
     </visual>
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_left_link_1.STL" />
@@ -254,471 +254,43 @@
     name="front_left_joint_1"
     type="revolute">
     <origin
-      xyz="0.01255 -0.08621 0.045907"
-      rpy="0.0046679 0 1.5708" />
+      xyz="0.113790303006481 0.0824500000000011 0.0459074375810237"
+      rpy="0.00466787437143287 0 0" />
     <parent
       link="chassis_link" />
     <child
       link="front_left_link_1" />
     <axis
       xyz="-1 0 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
   </joint>
   <link
     name="front_left_link_2">
     <inertial>
       <origin
-        xyz="-0.0387934692160751 -9.91793050274213E-05 -0.0203715766102188"
+        xyz="-0.038793 -9.9179E-05 -0.020372"
         rpy="0 0 0" />
       <mass
-        value="0.0652435230220067" />
+        value="0.065244" />
       <inertia
-        ixx="2.65332204461242E-05"
-        ixy="-4.59124952893766E-07"
-        ixz="-4.00601838438891E-05"
-        iyy="0.000107079969926343"
-        iyz="-2.39057261294725E-07"
-        izz="8.17110250947353E-05" />
+        ixx="2.6533E-05"
+        ixy="-4.5912E-07"
+        ixz="-4.006E-05"
+        iyy="0.00010708"
+        iyz="-2.3906E-07"
+        izz="8.1711E-05" />
     </inertial>
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_left_link_2.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/front_left_link_2.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="front_left_joint_2"
-    type="revolute">
-    <origin
-      xyz="0 0.0392977405875039 0.000624999999998176"
-      rpy="0 0 0" />
-    <parent
-      link="front_left_link_1" />
-    <child
-      link="front_left_link_2" />
-    <axis
-      xyz="0 1 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
-  </joint>
-  <link
-    name="front_left_link_3">
-    <inertial>
-      <origin
-        xyz="0.055121167035341 -3.56574827875544E-06 -0.0346149226523069"
-        rpy="0 0 0" />
-      <mass
-        value="0.0592549516376399" />
-      <inertia
-        ixx="3.42735566883273E-05"
-        ixy="-1.67694614521424E-08"
-        ixz="4.27380313979956E-05"
-        iyy="9.78844667303524E-05"
-        iyz="1.05269347814568E-08"
-        izz="6.80881593093783E-05" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/front_left_link_3.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/front_left_link_3.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="front_left_joint_3"
-    type="revolute">
-    <origin
-      xyz="-0.0969291533452484 0 -0.0509410368148641"
-      rpy="0 0 0" />
-    <parent
-      link="front_left_link_2" />
-    <child
-      link="front_left_link_3" />
-    <axis
-      xyz="0 -1 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
-  </joint>
-  <link
-    name="back_left_link_1">
-    <inertial>
-      <origin
-        xyz="0.0103130499210686 0.00101307872268084 -0.00972481419504265"
-        rpy="0 0 0" />
-      <mass
-        value="0.110718200835103" />
-      <inertia
-        ixx="2.86281683421293E-05"
-        ixy="5.70549959938513E-08"
-        ixz="2.87912567034474E-07"
-        iyy="3.48167271855928E-05"
-        iyz="6.74291695045703E-09"
-        izz="2.63506637408382E-05" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_left_link_1.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_left_link_1.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="back_left_joint_1"
-    type="revolute">
-    <origin
-      xyz="0.01225 -0.33471 0.045907"
-      rpy="0.0031593 0 1.5708" />
-    <parent
-      link="chassis_link" />
-    <child
-      link="back_left_link_1" />
-    <axis
-      xyz="1 0 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
-  </joint>
-  <link
-    name="back_left_link_2">
-    <inertial>
-      <origin
-        xyz="-0.0387934691994698 -9.91792980162692E-05 -0.0203715766001413"
-        rpy="0 0 0" />
-      <mass
-        value="0.0652435231118066" />
-      <inertia
-        ixx="2.65332204757146E-05"
-        ixy="-4.5912494986711E-07"
-        ixz="-4.00601838428752E-05"
-        iyy="0.000107079969993396"
-        iyz="-2.39057255785713E-07"
-        izz="8.17110251194175E-05" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_left_link_2.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_left_link_2.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="back_left_joint_2"
-    type="revolute">
-    <origin
-      xyz="0 0.0392977405875028 0.000624999999996156"
-      rpy="0 0 0" />
-    <parent
-      link="back_left_link_1" />
-    <child
-      link="back_left_link_2" />
-    <axis
-      xyz="0 1 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
-  </joint>
-  <link
-    name="back_left_link_3">
-    <inertial>
-      <origin
-        xyz="0.0551211670696044 -3.56448346074817E-06 -0.0346149226402852"
-        rpy="0 0 0" />
-      <mass
-        value="0.0592549511706032" />
-      <inertia
-        ixx="3.42735562461687E-05"
-        ixy="-1.67704863017925E-08"
-        ixz="4.2738030923107E-05"
-        iyy="9.78844656479831E-05"
-        iyz="1.05286414425801E-08"
-        izz="6.80881587871283E-05" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_left_link_3.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_left_link_3.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="back_left_joint_3"
-    type="revolute">
-    <origin
-      xyz="-0.0969291533452488 0 -0.0509410368148632"
-      rpy="0 0 0" />
-    <parent
-      link="back_left_link_2" />
-    <child
-      link="back_left_link_3" />
-    <axis
-      xyz="0 -1 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
-  </joint>
-  <link
-    name="back_right_link_1">
-    <inertial>
-      <origin
-        xyz="0.0103130496198179 -0.0010145991753055 -0.00972481422160444"
-        rpy="0 0 0" />
-      <mass
-        value="0.1107181974716" />
-      <inertia
-        ixx="2.86281681444219E-05"
-        ixy="-5.7106136747279E-08"
-        ixz="2.87970564785443E-07"
-        iyy="3.48167268333475E-05"
-        iyz="-1.64728186869941E-08"
-        izz="2.6350662927678E-05" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_right_link_1.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_right_link_1.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="back_right_joint_1"
-    type="revolute">
-    <origin
-      xyz="0.17745 -0.33471 0.045907"
-      rpy="-0.02534 0 1.5708" />
-    <parent
-      link="chassis_link" />
-    <child
-      link="back_right_link_1" />
-    <axis
-      xyz="1 0 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
-  </joint>
-  <link
-    name="back_right_link_2">
-    <inertial>
-      <origin
-        xyz="-0.0365782717829965 9.91796385669819E-05 -0.0241239323933991"
-        rpy="0 0 0" />
-      <mass
-        value="0.0652435283702889" />
-      <inertia
-        ixx="3.49416879227605E-05"
-        ixy="4.31121551897424E-07"
-        ixz="-4.46998571951726E-05"
-        iyy="0.000107079984143142"
-        iyz="2.8649720625639E-07"
-        izz="7.33025725215153E-05" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_right_link_2.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_right_link_2.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="back_right_joint_2"
-    type="revolute">
-    <origin
-      xyz="0 -0.039297740587504 0.000624999999998224"
-      rpy="0 0 0" />
-    <parent
-      link="back_right_link_1" />
-    <child
-      link="back_right_link_2" />
-    <axis
-      xyz="0 -1 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
-  </joint>
-  <link
-    name="back_right_link_3">
-    <inertial>
-      <origin
-        xyz="0.054696537077611 3.27537974717518E-06 -0.0352704567366433"
-        rpy="0 0 0" />
-      <mass
-        value="0.0592586186370103" />
-      <inertia
-        ixx="3.52957580877518E-05"
-        ixy="1.69580339658883E-08"
-        ixz="4.31346842573029E-05"
-        iyy="9.78905657503721E-05"
-        iyz="-1.10753861861826E-08"
-        izz="6.70724641648623E-05" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_right_link_3.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/back_right_link_3.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="back_right_joint_3"
-    type="revolute">
-    <origin
-      xyz="-0.0914299430637919 0 -0.0602562639263626"
-      rpy="0 0 0" />
-    <parent
-      link="back_right_link_2" />
-    <child
-      link="back_right_link_3" />
-    <axis
-      xyz="0 1 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
-  </joint>
-  <link
-    name="front_right_link_1">
-    <inertial>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <mass
-        value="0" />
-      <inertia
-        ixx="0"
-        ixy="0"
-        ixz="0"
-        iyy="0"
-        iyz="0"
-        izz="0" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://orion_urdf/meshes/front_right_link_1.STL" />
       </geometry>
       <material
         name="">
@@ -729,7 +301,471 @@
     <collision>
       <origin
         xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/front_left_link_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="front_left_joint_2"
+    type="revolute">
+    <origin
+      xyz="0 0.0392977405875036 0.000624999999999681"
+      rpy="0 0 0" />
+    <parent
+      link="front_left_link_1" />
+    <child
+      link="front_left_link_2" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
+  </joint>
+  <link
+    name="front_left_link_3">
+    <inertial>
+      <origin
+        xyz="0.050353 -3.9729E-06 -0.029856"
         rpy="0 0 0" />
+      <mass
+        value="0.052056" />
+      <inertia
+        ixx="3.3321E-05"
+        ixy="-1.6828E-08"
+        ixz="4.2839E-05"
+        iyy="9.7025E-05"
+        iyz="1.0572E-08"
+        izz="6.6763E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/front_left_link_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 0.45 0.03 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/front_left_link_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="front_left_joint_3"
+    type="revolute">
+    <origin
+      xyz="-0.0969291533452496 0 -0.0509410368148619"
+      rpy="0 0 0" />
+    <parent
+      link="front_left_link_2" />
+    <child
+      link="front_left_link_3" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
+  </joint>
+  <link
+    name="back_left_link_1">
+    <inertial>
+      <origin
+        xyz="0.010313 0.0010131 -0.0097248"
+        rpy="0 0 0" />
+      <mass
+        value="0.11072" />
+      <inertia
+        ixx="2.8628E-05"
+        ixy="5.7055E-08"
+        ixz="2.8791E-07"
+        iyy="3.4817E-05"
+        iyz="6.7429E-09"
+        izz="2.6351E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_left_link_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.84 0.84 0.84 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_left_link_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_left_joint_1"
+    type="revolute">
+    <origin
+      xyz="-0.134705178168527 0.082750000000001 0.0459074375810237"
+      rpy="0.00315930390260669 0 0" />
+    <parent
+      link="chassis_link" />
+    <child
+      link="back_left_link_1" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
+  </joint>
+  <link
+    name="back_left_link_2">
+    <inertial>
+      <origin
+        xyz="-0.038793 -9.9179E-05 -0.020372"
+        rpy="0 0 0" />
+      <mass
+        value="0.065244" />
+      <inertia
+        ixx="2.6533E-05"
+        ixy="-4.5912E-07"
+        ixz="-4.006E-05"
+        iyy="0.00010708"
+        iyz="-2.3906E-07"
+        izz="8.1711E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_left_link_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_left_link_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_left_joint_2"
+    type="revolute">
+    <origin
+      xyz="0 0.0392977405875036 0.000624999999999577"
+      rpy="0 0 0" />
+    <parent
+      link="back_left_link_1" />
+    <child
+      link="back_left_link_2" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
+  </joint>
+  <link
+    name="back_left_link_3">
+    <inertial>
+      <origin
+        xyz="0.050353 -3.9716E-06 -0.029856"
+        rpy="0 0 0" />
+      <mass
+        value="0.052056" />
+      <inertia
+        ixx="3.3321E-05"
+        ixy="-1.6829E-08"
+        ixz="4.2839E-05"
+        iyy="9.7025E-05"
+        iyz="1.0574E-08"
+        izz="6.6763E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_left_link_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 0.45 0.03 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_left_link_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_left_joint_3"
+    type="revolute">
+    <origin
+      xyz="-0.0969291533452496 0 -0.0509410368148617"
+      rpy="0 0 0" />
+    <parent
+      link="back_left_link_2" />
+    <child
+      link="back_left_link_3" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
+  </joint>
+  <link
+    name="back_right_link_1">
+    <inertial>
+      <origin
+        xyz="0.010313 -0.0010146 -0.0097248"
+        rpy="0 0 0" />
+      <mass
+        value="0.11072" />
+      <inertia
+        ixx="2.8628E-05"
+        ixy="-5.7106E-08"
+        ixz="2.8797E-07"
+        iyy="3.4817E-05"
+        iyz="-1.6473E-08"
+        izz="2.6351E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_right_link_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.84 0.84 0.84 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_right_link_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_right_joint_1"
+    type="revolute">
+    <origin
+      xyz="-0.134705178168499 -0.0824499999999989 0.0459074375810237"
+      rpy="-0.0253401254512525 0 0" />
+    <parent
+      link="chassis_link" />
+    <child
+      link="back_right_link_1" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
+  </joint>
+  <link
+    name="back_right_link_2">
+    <inertial>
+      <origin
+        xyz="-0.036578 9.918E-05 -0.024124"
+        rpy="0 0 0" />
+      <mass
+        value="0.065244" />
+      <inertia
+        ixx="3.4942E-05"
+        ixy="4.3112E-07"
+        ixz="-4.47E-05"
+        iyy="0.00010708"
+        iyz="2.865E-07"
+        izz="7.3303E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_right_link_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_right_link_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_right_joint_2"
+    type="revolute">
+    <origin
+      xyz="0 -0.0392977405875037 0.000625000000000271"
+      rpy="0 0 0" />
+    <parent
+      link="back_right_link_1" />
+    <child
+      link="back_right_link_2" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
+  </joint>
+  <link
+    name="back_right_link_3">
+    <inertial>
+      <origin
+        xyz="0.049996 3.8133E-06 -0.030454"
+        rpy="0 0 0" />
+      <mass
+        value="0.05206" />
+      <inertia
+        ixx="3.4348E-05"
+        ixy="1.6901E-08"
+        ixz="4.3227E-05"
+        iyy="9.7031E-05"
+        iyz="-1.1029E-08"
+        izz="6.5743E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_right_link_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 0.45 0.03 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/back_right_link_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_right_joint_3"
+    type="revolute">
+    <origin
+      xyz="-0.0914299430637917 0 -0.0602562639263631"
+      rpy="0 0 0" />
+    <parent
+      link="back_right_link_2" />
+    <child
+      link="back_right_link_3" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
+  </joint>
+  <link
+    name="front_right_link_1">
+    <inertial>
+      <origin
+        xyz="-0.002508 -0.00073702 -0.0098248"
+        rpy="0 0 0" />
+      <mass
+        value="0.14335" />
+      <inertia
+        ixx="3.4309E-05"
+        ixy="5.864E-08"
+        ixz="-3.6283E-07"
+        iyy="4.373E-05"
+        iyz="6.3031E-08"
+        izz="3.1707E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/front_right_link_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.84 0.84 0.84 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_right_link_1.STL" />
@@ -740,36 +776,40 @@
     name="front_right_joint_1"
     type="revolute">
     <origin
-      xyz="0.177749999999999 -0.0862096969935193 0.0459074375810233"
-      rpy="-0.0196130777187637 0 1.5707963267949" />
+      xyz="0.113790303006509 -0.0827499999999989 0.0459074375810237"
+      rpy="-0.0196130777187636 0 0" />
     <parent
       link="chassis_link" />
     <child
       link="front_right_link_1" />
     <axis
       xyz="-1 0 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
   </joint>
   <link
     name="front_right_link_2">
     <inertial>
       <origin
-        xyz="-0.0365782716851196 9.91796027104974E-05 -0.0241239323351951"
+        xyz="-0.036578 9.918E-05 -0.024124"
         rpy="0 0 0" />
       <mass
-        value="0.065243528810921" />
+        value="0.065244" />
       <inertia
-        ixx="3.49416880506896E-05"
-        ixy="4.31121534454438E-07"
-        ixz="-4.46998571880746E-05"
-        iyy="0.000107079984458583"
-        iyz="2.86497213391561E-07"
-        izz="7.33025726632704E-05" />
+        ixx="3.4942E-05"
+        ixy="4.3112E-07"
+        ixz="-4.47E-05"
+        iyy="0.00010708"
+        iyz="2.865E-07"
+        izz="7.3303E-05" />
     </inertial>
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_right_link_2.STL" />
@@ -777,13 +817,13 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba="1 1 1 1" />
       </material>
     </visual>
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_right_link_2.STL" />
@@ -794,7 +834,7 @@
     name="front_right_joint_2"
     type="revolute">
     <origin
-      xyz="0 -0.0392977405875036 0.000625000000000368"
+      xyz="0 -0.0392977405875038 0.000624999999999792"
       rpy="0 0 0" />
     <parent
       link="front_right_link_1" />
@@ -802,28 +842,32 @@
       link="front_right_link_2" />
     <axis
       xyz="0 -1 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
   </joint>
   <link
     name="front_right_link_3">
     <inertial>
       <origin
-        xyz="0.0546965369830923 3.27263792415655E-06 -0.0352704573246154"
+        xyz="0.049996 3.8101E-06 -0.030454"
         rpy="0 0 0" />
       <mass
-        value="0.0592586215672063" />
+        value="0.05206" />
       <inertia
-        ixx="3.52957611856546E-05"
-        ixy="1.69613134729086E-08"
-        ixz="4.31346874809619E-05"
-        iyy="9.78905725994991E-05"
-        iyz="-1.10800126965045E-08"
-        izz="6.707246783827E-05" />
+        ixx="3.4348E-05"
+        ixy="1.6904E-08"
+        ixz="4.3227E-05"
+        iyy="9.7031E-05"
+        iyz="-1.1033E-08"
+        izz="6.5743E-05" />
     </inertial>
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_right_link_3.STL" />
@@ -831,13 +875,13 @@
       <material
         name="">
         <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+          rgba="1 0.45 0.03 1" />
       </material>
     </visual>
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_right_link_3.STL" />
@@ -848,7 +892,7 @@
     name="front_right_joint_3"
     type="revolute">
     <origin
-      xyz="-0.0914299430637918 0 -0.0602562639263623"
+      xyz="-0.0914299430637918 0 -0.0602562639263629"
       rpy="0 0 0" />
     <parent
       link="front_right_link_2" />
@@ -856,6 +900,63 @@
       link="front_right_link_3" />
     <axis
       xyz="0 1 0" />
-    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="10"
+      velocity="1" />
+  </joint>
+  <link
+    name="lid_link">
+    <inertial>
+      <origin
+        xyz="0.069069 -2.7518E-10 -0.0036319"
+        rpy="0 0 0" />
+      <mass
+        value="0.47342" />
+      <inertia
+        ixx="0.0012829"
+        ixy="1.0139E-11"
+        ixz="-3.115E-06"
+        iyy="0.0014434"
+        iyz="1.6249E-12"
+        izz="0.0026737" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/lid_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 0.45 0.03 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh
+          filename="package://orion_urdf/meshes/lid_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="lid_joint"
+    type="fixed">
+    <origin
+      xyz="0.01 0 0.1"
+      rpy="0 0 0" />
+    <parent
+      link="chassis_link" />
+    <child
+      link="lid_link" />
+    <axis
+      xyz="0 0 0" />
   </joint>
 </robot>

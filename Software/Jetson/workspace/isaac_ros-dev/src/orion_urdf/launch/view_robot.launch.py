@@ -5,7 +5,7 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     pkg = get_package_share_directory('orion_urdf')
-    urdf_file = PathJoinSubstitution([pkg, 'urdf', 'robot_description_v2.urdf']) 
+    urdf_file = PathJoinSubstitution([pkg, 'urdf', 'robot_description.urdf']) 
     robot_description = Command(['xacro ', urdf_file])
 
     # Publishes TF from the URDF
