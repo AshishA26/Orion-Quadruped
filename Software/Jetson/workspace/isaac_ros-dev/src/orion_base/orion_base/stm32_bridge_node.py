@@ -3,6 +3,7 @@ import rclpy
 from rclpy.node import Node
 from orion_msgs.msg import OrionMotionCmd, OrionImuFeedback, OrionBatteryVoltage, OrionLegInfo
 from std_msgs.msg import Float32MultiArray
+from sensor_msgs.msg import JointState
 import serial
 import struct
 from typing import Tuple
@@ -43,11 +44,14 @@ class STM32Bridge(Node):
         # IMU publisher
         self.imu_pub = self.create_publisher(OrionImuFeedback, 'imu_degrees', 10)
 
-        # Joint angle publisher
+        # Custom Joint angle publishers
         self.front_left_leg_pub = self.create_publisher(OrionLegInfo, 'joint_angles_front_left', 10)
         self.front_right_leg_pub = self.create_publisher(OrionLegInfo, 'joint_angles_front_right', 10)
         self.back_left_leg_pub = self.create_publisher(OrionLegInfo, 'joint_angles_back_left', 10)
         self.back_right_leg_pub = self.create_publisher(OrionLegInfo, 'joint_angles_back_right', 10)
+
+        # Standard JointState publisher
+        self.joint_state_pub = self.create_publisher(JointState, 'joint_states', 10)
 
         # Read timer and buffer
         self.rx_buffer = bytearray()
@@ -73,7 +77,6 @@ class STM32Bridge(Node):
         if self.serial_conn.in_waiting > 0:
             new_bytes = self.serial_conn.read(self.serial_conn.in_waiting)
             self.rx_buffer.extend(new_bytes)
-            # self.get_logger().info(f"Received {len(new_bytes)} bytes from STM32")
 
         # Process packets in the buffer
         while len(self.rx_buffer) >= TELEM_PKT_SIZE:
@@ -103,7 +106,6 @@ class STM32Bridge(Node):
                     self.imu_pub.publish(imu_msg)
 
                     # Publish battery data
-
                     battery_front_msg = OrionBatteryVoltage()
                     battery_front_msg.cell_1 = battery_data[0]
                     battery_front_msg.cell_2 = battery_data[1]-battery_data[0]
@@ -123,8 +125,7 @@ class STM32Bridge(Node):
                     battery_jetson_msg.total = battery_data[8]
                     self.battery_jetson_pub.publish(battery_jetson_msg)
 
-                    # Publish joint angle data
-
+                    # Publish custom joint angle data (Kept in degrees)
                     front_left_msg = OrionLegInfo()
                     front_left_msg.hip_angle = joint_data[0]
                     front_left_msg.femur_angle = joint_data[1]
@@ -148,6 +149,40 @@ class STM32Bridge(Node):
                     back_right_msg.femur_angle = joint_data[10]
                     back_right_msg.tibia_angle = joint_data[11]
                     self.back_right_leg_pub.publish(back_right_msg)
+
+                    # Publish standard sensor_msgs/JointState (Converted to Radians)
+                    joint_state_msg = JointState()
+                    joint_state_msg.header.stamp = self.get_clock().now().to_msg()
+                    
+                    # Mapping identical to URDF names
+                    joint_state_msg.name = [
+                        'front_left_joint_1', 'front_left_joint_2', 'front_left_joint_3',
+                        'front_right_joint_1', 'front_right_joint_2', 'front_right_joint_3',
+                        'back_left_joint_1', 'back_left_joint_2', 'back_left_joint_3',
+                        'back_right_joint_1', 'back_right_joint_2', 'back_right_joint_3'
+                    ]
+                    
+                    # Converting degrees from STM32 to radians for standard ROS visualization
+                    FEMUR_OFFSET_DEG = 37.756404876708984
+                    TIBIA_OFFSET_DEG = 98.46704864501953
+
+                    corrected = [
+                        joint_data[0],                       # FL hip
+                        joint_data[1] + FEMUR_OFFSET_DEG,    # FL femur
+                        joint_data[2] - TIBIA_OFFSET_DEG,    # FL tibia
+                        joint_data[3],                       # FR hip
+                        joint_data[4] - FEMUR_OFFSET_DEG,    # FR femur
+                        joint_data[5] + TIBIA_OFFSET_DEG,    # FR tibia
+                        joint_data[6],                       # BL hip
+                        joint_data[7] + FEMUR_OFFSET_DEG,    # BL femur
+                        joint_data[8] - TIBIA_OFFSET_DEG,    # BL tibia
+                        joint_data[9],                       # BR hip
+                        joint_data[10] - FEMUR_OFFSET_DEG,   # BR femur
+                        joint_data[11] + TIBIA_OFFSET_DEG,   # BR tibia
+                    ]
+                    joint_state_msg.position = [math.radians(v) for v in corrected]
+                    
+                    self.joint_state_pub.publish(joint_state_msg)
 
                 else:
                     self.get_logger().warn("Telemetry checksum failed")

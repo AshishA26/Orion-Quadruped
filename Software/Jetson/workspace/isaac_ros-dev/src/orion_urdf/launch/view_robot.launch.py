@@ -26,5 +26,5 @@ def generate_launch_description():
 
     return LaunchDescription([
         robot_state_publisher,
-        joint_state_publisher_gui
+        # joint_state_publisher_gui
     ])

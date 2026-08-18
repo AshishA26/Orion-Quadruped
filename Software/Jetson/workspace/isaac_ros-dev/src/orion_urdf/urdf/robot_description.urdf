@@ -32,7 +32,7 @@
       <material
         name="">
         <color
-          rgba="1 1 1 1" />
+          rgba="0.8 0.8 0.8 1" />
       </material>
     </visual>
     <collision>
@@ -49,6 +49,9 @@
   <joint name="chassis_joint" type="fixed">
     <parent link="base_link"/>
     <child link="chassis_link"/>
+    <origin
+      xyz="0 0 0.07"
+      rpy="0 0 0" />
   </joint>
 
   <link
@@ -255,7 +258,7 @@
     type="revolute">
     <origin
       xyz="0.113790303006481 0.0824500000000011 0.0459074375810237"
-      rpy="0.00466787437143287 0 0" />
+      rpy="0 0 0" />
     <parent
       link="chassis_link" />
     <child
@@ -265,8 +268,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="front_left_link_2">
@@ -295,7 +298,7 @@
       <material
         name="">
         <color
-          rgba="1 1 1 1" />
+          rgba="0.8 0.8 0.8 1" />
       </material>
     </visual>
     <collision>
@@ -323,8 +326,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="front_left_link_3">
@@ -381,8 +384,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="back_left_link_1">
@@ -429,7 +432,7 @@
     type="revolute">
     <origin
       xyz="-0.134705178168527 0.082750000000001 0.0459074375810237"
-      rpy="0.00315930390260669 0 0" />
+      rpy="0 0 0" />
     <parent
       link="chassis_link" />
     <child
@@ -439,8 +442,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="back_left_link_2">
@@ -469,7 +472,7 @@
       <material
         name="">
         <color
-          rgba="1 1 1 1" />
+          rgba="0.8 0.8 0.8 1" />
       </material>
     </visual>
     <collision>
@@ -497,8 +500,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="back_left_link_3">
@@ -555,8 +558,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="back_right_link_1">
@@ -603,7 +606,7 @@
     type="revolute">
     <origin
       xyz="-0.134705178168499 -0.0824499999999989 0.0459074375810237"
-      rpy="-0.0253401254512525 0 0" />
+      rpy="0 0 0" />
     <parent
       link="chassis_link" />
     <child
@@ -613,8 +616,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="back_right_link_2">
@@ -643,7 +646,7 @@
       <material
         name="">
         <color
-          rgba="1 1 1 1" />
+          rgba="0.8 0.8 0.8 1" />
       </material>
     </visual>
     <collision>
@@ -671,8 +674,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="back_right_link_3">
@@ -729,8 +732,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="front_right_link_1">
@@ -777,7 +780,7 @@
     type="revolute">
     <origin
       xyz="0.113790303006509 -0.0827499999999989 0.0459074375810237"
-      rpy="-0.0196130777187636 0 0" />
+      rpy="0 0 0" />
     <parent
       link="chassis_link" />
     <child
@@ -787,8 +790,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="front_right_link_2">
@@ -817,7 +820,7 @@
       <material
         name="">
         <color
-          rgba="1 1 1 1" />
+          rgba="0.8 0.8 0.8 1" />
       </material>
     </visual>
     <collision>
@@ -845,8 +848,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="front_right_link_3">
@@ -903,8 +906,8 @@
     <limit
       lower="-3.1416"
       upper="3.1416"
-      effort="10"
-      velocity="1" />
+      effort="1000"
+      velocity="100" />
   </joint>
   <link
     name="lid_link">
