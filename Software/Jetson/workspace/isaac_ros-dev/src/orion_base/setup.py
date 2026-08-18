@@ -32,6 +32,7 @@ setup(
             'roboeyes_node = orion_base.roboeyes_node:main',
             'joystick_parser_node = orion_base.joystick_parser_node:main',
             'cmd_mux_node = orion_base.cmd_mux_node:main',
+            'joint_state_republisher = orion_base.joint_state_republisher:main',
         ],
     },
 )

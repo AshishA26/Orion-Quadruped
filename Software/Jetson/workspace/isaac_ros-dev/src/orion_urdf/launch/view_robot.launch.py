@@ -17,14 +17,6 @@ def generate_launch_description():
         output='screen'
     )
 
-    # Provides GUI sliders and publishes to /joint_states
-    joint_state_publisher_gui = Node(
-        package='joint_state_publisher_gui',
-        executable='joint_state_publisher_gui',
-        name='joint_state_publisher_gui'
-    )
-
     return LaunchDescription([
         robot_state_publisher,
-        # joint_state_publisher_gui
     ])

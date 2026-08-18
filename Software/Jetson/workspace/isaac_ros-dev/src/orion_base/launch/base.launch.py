@@ -51,6 +51,15 @@ def generate_launch_description():
         ]
     )
 
+    
+    joint_state_republisher = Node(
+        package='orion_base',
+        executable='joint_state_republisher',
+        name='joint_state_republisher',
+        output='screen',
+        parameters=[params_file],
+    )
+
     roboeyes_node = Node(
         package='orion_base',
         executable='roboeyes_node',
@@ -86,6 +95,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         stm32_bridge_node,
+        joint_state_republisher,
         joy_node,
         joystick_parser_node,
         roboeyes_node,

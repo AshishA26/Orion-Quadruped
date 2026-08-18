@@ -75,4 +75,51 @@ ros2 bag record \
   /joy_eyes_cmd \
   /joy \
   /annotated_image_compressed
+  /foxglove_bridge/sysinfo
+```
+
+
+```bash
+ros2 bag record \
+  --storage mcap \
+  -o orion_run_$(date +%Y%m%d_%H%M%S) \
+  /left/camera_info \
+  /left/image_compressed \
+  /left/image_raw \
+  /annotated_image_compressed
+```
+
+```bash
+ros2 bag record \
+  --storage mcap \
+  -o orion_run_$(date +%Y%m%d_%H%M%S) \
+  /battery_voltage_front \
+  /battery_voltage_jetson \
+  /battery_voltage_rear \
+  /imu_degrees \
+  /joint_angles_back_left \
+  /joint_angles_back_right \
+  /joint_angles_front_left \
+  /joint_angles_front_right \
+  /odom \
+  /map \
+  /scan \
+  /global_costmap/costmap \
+  /local_costmap/costmap \
+  /plan \
+  /robot_description \
+  /orion_eyes_cmd \
+  /orion_motion_cmd \
+  /map_metadata \
+  /landmarks \
+  /slam_toolbox/update \
+  /slam_toolbox/scan_visualization \
+  /slam_toolbox/graph_visualization \
+  /slam_toolbox/feedback \
+  /rosout \
+  /pose \
+  /joy_motion_cmd \
+  /joy_eyes_cmd \
+  /joy \
+  /foxglove_bridge/sysinfo
 ```
