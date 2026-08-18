@@ -50,7 +50,7 @@
     <parent link="base_link"/>
     <child link="chassis_link"/>
     <origin
-      xyz="0 0 0.07"
+      xyz="0 0 0.09"
       rpy="0 0 0" />
   </joint>
 

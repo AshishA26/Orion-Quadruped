@@ -61,8 +61,8 @@ def generate_launch_description():
     return LaunchDescription([
         lidar_launch,
         base_launch,
-        # nav_launch,
-        # camera_launch,
-        # hand_pose_launch,
+        nav_launch,
+        camera_launch,
+        hand_pose_launch,
         urdf_launch,
     ])
