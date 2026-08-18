@@ -64,5 +64,5 @@ def generate_launch_description():
         nav_launch,
         camera_launch,
         hand_pose_launch,
-        # urdf_launch,
+        urdf_launch,
     ])

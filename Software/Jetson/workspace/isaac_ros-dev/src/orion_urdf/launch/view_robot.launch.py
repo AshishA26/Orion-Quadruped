@@ -15,7 +15,7 @@ def generate_launch_description():
     )
 
     urdf_file = PathJoinSubstitution([pkg, 'urdf', 'robot_description_v2.urdf']) 
-    robot_description = Command(['cat ', urdf_file])
+    robot_description = Command(['xacro ', urdf_file])
 
     # OPTION A: Manual Slider GUI (Runs ONLY when use_gui:=true)
     jsp_gui = Node(

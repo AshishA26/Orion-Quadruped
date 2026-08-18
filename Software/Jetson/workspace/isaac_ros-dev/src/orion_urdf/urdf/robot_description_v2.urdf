@@ -24,7 +24,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/chassis_link.STL" />
@@ -38,7 +38,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/chassis_link.STL" />
@@ -70,7 +70,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/lidar_link.STL" />
@@ -84,7 +84,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/lidar_link.STL" />
@@ -123,7 +123,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/left_camera_link.STL" />
@@ -137,7 +137,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/left_camera_link.STL" />
@@ -176,7 +176,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/right_camera_link.STL" />
@@ -190,7 +190,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/right_camera_link.STL" />
@@ -229,7 +229,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_left_link_1.STL" />
@@ -243,7 +243,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_left_link_1.STL" />
@@ -287,7 +287,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_left_link_2.STL" />
@@ -301,7 +301,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_left_link_2.STL" />
@@ -345,7 +345,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_left_link_3.STL" />
@@ -359,7 +359,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_left_link_3.STL" />
@@ -403,7 +403,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_left_link_1.STL" />
@@ -417,7 +417,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_left_link_1.STL" />
@@ -461,7 +461,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_left_link_2.STL" />
@@ -475,7 +475,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_left_link_2.STL" />
@@ -519,7 +519,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_left_link_3.STL" />
@@ -533,7 +533,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_left_link_3.STL" />
@@ -577,7 +577,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_right_link_1.STL" />
@@ -591,7 +591,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_right_link_1.STL" />
@@ -635,7 +635,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_right_link_2.STL" />
@@ -649,7 +649,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_right_link_2.STL" />
@@ -693,7 +693,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_right_link_3.STL" />
@@ -707,7 +707,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/back_right_link_3.STL" />
@@ -751,7 +751,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_right_link_1.STL" />
@@ -765,7 +765,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_right_link_1.STL" />
@@ -809,7 +809,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_right_link_2.STL" />
@@ -823,7 +823,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_right_link_2.STL" />
@@ -867,7 +867,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_right_link_3.STL" />
@@ -881,7 +881,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/front_right_link_3.STL" />
@@ -925,7 +925,7 @@
     <visual>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/lid_link.STL" />
@@ -939,7 +939,7 @@
     <collision>
       <origin
         xyz="0 0 0"
-        rpy="0 0 0" />
+        rpy="-1.5708 0 0" />
       <geometry>
         <mesh
           filename="package://orion_urdf/meshes/lid_link.STL" />
