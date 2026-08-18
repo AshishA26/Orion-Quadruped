@@ -57,6 +57,10 @@ ros2 bag record \
   /odom \
   /map \
   /scan \
+  /global_costmap/costmap \
+  /local_costmap/costmap \
+  /plan \
+  /robot_description \
   /orion_eyes_cmd \
   /orion_motion_cmd \
   /map_metadata \
