@@ -29,3 +29,9 @@ ENV LD_LIBRARY_PATH=/opt/ros/humble/share/gxf_isaac_optimizer/gxf/lib:${LD_LIBRA
 RUN echo "source /opt/ros/humble/setup.bash" >> /etc/bash.bashrc
 
 RUN python3 -m pip install mediapipe==0.10.14 --no-deps
+
+# TODO(orion) - uncomment the below and rebuild docker container and ensure all works
+# pycuda is required by midas_depth_node.py for TensorRT buffer management.
+# nvcc must be on PATH for pycuda to build its CUDA extension during install.
+# ENV PATH=/usr/local/cuda/bin:${PATH}
+# RUN python3 -m pip install pycuda --break-system-packages

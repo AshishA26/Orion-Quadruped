@@ -35,3 +35,10 @@ hand_pose_node:
     model_complexity: 0
     min_detection_confidence: 0.4
     min_tracking_confidence: 0.4
+
+depth_map_node:
+  ros__parameters:
+    engine_path: "./models/midas_v21_small_256.plan"
+    input_size: 256
+    publish_colorized_raw: True
+    jpeg_quality: 100

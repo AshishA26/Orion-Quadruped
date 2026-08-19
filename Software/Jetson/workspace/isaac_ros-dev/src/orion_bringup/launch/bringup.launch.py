@@ -52,6 +52,12 @@ def generate_launch_description():
         )
     )
 
+    depth_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(orion_camera_dir, 'launch', 'depth.launch.py')
+        )
+    )
+
     urdf_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(orion_urdf_dir, 'launch', 'view_robot.launch.py')
@@ -65,4 +71,5 @@ def generate_launch_description():
         camera_launch,
         hand_pose_launch,
         urdf_launch,
+        # depth_launch
     ])
