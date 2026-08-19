@@ -1,5 +1,6 @@
 # Depth node. Note: Build plan file if not present already by using:
 #   /usr/src/tensorrt/bin/trtexec --onnx=./models/midas_v21_small_256.onnx --saveEngine=./models/midas_v21_small_256.plan --fp16
+# Model from https://docs.doji-tech.com/com.doji.midas/manual/models.html
 
 import os
 

@@ -39,6 +39,7 @@ To fix SSH / connectivity issues from no machine or vs-code, ensure you have the
 
 ### Bag
 
+All (no depth):
 ```bash
 ros2 bag record \
   --storage mcap \
@@ -74,11 +75,13 @@ ros2 bag record \
   /joy_motion_cmd \
   /joy_eyes_cmd \
   /joy \
-  /annotated_image_compressed
-  /foxglove_bridge/sysinfo
+  /annotated_image_compressed \
+  /foxglove_bridge/sysinfo \
+  /tf \
+  /tf_static
 ```
 
-
+Just cameras (no depth):
 ```bash
 ros2 bag record \
   --storage mcap \
@@ -89,6 +92,7 @@ ros2 bag record \
   /annotated_image_compressed
 ```
 
+Everything but cameras:
 ```bash
 ros2 bag record \
   --storage mcap \
@@ -121,5 +125,7 @@ ros2 bag record \
   /joy_motion_cmd \
   /joy_eyes_cmd \
   /joy \
-  /foxglove_bridge/sysinfo
+  /foxglove_bridge/sysinfo \
+  /tf \
+  /tf_static
 ```
