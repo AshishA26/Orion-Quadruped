@@ -48,7 +48,7 @@ def generate_launch_description():
     bag_play = ExecuteProcess(
         cmd=[
             'ros2', 'bag', 'play',
-            '/workspaces/isaac_ros-dev/orion_run_20260818_004807_slam',
+            '/workspaces/isaac_ros-dev/bags/orion_run_20260818_004807_slam',
             '--clock',
             '--remap', '/odom:=/recorded_odom',
             '--remap', '/map:=/recorded_map',
