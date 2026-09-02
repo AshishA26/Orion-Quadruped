@@ -71,6 +71,26 @@ Other Links:
 - [Training Quadrupeds with Reinforcement Learning Reddit](https://www.reddit.com/r/reinforcementlearning/comments/1ik7dhn/training_quadrupeds_with_reinforcement_learning/)
 - [Training & Registering Robots - Isaac Lab Tutorial 4 (Reinforcement Learning)](https://www.youtube.com/watch?v=BSQEYj3Wm0Q&list=PLQQ577DOyRN_hY6OAoxBh8K5mKsgyJi-r&index=11)
 
+### Steps
+1. Copy the `custom_quadruped` folder to `~/IsaacLab/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/config/`
+2. Then:
+```bash
+conda activate env_isaaclab
+cd ~/Isaaclab/scripts/reinforcement-learning/rsl_rl
+python train.py --task=Isaac-Velocity-Flat-Custom-Quad-v0 --num_envs=128
+python play.py --task=Isaac-Velocity-Flat-Custom-Quad-v0 --num_envs=16
+```
+3. Tensorboard can be viewed by install Tensorboard extension in vscode, then doing `ctrl + shift + P`, and selecting the `~/Isaaclab/scripts/reinforcement-learning/rsl_rl` folder.
 
+## Preprocessing urdf Steps
+Before training, I:
 
-To execute play.py using model shown in the video, move the "2025-03-03_05-00-17" folder into the "/rsl_rl/logs/rsl_rl/custom_quad_flat" directory.
+1. Added a foot joint (for touch sensor in isaac lab)
+2. Exported the urdf from solidworks
+
+Based on [How to Train a Custom Quadruped Robot to Walk Using Isaac Lab](https://www.youtube.com/watch?v=z62oU4hM1xM) mostly, I:
+
+3. Changed the links and joint names to match what is needed
+4. Fixed the limits to be non-360 degrees
+5. Imported into isaacsim to get the usd file
+6. Put usd file and configuration folder into `custom_quadruped`

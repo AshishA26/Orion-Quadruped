@@ -19,7 +19,7 @@ CUSTOM_QUAD_CFG = ArticulationCfg(
             max_depenetration_velocity=1.0,
         ),
         articulation_props=sim_utils.ArticulationRootPropertiesCfg(
-            enabled_self_collisions=True,
+            enabled_self_collisions=False,
             solver_position_iteration_count=4,
             solver_velocity_iteration_count=0
         ),
@@ -31,8 +31,8 @@ CUSTOM_QUAD_CFG = ArticulationCfg(
             ".*R_hip_joint": 0, # Right side hip joints
             ".*L_thigh_joint": -30*pi/180, # Left side thigh joints
             ".*R_thigh_joint": 30*pi/180, # Right side thigh joints
-            ".*L_calf_joint": 20*pi/180, # Left side calf joints
-            ".*R_calf_joint": -20*pi/180, # Right side calf joints
+            ".*L_calf_joint": 40*pi/180, # Left side calf joints
+            ".*R_calf_joint": -40*pi/180, # Right side calf joints
         },
         joint_vel={".*": 0.0},
     ),
