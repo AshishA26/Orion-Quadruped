@@ -35,7 +35,6 @@ cd IsaacLab/
 ./isaaclab.sh -p scripts/tutorials/02_scene/create_scene.py 
 ./isaaclab.sh -p scripts/tutorials/03_envs/create_quadruped_base_env.py 
 ./isaaclab.sh -p scripts/tutorials/02_scene/create_scene.py 
-isaacsim
 ```
 
 ### Tip 1
@@ -54,3 +53,9 @@ Expect random glitches and try:
 - Restart isaac lab / sim
 - Restart machine
 - Reinstall drivers / dependencies
+
+
+## Training
+
+To execute play.py using model shown in the video, move the "2025-03-03_05-00-17" folder
+into the "/rsl_rl/logs/rsl_rl/custom_quad_flat" directory.
