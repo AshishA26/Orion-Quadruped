@@ -55,9 +55,20 @@ Expect random glitches and try:
 - Restart machine
 - Reinstall drivers / dependencies
 
+## Preprocessing urdf Steps
+Before training, I:
+
+1. Added a foot joint (for touch sensor in isaac lab)
+2. Exported the urdf from solidworks
+
+Based on [How to Train a Custom Quadruped Robot to Walk Using Isaac Lab](https://www.youtube.com/watch?v=z62oU4hM1xM) mostly, I:
+
+3. Changed the links and joint names to match what is needed
+4. Fixed the limits to be non-360 degrees
+5. Imported into isaacsim to get the usd file
+6. Put usd file and configuration folder into `custom_quadruped`
 
 ## Training
-
 ### Links
 Robot Mania:
 - [Channel](https://www.youtube.com/@robotmania8896/videos)
@@ -77,20 +88,10 @@ Other Links:
 ```bash
 conda activate env_isaaclab
 cd ~/Isaaclab/scripts/reinforcement-learning/rsl_rl
-python train.py --task=Isaac-Velocity-Flat-Custom-Quad-v0 --num_envs=128
-python play.py --task=Isaac-Velocity-Flat-Custom-Quad-v0 --num_envs=16
+python train.py --task=Isaac-Velocity-Flat-Custom-Quad-v0 --num_envs=128 # train
+python play.py --task=Isaac-Velocity-Flat-Custom-Quad-v0 --num_envs=16 # play the trained model
 ```
 3. Tensorboard can be viewed by install Tensorboard extension in vscode, then doing `ctrl + shift + P`, and selecting the `~/Isaaclab/scripts/reinforcement-learning/rsl_rl` folder.
+4. Tune parameters as needed in the `custom_quadruped` folder. Can add override commands as well.
 
-## Preprocessing urdf Steps
-Before training, I:
-
-1. Added a foot joint (for touch sensor in isaac lab)
-2. Exported the urdf from solidworks
-
-Based on [How to Train a Custom Quadruped Robot to Walk Using Isaac Lab](https://www.youtube.com/watch?v=z62oU4hM1xM) mostly, I:
-
-3. Changed the links and joint names to match what is needed
-4. Fixed the limits to be non-360 degrees
-5. Imported into isaacsim to get the usd file
-6. Put usd file and configuration folder into `custom_quadruped`
+To stop Processor 0 from heating up, add `--headless` to the train command and switch to `power save` mode instead of `performance`.

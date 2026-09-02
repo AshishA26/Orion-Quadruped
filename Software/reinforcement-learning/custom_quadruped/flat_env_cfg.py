@@ -31,7 +31,7 @@ class CustomQuadFlatEnvCfg(CustomQuadRoughEnvCfg):
         # no terrain curriculum
         self.curriculum.terrain_levels = None
         self.commands.base_velocity.debug_vis = False
-        self.scene.env_spacing = 1
+        self.scene.env_spacing = 1.2
 
 class CustomQuadFlatEnvCfg_PLAY(CustomQuadFlatEnvCfg):
     def __post_init__(self) -> None:
