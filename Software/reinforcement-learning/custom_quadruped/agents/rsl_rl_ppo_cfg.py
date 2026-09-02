@@ -16,7 +16,7 @@ class CustomQuadRoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
     experiment_name = "custom_quad_rough"
     empirical_normalization = False
     policy = RslRlPpoActorCriticCfg(
-        init_noise_std=1.0,
+        init_noise_std=0.3, # Changed from 1.0 to 0.3 to reduce initial jitter
         actor_hidden_dims=[512, 256, 128],
         critic_hidden_dims=[512, 256, 128],
         activation="elu",

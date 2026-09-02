@@ -2,14 +2,15 @@
 
 ## Isaac Sim Setup
 
-### Links used:
+### Links 
+Used:
 - [Installation using Isaac Sim Pip Package](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/pip_installation.html)
 - [Step by Step Walkthrough: Installing Isaac Sim and Isaac Lab on Windows](https://www.youtube.com/watch?v=R7zUlsUfdYk)
 - [Import Your Robots From URDF to USD - Isaac Sim Tutorial](https://www.youtube.com/watch?v=AMfEtZ4hyLY)
 - [URDF Importer Extension](https://docs.isaacsim.omniverse.nvidia.com/4.5.0/robot_setup/ext_isaacsim_asset_importer_urdf.html)
 - [Using the Interactive Scene](https://isaac-sim.github.io/IsaacLab/main/source/tutorials/02_scene/create_scene.html)
 
-### Other Links:
+Other Links:
 - [Direct Workflow - Isaac Lab Tutorial 3 (Reinforcement Learning](https://www.youtube.com/watch?v=gdIJ_FcYXvM&list=PLQQ577DOyRN_hY6OAoxBh8K5mKsgyJi-r&index=8)
 - [Importing a New Asset](https://isaac-sim.github.io/IsaacLab/main/source/how-to/import_new_asset.html)
 - [Tutorial: Import URDF](https://docs.isaacsim.omniverse.nvidia.com/4.5.0/robot_setup/import_urdf.html)
@@ -57,5 +58,19 @@ Expect random glitches and try:
 
 ## Training
 
-To execute play.py using model shown in the video, move the "2025-03-03_05-00-17" folder
-into the "/rsl_rl/logs/rsl_rl/custom_quad_flat" directory.
+### Links
+Robot Mania:
+- [Channel](https://www.youtube.com/@robotmania8896/videos)
+- [How to Train a Custom Quadruped Robot to Walk Using Isaac Lab](https://www.youtube.com/watch?v=z62oU4hM1xM) - primary tutorial used
+- [Path Tracking Algorithm Simulation in ROS2](https://www.youtube.com/watch?v=uls-WmxRiTw)
+- [Object detection using Yolo3D with ROS2](https://www.youtube.com/watch?v=KTCtTLwJXP0)
+- [Training a Quadruped Robot to Walk on a Rough Terrain Using Depth Camera](https://www.youtube.com/watch?v=RaBPTD19Xoc)
+
+Other Links:
+- [How We Train Humanoid Robots](https://www.youtube.com/watch?v=oRymQyooWjE)
+- [Training Quadrupeds with Reinforcement Learning Reddit](https://www.reddit.com/r/reinforcementlearning/comments/1ik7dhn/training_quadrupeds_with_reinforcement_learning/)
+- [Training & Registering Robots - Isaac Lab Tutorial 4 (Reinforcement Learning)](https://www.youtube.com/watch?v=BSQEYj3Wm0Q&list=PLQQ577DOyRN_hY6OAoxBh8K5mKsgyJi-r&index=11)
+
+
+
+To execute play.py using model shown in the video, move the "2025-03-03_05-00-17" folder into the "/rsl_rl/logs/rsl_rl/custom_quad_flat" directory.

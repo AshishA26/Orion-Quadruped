@@ -19,7 +19,7 @@ CUSTOM_QUAD_CFG = ArticulationCfg(
             max_depenetration_velocity=1.0,
         ),
         articulation_props=sim_utils.ArticulationRootPropertiesCfg(
-            enabled_self_collisions=False,
+            enabled_self_collisions=True,
             solver_position_iteration_count=4,
             solver_velocity_iteration_count=0
         ),
@@ -37,14 +37,43 @@ CUSTOM_QUAD_CFG = ArticulationCfg(
         joint_vel={".*": 0.0},
     ),
     soft_joint_pos_limit_factor=0.9,
+    # actuators={
+    #     "base_legs": DCMotorCfg(
+    #         joint_names_expr=[".*_hip_joint", ".*_thigh_joint", ".*_calf_joint"],
+    #         effort_limit=20.0, # 33.5
+    #         saturation_effort=20.0,  # 33.5
+    #         velocity_limit=40.0,
+    #         stiffness=10.0, # 25.0
+    #         damping=0.7, # 0.5
+    #         friction=0.0,
+    #     ),
+    # },
     actuators={
-        "base_legs": DCMotorCfg(
-            joint_names_expr=[".*_hip_joint", ".*_thigh_joint", ".*_calf_joint"],
-            effort_limit=45, # 33.5
-            saturation_effort=45,  # 33.5
-            velocity_limit=21.0,
-            stiffness=60, # 25.0
-            damping=1.5, # 0.5
+        "hip": DCMotorCfg(
+            joint_names_expr=[".*_hip_joint"],
+            effort_limit=7.0,
+            saturation_effort=7.0,
+            velocity_limit=15.0,
+            stiffness=25.0,
+            damping=0.7,
+            friction=0.0,
+        ),
+        "thigh": DCMotorCfg(
+            joint_names_expr=[".*_thigh_joint"],
+            effort_limit=8.0,
+            saturation_effort=8.0,
+            velocity_limit=15.0,
+            stiffness=30.0,
+            damping=0.8,
+            friction=0.0,
+        ),
+        "calf": DCMotorCfg(
+            joint_names_expr=[".*_calf_joint"],
+            effort_limit=7.0,
+            saturation_effort=7.0,
+            velocity_limit=15.0,
+            stiffness=25.0,
+            damping=0.7,
             friction=0.0,
         ),
     },
