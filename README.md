@@ -92,7 +92,9 @@ Chassis iteratively modelled in SolidWorks. 3D printed with 2-part silicone inje
 | Main body parts | Leg Assembly & Silicone Feet |
 | :---: | :---: |
 | ![Body Parts](./photos/Body_Parts.png) | ![Leg Assembly](./photos/Leg_Assembly.jpg) |
+
 | Inside Orion (without shelves) | Inside Orion (with magnetic shelves) |
+| :---: | :---: |
 | ![Orion_Inside](./photos/Orion_Inside.JPG) | ![Orion_Inside_with_Shelves](./photos/Orion_Inside_with_Shelves.JPG) |
 
 ---
