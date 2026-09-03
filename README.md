@@ -50,13 +50,9 @@ Check out the [Demo Video](https://youtu.be/wUXvWBjLTyA)!
 | LiDAR SLAM | Autonomous Navigation |
 | :---: | :---: |
 | ![SLAM](./photos/lidar_slam.png) | ![Autonomy](./photos/autonomy.png) |
-
 | Original Camera Feed | TensorRT Depth Map |
-| :---: | :---: |
 | ![Original Image](./photos/original_depth.png) | ![Depth Map](./photos/midas_depth.png) |
-
 | Hand Pose Detection | Reinforcement Learning in Isaac Lab |
-| :---: | :---: |
 | ![Hand Pose Recognition](./photos/handpose.png) | ![Reinforcement Learning](./photos/RL.png) |
 
 <p align="center">
@@ -92,9 +88,7 @@ Chassis iteratively modelled in SolidWorks. 3D printed with 2-part silicone inje
 | Main body parts | Leg Assembly & Silicone Feet |
 | :---: | :---: |
 | ![Body Parts](./photos/Body_Parts.png) | ![Leg Assembly](./photos/Leg_Assembly.jpg) |
-
-| Inside Orion (without shelves) | Inside Orion (with magnetic shelves) |
-| :---: | :---: |
+| Inside Orion (Jetson + PCBs + Display only) | Inside Orion (including Batteries + Lidar + Cameras) |
 | ![Orion_Inside](./photos/Orion_Inside.JPG) | ![Orion_Inside_with_Shelves](./photos/Orion_Inside_with_Shelves.JPG) |
 
 ---
