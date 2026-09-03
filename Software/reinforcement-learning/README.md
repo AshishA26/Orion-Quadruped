@@ -1,4 +1,31 @@
-# Reinforcement Learning
+# Reinforcement Learning for Orion
+
+PPO reinforcement learning in NVIDIA Isaac Lab for locomotion and potential sim-to-real transfer.
+
+## Registered Environments
+
+| Environment | Terrain | Mode |
+|:------------|:--------|:-----|
+| `Isaac-Velocity-Flat-Custom-Quad-v0` | Flat | Train |
+| `Isaac-Velocity-Flat-Custom-Quad-Play-v0` | Flat | Play |
+| `Isaac-Velocity-Rough-Custom-Quad-v0` | Rough | Train |
+| `Isaac-Velocity-Rough-Custom-Quad-Play-v0` | Rough | Play |
+
+## Directory Structure
+
+```
+reinforcement-learning/
+├── custom_quadruped/        # Isaac Lab environment package
+│   ├── custom_quad.py       # Robot articulation config (actuators, init state)
+│   ├── flat_env_cfg.py      # Flat terrain env config
+│   ├── rough_env_cfg.py     # Rough terrain env config
+│   ├── agents/              # RSL RL + SKRL PPO agent configs
+│   └── robot.usd            # USD model reference
+├── src/                     # Training scripts
+└── quadruped.usd            # Standalone USD model
+```
+
+---
 
 ## Isaac Sim Setup
 
@@ -15,7 +42,7 @@ Other Links:
 - [Importing a New Asset](https://isaac-sim.github.io/IsaacLab/main/source/how-to/import_new_asset.html)
 - [Tutorial: Import URDF](https://docs.isaacsim.omniverse.nvidia.com/4.5.0/robot_setup/import_urdf.html)
 
-### Commands ran to setup Isaac Lab:
+### Commands
 ```bash
 conda create -n env_isaaclab python=3.11
 conda activate env_isaaclab
@@ -25,7 +52,6 @@ pip install -U torch==2.7.0 torchvision==0.22.0 --index-url https://download.pyt
 isaacsim
 git clone git@github.com:isaac-sim/IsaacLab.git
 sudo apt install cmake build-essential
-./isaaclab.sh --install
 cd IsaacLab/
 ./isaaclab.sh --install
 
@@ -55,7 +81,7 @@ Expect random glitches and try:
 - Restart machine
 - Reinstall drivers / dependencies
 
-## Preprocessing urdf Steps
+## Preprocessing URDF Steps
 Before training, I:
 
 1. Added a foot joint (for touch sensor in isaac lab)

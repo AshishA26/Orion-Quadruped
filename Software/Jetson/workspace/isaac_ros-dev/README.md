@@ -1,6 +1,67 @@
 # Isaac ROS Workspace
 
-## Jetson Setup:
+ROS2 workspace running on the NVIDIA Jetson Orin Nano inside an Isaac ROS Docker container.
+
+## ROS2 Packages
+
+### `orion_base`
+Core system nodes.
+
+| Node | Description |
+|:-----|:------------|
+| `stm32_bridge_node` | Bidirectional UART bridge to STM32 — sends motion commands, receives IMU/battery/joint telemetry |
+| `joystick_parser_node` | Parses joystick input into motion and eye commands |
+| `cmd_mux_node` | Multiplexes joystick and autonomous navigation commands |
+| `roboeyes_node` | OLED eye animations via Python/OpenCV, controlled over ROS2 topics |
+| `joint_state_republisher` | Republishes STM32 joint angles as standard `JointState` messages |
+
+### `orion_camera`
+| Node | Description |
+|:-----|:------------|
+| `gstreamer_dual_camera_node` | Dual CSI (IMX219) capture via GStreamer |
+| `depth_map_node` | MIDAS depth inference with TensorRT |
+| `hand_pose_node` | MediaPipe hand gesture recognition |
+
+### `orion_lidar`
+- RPLIDAR A1M8 driver — publishes `/scan` for SLAM and navigation.
+- `slam_toolbox` for 2D SLAM.
+- `rf2o` for laser odometry
+
+### `orion_navigation`
+- `nav2` for costmap creation and pure-pursuit path following.
+
+### `orion_bringup`
+- Main `bringup.launch.py`.
+
+### `orion_msgs`
+- Custom messages: `OrionMotionCmd`, `OrionEyesCmd`, `OrionBatteryVoltage`, `OrionImuFeedback`, `OrionLegInfo`.
+
+### `orion_urdf`
+- Full URDF with SolidWorks-exported STL meshes.
+
+### `submodules/`
+- `isaac_ros_common`
+- `isaac_ros_argus_camera`
+- `rf2o_laser_odometry`
+
+## Directory Structure
+
+```
+isaac_ros-dev/
+├── src/                  # ROS2 packages (see above)
+├── scripts/
+│   ├── build_robot.sh    # Colcon build
+│   ├── run_robot.sh      # Launch with auto display detection
+│   ├── autostart.sh      # Systemd entry point
+│   └── foxglove-layouts/ # Foxglove dashboard layouts
+└── models/
+    ├── midas_v21_small_256.onnx   # MIDAS ONNX model
+    └── midas_v21_small_256.plan   # TensorRT compiled plan
+```
+
+---
+
+## Jetson Setup
 ```bash
 cd ${ISAAC_ROS_WS}
 cp src/orion_bringup/docker/.isaac_ros_common-config ~/.
@@ -18,7 +79,7 @@ journalctl -b -u orion-startup.service
 journalctl -af -u orion-startup.service 
 ```
 
-## Building and running
+## Building and Running
 ```bash
 cp src/orion_bringup/docker/.isaac_ros_common-config ~/.
 cd ${ISAAC_ROS_WS}/src/submodules/isaac_ros_common && ./scripts/run_dev.sh --skip_image_build
@@ -37,7 +98,7 @@ ros2 pkg create --build-type ament_python orion_bringup
 ### General
 To fix SSH / connectivity issues from no machine or vs-code, ensure you have the right wifi set, and are on MAXN Super power mode.
 
-### Bag
+### Bag Recording
 
 All (no depth):
 ```bash
