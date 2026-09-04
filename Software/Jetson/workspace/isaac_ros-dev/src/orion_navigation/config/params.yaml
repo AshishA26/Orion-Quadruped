@@ -8,7 +8,7 @@ global_costmap:
       global_frame: map
       robot_base_frame: base_link
       use_sim_time: false
-      robot_radius: 0.15        # match your actual robot
+      robot_radius: 0.15
       resolution: 0.05
       transform_tolerance: 1.0
       track_unknown_space: true
@@ -79,28 +79,40 @@ controller_server:
       xy_goal_tolerance: 0.25
       yaw_goal_tolerance: 0.25
     FollowPath:
-      plugin: "dwb_core::DWBLocalPlanner"
-      debug_trajectory_details: true
-      min_vel_x: 0.0
-      min_vel_y: 0.0
-      max_vel_x: 0.26
-      max_vel_y: 0.0
-      max_vel_theta: 1.0
-      min_speed_xy: 0.0
-      max_speed_xy: 0.26
-      min_speed_theta: 0.0
-      acc_lim_x: 2.5
-      acc_lim_theta: 3.2
-      decel_lim_x: -2.5
-      decel_lim_theta: -3.2
-      vx_samples: 20
-      vtheta_samples: 20
-      sim_time: 1.7
-      transform_tolerance: 0.5
-      trans_stopped_velocity: 0.25
-      short_circuit_trajectory_evaluation: true
-      stateful: true
-      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController" # Nav2's Pure Pursuit
+      desired_linear_vel: 0.3
+      lookahead_dist: 0.4
+      min_lookahead_dist: 0.2
+      max_lookahead_dist: 0.6
+      lookahead_time: 1.5
+      transform_tolerance: 0.1
+      use_velocity_scaled_lookahead_dist: false
+      min_approach_linear_velocity: 0.05
+      approach_velocity_scaling_dist: 0.6
+      use_collision_detection: false
+      use_regulated_linear_velocity_scaling: false
+      # plugin: "dwb_core::DWBLocalPlanner" # DWB Local Planner for comparison
+      # debug_trajectory_details: true
+      # min_vel_x: 0.0
+      # min_vel_y: 0.0
+      # max_vel_x: 0.26
+      # max_vel_y: 0.0
+      # max_vel_theta: 1.0
+      # min_speed_xy: 0.0
+      # max_speed_xy: 0.26
+      # min_speed_theta: 0.0
+      # acc_lim_x: 2.5
+      # acc_lim_theta: 3.2
+      # decel_lim_x: -2.5
+      # decel_lim_theta: -3.2
+      # vx_samples: 20
+      # vtheta_samples: 20
+      # sim_time: 1.7
+      # transform_tolerance: 0.5
+      # trans_stopped_velocity: 0.25
+      # short_circuit_trajectory_evaluation: true
+      # stateful: true
+      # critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
 
 bt_navigator:
   ros__parameters:
