@@ -1,6 +1,7 @@
 import copy
 import rclpy
 from rclpy.node import Node
+from rclpy.time import Time
 from orion_msgs.msg import OrionMotionCmd
 from orion_msgs.msg import OrionEyesCmd
 
@@ -20,13 +21,12 @@ class CmdMux(Node):
             self.joy_eyes_cmd_callback,
             10
         )
-        # TODO(orion)
-        # self.nav_motion_cmd_sub = self.create_subscription(
-        #     OrionMotionCmd,
-        #     'nav_motion_cmd',
-        #     self.nav_motion_cmd_callback,
-        #     10
-        # )
+        self.nav_motion_cmd_sub = self.create_subscription(
+            OrionMotionCmd,
+            'nav_motion_cmd',
+            self.nav_motion_cmd_callback,
+            10
+        )
         self.orion_motion_cmd_pub = self.create_publisher(OrionMotionCmd, 'orion_motion_cmd', 10)
         self.orion_eyes_cmd_pub = self.create_publisher(OrionEyesCmd, 'orion_eyes_cmd', 10)            
 
@@ -34,14 +34,18 @@ class CmdMux(Node):
         self.declare_parameter('motion_based_eyes', True)
         self.declare_parameter('curious_scale_enabled', True)
         self.declare_parameter('curious_scale_max', 1.3)
+        self.declare_parameter('nav_cmd_timeout', 0.5)
         
         send_rate = 1.0 / self.get_parameter('send_rate_hz').value
         self.motion_based_eyes = self.get_parameter('motion_based_eyes').value
         self.curious_scale_enabled = self.get_parameter('curious_scale_enabled').value
         self.curious_scale_max = self.get_parameter('curious_scale_max').value
+        self.nav_cmd_timeout = self.get_parameter('nav_cmd_timeout').value
 
         self.latest_joy_motion = OrionMotionCmd()
         self.latest_joy_eyes = OrionEyesCmd()
+        self.latest_nav_motion = OrionMotionCmd()
+        self.last_nav_cmd_time: float | None = None  # seconds (monotonic clock)
 
         self.pub_timer = self.create_timer(send_rate, self.publish_latest)
 
@@ -50,6 +54,10 @@ class CmdMux(Node):
 
     def joy_eyes_cmd_callback(self, msg):
         self.latest_joy_eyes = msg
+
+    def nav_motion_cmd_callback(self, msg):
+        self.latest_nav_motion = msg
+        self.last_nav_cmd_time = self.get_clock().now().nanoseconds * 1e-9
     
     def eyes_mux(self, joy_eyes, motion) -> OrionEyesCmd:
         eyes_out = copy.copy(joy_eyes)
@@ -104,13 +112,23 @@ class CmdMux(Node):
     def _clamp(val, lo, hi):
         return max(lo, min(hi, val))
 
+    def _nav_cmd_is_fresh(self) -> bool:
+        # Return True if a nav command arrived within nav_cmd_timeout seconds.
+        if self.last_nav_cmd_time is None:
+            return False
+        now = self.get_clock().now().nanoseconds * 1e-9
+        return (now - self.last_nav_cmd_time) <= self.nav_cmd_timeout
+
     def publish_latest(self):
         joy_motion = self.latest_joy_motion
         joy_eyes = self.latest_joy_eyes
 
-        # TODO(orion): Create a unified state machine to handle nav and joystick
-        # For now we directly send joy command to orion_base
-        overall_motion = joy_motion
+        # Autonomy mode: joystick has set CMD_AUTONOMY and a fresh nav command exists.
+        if (joy_motion.cmd_type == OrionMotionCmd.CMD_AUTONOMY
+                and self._nav_cmd_is_fresh()):
+            overall_motion = self.latest_nav_motion
+        else:
+            overall_motion = joy_motion
 
         self.orion_motion_cmd_pub.publish(overall_motion)
 

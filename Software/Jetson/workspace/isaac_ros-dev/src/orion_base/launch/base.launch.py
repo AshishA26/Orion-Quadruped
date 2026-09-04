@@ -71,6 +71,9 @@ def generate_launch_description():
         ]
     )
 
+    # Command Mux - routes joystick or autonomous navigation commands to the STM32.
+    # In CMD_AUTONOMY mode (BTN_L2 on controller), nav_motion_cmd (from pure_pursuit_node)
+    # takes priority over joy_motion_cmd.
     cmd_mux_node = Node(
         package='orion_base',
         executable='cmd_mux_node',
@@ -80,7 +83,7 @@ def generate_launch_description():
         remappings=[
             ('joy_motion_cmd', '/joy_motion_cmd'),
             ('joy_eyes_cmd', '/joy_eyes_cmd'),
-            ('nav_motion_cmd', '/nav_motion_cmd'),
+            ('nav_motion_cmd', '/nav_motion_cmd'),    # From pure_pursuit_node (orion_navigation)
             ('orion_motion_cmd', '/orion_motion_cmd'),
             ('orion_eyes_cmd', '/orion_eyes_cmd'),
         ]

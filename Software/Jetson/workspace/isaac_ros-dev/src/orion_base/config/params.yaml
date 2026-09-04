@@ -35,6 +35,7 @@ cmd_mux_node:
     motion_based_eyes: true
     curious_scale_enabled: true
     curious_scale_max: 1.2
+    nav_cmd_timeout: 0.5   # Seconds before a stale nav command is zeroed out (safety)
 
 # Roboeyes
 roboeyes_node:
