@@ -134,3 +134,14 @@ waypoint_follower:
   ros__parameters:
     loop_rate: 20
     stop_on_failure: false
+
+# Pure Pursuit Controller
+pure_pursuit_node:
+  ros__parameters:
+    lookahead_distance: 0.4     # Lookahead distance in metres
+    max_linear_speed: 0.3       # Maximum forward speed in m/s
+    max_angular_speed: 1.0      # Maximum yaw rate in rad/s
+    goal_tolerance: 0.15        # Stop when within this distance of the goal (metres)
+    control_frequency: 20.0     # Control loop frequency in Hz
+    map_frame: map
+    base_frame: base_link

@@ -28,6 +28,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'pure_pursuit_node = orion_navigation.pure_pursuit_node:main',
         ],
     },
 )

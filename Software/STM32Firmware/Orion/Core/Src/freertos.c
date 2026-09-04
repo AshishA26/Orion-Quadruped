@@ -84,6 +84,7 @@ struct __attribute__((packed)) CmdPayload {
 #define CMD_EXTRAS 0x06
 #define CMD_EYES 0x07
 #define CMD_BOOTUP 0x08
+#define CMD_AUTONOMY 0x09  // Autonomous navigation mode: same trot gait as CMD_NORMAL
 
 // DMA Buffer and tracking
 #define DMA_RX_BUFFER_SIZE 64 // Larger than the expected command size to ensure no bytes are missed
@@ -316,6 +317,7 @@ void StartControlTask(void *argument)
     // Process Kinematics and Motion state machine based on cmd_type
     switch(active_cmd.cmd_type) 
     {
+        case CMD_AUTONOMY: // Same trot gait as CMD_NORMAL
         case CMD_NORMAL:
             {
                 float target_feet[4][3];

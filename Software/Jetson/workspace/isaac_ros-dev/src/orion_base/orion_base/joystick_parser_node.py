@@ -17,16 +17,16 @@ from typing import Tuple
 # DPAD_VERT = 7 # Pitch if CMD_NORMAL, move pivot point forward/backward if CMD_EXTRAS
 # DPAD_HORZ = 6 # Roll if CMD_NORMAL, move pivot point left/right if CMD_EXTRAS
 # BTN_SQUARE = 0 # Yaw left if CMD_NORMAL, reset pivot point in CMD_EXTRAS
-# BTN_CROSS = 1 # Height (z offset) decrease
+# BTN_CROSS = 1  # Height (z offset) decrease
 # BTN_CIRCLE = 2 # Yaw right
 # BTN_TRIANGLE = 3 # Height (z offset) increase
-# BTN_L1 = 4 # Sets CMD_NORMAL
-# BTN_R1 = 5 # Reset, sets CMD_RESET
-# BTN_L2 = 3 # Powers on eyes (used to make happy eyes for tennis ball scene) if CMD_NORMAL. Does extra eye commands if CMD_EYES
-# BTN_R2 = 4 # Boost mode (axis 4)
-# BTN_SHARE = 8 # Powers off eyes (used to set CMD_BOOTUP or CMD_HEEL)
-# BTN_OPTIONS = 9 # Sets CMD_HEEL (used to set CMD_WAVE)
-# BTN_L3 = 10 # Sets CMD_EYES
+# BTN_L1 = 4    # Sets CMD_NORMAL (+ posture reset)
+# BTN_R1 = 5    # Sets CMD_RESET (safe standing pose)
+# BTN_L2 = 3    # Sets CMD_AUTONOMY (autonomous navigation mode)
+# BTN_R2 = 4    # Boost mode if CMD_NORMAL. Does extra eye commands if CMD_EYES
+# BTN_SHARE = 8   # Sets CMD_WAVE
+# BTN_OPTIONS = 9 # Sets CMD_HEEL
+# BTN_L3 = 10  # Sets CMD_EYES
 # BTN_R3 = 11  # Sets CMD_EXTRAS
 # BTN_PS = 12
 # BTN_TOUCHPAD = 13
@@ -197,7 +197,7 @@ class JoystickParser(Node):
         elif msg.axes[DPAD_HORZ] < -0.5:
             self.eyes_mood = OrionEyesCmd.MOOD_SLEEPING
 
-        if msg.buttons[BTN_L2] == 1:
+        if msg.buttons[BTN_R2] == 1:
             # Idle on/off
             if msg.buttons[BTN_SQUARE] == 1:
                 self.auto_idle = True
@@ -243,22 +243,15 @@ class JoystickParser(Node):
             self.cmd_type = OrionMotionCmd.CMD_EXTRAS
         elif msg.buttons[BTN_OPTIONS] == 1:
             self.cmd_type = OrionMotionCmd.CMD_HEEL
-        # elif msg.buttons[BTN_SHARE] == 1:
-            # self.cmd_type = OrionMotionCmd.CMD_BOOTUP
+        elif msg.buttons[BTN_SHARE] == 1:
+            self.cmd_type = OrionMotionCmd.CMD_WAVE
+        elif msg.buttons[BTN_L2] == 1:
+            self.cmd_type = OrionMotionCmd.CMD_AUTONOMY
         elif msg.buttons[BTN_L3] == 1:
             self.cmd_type = OrionMotionCmd.CMD_EYES
 
         if self.cmd_type == OrionMotionCmd.CMD_NORMAL: # Normal
             lin_x, lin_y, ang_z, yawing_direction = self.operation_normal(msg)
-            
-            if msg.buttons[BTN_L2] == 1:
-                # Powers on eyes
-                self.eyes_power = True
-                # Sets happy eyes for tennis ball scene using L2
-                # self.auto_idle = False
-                # self.eyes_mood = OrionEyesCmd.MOOD_HAPPY
-            if msg.buttons[BTN_SHARE] == 1:
-                self.eyes_power = False
 
         elif self.cmd_type == OrionMotionCmd.CMD_EXTRAS: # Extras
             x_offset, y_offset = self.operation_extras(msg)

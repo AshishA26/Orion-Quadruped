@@ -24,6 +24,19 @@ def generate_launch_description():
         }.items()
     )
 
+    pure_pursuit_node = Node(
+        package='orion_navigation',
+        executable='pure_pursuit_node',
+        name='pure_pursuit_node',
+        parameters=[params_file],
+        output='screen',
+        remappings=[
+            ('plan', '/plan'),                        # Nav2 planned path (from planner_server)
+            ('nav_motion_cmd', '/nav_motion_cmd'),    # Consumed by cmd_mux_node
+        ],
+    )
+
     return LaunchDescription([
-        navigation_launch
+        navigation_launch,
+        pure_pursuit_node,
     ])
