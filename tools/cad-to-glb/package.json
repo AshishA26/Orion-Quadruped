@@ -1,0 +1,16 @@
+{
+  "name": "orion-cad-to-glb",
+  "private": true,
+  "type": "module",
+  "description": "Converts a SolidWorks assembly dump into a compressed GLB for the web exploded view.",
+  "scripts": {
+    "export": "powershell -ExecutionPolicy Bypass -File export-assembly.ps1",
+    "convert": "node --max-old-space-size=8192 convert.mjs"
+  },
+  "dependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
+    "meshoptimizer": "^1.3.0"
+  }
+}
